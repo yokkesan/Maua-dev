@@ -6,10 +6,10 @@ RUN apk add --no-cache git
 
 COPY backend/go.mod backend/go.sum* ./
 
-RUN go mod download || true
+RUN go mod download
 
 COPY backend/ ./
 
 EXPOSE 8080
 
-CMD ["go", "run", "./cmd/api"]
+CMD ["go", "run", "."]
