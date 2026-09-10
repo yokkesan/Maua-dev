@@ -1,4 +1,4 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
+@use "./EndUser/base/reset";
+@use "./EndUser/base/common";
+@use "./EndUser/base/layout";
+@use "./EndUser/top/top";

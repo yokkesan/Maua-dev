@@ -1,0 +1,143 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// ローディングアニメーションに対してのscss
+// 134行目までは編集しない。
+//
+//.......................................................
+
+// ローディング中一瞬ページが見えてしまう対策 ================================================
+.root-wrap.nowloading {
+    opacity: 0;
+}
+.root-wrap  {
+    opacity: 1;
+}
+// ================================================================================================
+//
+//  * LOADING - COMPONENT *
+//
+// ================================================================================================
+
+// ローディンング終了のスタイル ================================================
+body .loading-wrap {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 9999;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+// ローディンング中のスタイル ================================================
+body.trans .loading-wrap {
+    opacity: 1;
+    pointer-events: auto;
+    transition: all 0.5s ease;
+}
+
+.loading-wrap .inner {
+    width: 100%;
+    height: 100%;
+}
+.loading-wrap .inner > div {
+    transform: translateY(-8rem);
+}
+
+// iOS用ローディング強制解除 ================================================
+html.ios body .loading-wrap,
+html.ipad body .loading-wrap {
+    background: none;
+    padding: 0rem;
+    pointer-events: none;
+}
+body .loading-ios-wrap {
+    width: 100%;
+    height: 100%;
+    padding: 0rem;
+    pointer-events: none;
+}
+html.ios body .loading-ios-wrap,
+html.ipad body .loading-ios-wrap {
+    width: 100%;
+    height: 100%;
+    background: #fff;//背景色合わせる
+    padding: 2rem;
+    pointer-events: none;
+}
+
+html.ios body .loading-ios-wrap,
+html.ipad body .loading-ios-wrap {
+    animation-duration: 0.5s;
+    animation-delay: 0s;
+    animation-name: loadinginios;
+    animation-timing-function: ease;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+html.ios body.trans .loading-ios-wrap,
+html.ipad body.trans .loading-ios-wrap {
+    animation-duration: 4.5s;
+    animation-delay: 0s;
+    animation-name: loadingoutios;
+    animation-timing-function: ease;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes loadingoutios {
+    0%{
+        pointer-events: auto;
+        opacity: 1;
+    }
+    80%{
+        pointer-events: auto;
+        opacity: 1;
+    }
+    81%{
+        pointer-events: auto;
+        opacity: 1;
+    }
+    99%{
+        pointer-events: auto;
+    }
+    100%{
+        pointer-events: none;
+        opacity: 0;
+    }
+}
+@keyframes loadininios {
+    0%{
+        pointer-events: auto;
+        opacity: 0;
+    }
+    80%{
+        pointer-events: auto;
+        opacity: 0;
+    }
+    81%{
+        pointer-events: auto;
+        opacity: 0;
+    }
+    99%{
+        pointer-events: auto;
+    }
+    100%{
+        pointer-events: none;
+        opacity: 1;
+    }
+}
+
+// ================================================================================================
+//
+//  ここからスタイル記述
+//
+// ================================================================================================

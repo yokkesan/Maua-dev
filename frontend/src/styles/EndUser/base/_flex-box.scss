@@ -1,0 +1,36 @@
+@charset "utf-8";
+//
+// Css Name: lc-flex-box ver.2.0.0
+// Author: HARUHARA
+// Author URI: http://launchcraft.jp
+//
+.flex { // デフォルト - 最初の要素は左寄せ、最後の要素は右寄せ。その他は等間隔。
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+	&._left { // 左詰め
+		justify-content: flex-start;
+	}
+
+	&._right { // 右詰め
+		justify-content: flex-end;
+	}
+
+	&._x-center { // 垂直方向中央寄せ
+		justify-content: center;
+	}
+
+	&._y-center { // 水平方向中央寄せ
+		align-items: center;
+	}
+
+	&._bottom { // 下部合わせ
+		align-items: flex-end;
+	}
+
+	&._top { // 上部合わせ
+		align-items: flex-start;
+	}
+
+}

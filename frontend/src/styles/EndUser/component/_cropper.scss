@@ -1,0 +1,189 @@
+@charset "utf-8";
+@use "../../EndUser/component/variable-end-user" as e;
+@use "../../Admin/component/variable-admin" as a;
+
+
+
+
+//Description.........................................
+//
+// Cropperに対してのscss
+//
+//.......................................................
+
+.cropper_component {
+    &-control {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        margin-bottom: 1rem;
+        @include e.Flex;
+        .title {
+            width: 100%;
+            color: #fff;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        // TODO とりあえず adminから持ってきただけなので後で調整が必要
+        .btn_link_c {
+            display: inline-block;
+            color: #fff;
+            background: a.$Link;
+            line-height: 1;
+            border-radius: 50px;
+            position: relative;
+            overflow-y: visible;
+            overflow-x: visible;
+            cursor: pointer;
+            vertical-align: bottom;
+            transition: 0.35s ease a.$Transition;
+            &::after {
+                width: 100%;
+                height: 100%;
+                content: "";
+                @include a.LinkGrad;
+                border-radius: 50px;
+                filter: blur(5px);
+                margin: auto;position: absolute;top: 3px;right: 0;bottom: 0;left: 0;
+                opacity: 0;
+                transition: 0.5s a.$Transition;
+            }
+            &:hover::after {
+                opacity: 0.8;
+                transition: 0.5s a.$Transition;
+            }
+
+            span {
+                position: relative;
+                z-index: 3;
+            }
+
+            .inner {
+                line-height: 1;
+                padding: 16px 3rem 15px 3rem;
+                overflow: hidden;
+                border-radius: 50px;
+                position: relative;
+                &::after {
+                    width: 200%;
+                    @include a.LinkGrad;
+                    content: "";
+                    margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+                    transform: translateX(0%);
+                    opacity: 0;
+                    transition: 0.5s a.$Transition;
+                }
+            }
+
+            &:hover > .inner::after {
+                transform: translateX(-50%);
+                opacity: 1;
+                transition: 0.5s a.$Transition;
+            }
+
+            //キャンセル ----------------------------------
+            &._cancel {
+                color: e.$Text-Light;
+                // background: e.$Border-UltraLight;
+                background: #fff;
+                transition: 0.25s ease;
+                &:hover {
+                    background: e.$Border-UltraLight;
+                    transition: 0.25s ease;
+                }
+                &::after {
+                    display: none;
+                }
+                .inner {
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+
+            //Delete ----------------------------------
+            &._delete {
+                background: a.$Error;
+                &::after {
+                    @include a.ErrorGrad;
+                }
+                .inner {
+                    &::after {
+                        @include a.ErrorGrad;
+                    }
+                }
+            }
+
+        }
+        .btn_svg-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(166, 169, 171, 0.7);
+            border-radius: 100%;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transition: 0.15s a.$Transition;
+
+            svg {
+                @include a.SvgIconSize;
+                margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+            }
+
+            svg path,
+            svg circle,
+            svg rect {
+                stroke: #fff;
+                stroke-width: 4px;
+                transition: 0.15s a.$Transition;
+            }
+
+            &:hover {
+                background: a.$Link;
+                transition: 0.15s a.$Transition;
+                svg path,
+                svg circle,
+                svg rect {
+                    stroke: #fff;
+                    stroke-width: 5px;
+                    transition: 0.15s a.$Transition;
+                }
+            }
+
+            &._white {
+                background: #fff;
+                &:hover {
+                    background: a.$Link;
+                }
+            }
+
+            //新着表示 ---------------------
+            &._notice {
+                &::after {
+                    width: 10px;
+                    height: 10px;
+                    background: a.$Success;
+                    content: "";
+                    margin: auto;position: absolute;top: 0;right: 0;
+                    border-radius: 100%;
+                }
+                &::before {
+                    width: 24px;
+                    height: 24px;
+                    background: a.$Success;
+                    content: "";
+                    margin: auto;position: absolute;top: 0;right: 0;
+                    border-radius: 100%;
+                    transform: translate(29%,-29%);
+                    opacity: 0.4;
+                    animation-duration: 2s;
+                    animation-delay: 0s;
+                    animation-name: kf_NoticeLamp;
+                    animation-timing-function: ease;
+                    animation-iteration-count: infinite;
+                }
+            }
+        }
+    }
+}

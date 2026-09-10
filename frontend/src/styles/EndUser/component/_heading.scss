@@ -1,0 +1,118 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// 見出しに対してのscss
+//
+//.......................................................
+
+//================================================================================================
+//
+//  水平ラインの入る見出し
+//
+//================================================================================================
+.heading_line {
+    width: 100%;
+    color: #fff;
+    @include e.FontAuma;
+    @include e.FontSize-Xxl;
+    line-height: 0.8em;
+    margin-bottom: 0rem;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    line-height: 1;
+    p {
+        padding-top: 5px;
+    }
+    .line {
+        flex: 1;
+        line-height: 1;
+        position: relative;
+        &::after {
+            width: 100%;
+            height: 1px;
+            background: #fff;
+            content: "";
+            margin: auto;position: absolute;top: 0;right: 0;bottom: 0;
+            z-index: 1;
+        }
+    }
+
+    //日本語表記
+    &._jp {
+        font-family: e.$Font;
+        @include e.FontSize-L;
+        letter-spacing: 1px;
+    }
+
+    &._alpha-down {
+        .line {
+            &::after {
+                background: e.$Border-Dark;
+            }
+        }
+    }
+
+}
+
+
+//================================================================================================
+//
+//  Componentページ用
+//
+//================================================================================================
+.heading_component-page {
+    width: 100%;
+    padding: 1rem;
+    border-left: 3px solid #000;
+    @include e.FontSize-L;
+    margin-bottom: 1rem;
+
+    & + .comment {
+        max-width: 620px;
+        margin-bottom: 4rem;
+        code {
+            font-weight: 700;
+            padding: 0 0.5rem;
+            font-family: e.$Font;
+        }
+    }
+
+}
+
+
+//================================================================================================
+//
+//  SectionTitle
+//
+//================================================================================================
+.heading_section-title {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4rem;
+
+    .main {
+        @include e.FontAntonio;
+        font-weight: 500;
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+}
+
+//================================================================================================
+//
+//  FAQ
+//
+//================================================================================================
+.heading_faq {
+    text-align: center;
+    margin-bottom: 2rem;
+    @include e.FontSize-L;
+    font-weight: 700;
+}

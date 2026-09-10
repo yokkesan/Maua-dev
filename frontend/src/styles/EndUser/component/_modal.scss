@@ -1,0 +1,197 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// モーダルウィンドウに対してのscss
+//
+//.......................................................
+
+// ================================================================================================
+//
+//  MODAL
+// ※ DEMO用のデザインのため、必要によってスタイリングする。消してしまってもOK
+//
+// ================================================================================================
+.modal_bg {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    margin: auto;top: 0;left: 0;
+    background: rgba(50, 50, 50, 0.4);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.35s ease;
+    &._on {
+        opacity: 1;
+        pointer-events: auto;
+        transition: 0.35s ease;
+    }
+}
+
+.modal_container {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    margin: auto;top: 0;left: 0;
+    z-index: 10001;
+    pointer-events: none;
+    overscroll-behavior: none;
+    opacity: 0;
+    padding: 12rem 2rem 55vh 2rem;
+    overflow-y: scroll;
+    -ms-overflow-style: none; // IE,edge用
+    scrollbar-width: none; // FireFox用
+    transition: 0.5s ease 0.5s;
+    &::-webkit-scrollbar { // Chrome,Safari用
+        display:none;
+    }
+
+    .wrap {
+        width: 100%;
+        max-width: 680px;
+        margin: auto;
+        background: #fff;
+        opacity: 0;
+        transform: translateY(20px);
+        position: relative;
+        z-index: 100;
+        transition: 0.5s ease;
+        &::after {
+            height: 100%;
+            width: 100%;
+            content: "";
+            margin: auto;position: absolute;top: 1rem;left: 1rem;
+            background: #000;
+            z-index: 1;
+        }
+        //Title
+        .title {
+            padding: 2rem;
+            text-align: center;
+            background: #000;
+            color: #fff;
+            z-index: 100;
+            position: relative;
+        }
+
+        .modal-title-main {
+            display: block;
+            font-size: 20px;
+        }
+
+        .modal-title-sub {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            width: 100%;
+
+            img {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
+            }
+        }
+
+        //Text
+        .text-wrap {
+            width: 100%;
+            padding: 3rem 2rem 3rem;
+            z-index: 100;
+            position: relative;
+            background: #fff;
+            & > .inner {
+                max-width: 520px;
+                margin: auto;
+            }
+
+            .button-wrap {
+                width: 100%;
+                margin-top: 2rem;
+                padding-top: 2rem;
+                border-top: 1px solid e.$Border-MediumLight;
+                @include e.Flex-Center;
+                gap: 2rem;
+
+                a:not(.btn_link),button:not(.btn_link) {
+                    font-weight: 700;
+                    width: calc((100% - 2rem * 1) / 2);
+                    text-align: center;
+                    padding: 1rem;
+                    &.cancel {
+                        color: e.$Text-Light;
+                        font-weight: normal;
+                    }
+                }
+                .btn_link-wrap {
+                    width: calc((100% - 2rem * 1) / 2);
+                    a {
+                        padding-left: 1rem;
+                        padding-right: 1rem;
+                    }
+                }
+            }
+
+            .list_common + .button-wrap {
+                margin-top: 1rem;
+                padding-top: 0rem;
+                border-top: 0px solid e.$Border-MediumLight;
+            }
+        }//text-wrap
+    }//wrap
+
+    .close-icon {
+        width: 50px;
+        height: 50px;
+        content: "";
+        margin: auto;position: absolute;top: 0;right: 0;
+        transform: translateY(-100%);
+        pointer-events: none;
+        span {
+            width: 50%;
+            height: 1px;
+            background: #fff;
+            content: "";
+            margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+            transform: rotate(0deg);
+            transition: 0.5s ease;
+            &:nth-child(2) {
+                transform: rotate(-0deg);
+            }
+        }
+    }
+
+    &._open {
+        opacity: 1;
+        pointer-events: auto;
+        transition: 0s ease;
+        .wrap {
+            opacity: 1;
+            transform: translateY(0);
+            transition: 0.5s ease 0.2s;
+        }
+        .close-icon {
+            span {
+                transform: rotate(45deg);
+                transition: 0.5s ease 0.5s;
+                &:nth-child(2) {
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+    }
+
+    //CloseOvl
+    .modal_close-ovl {
+        width: 100%;
+        height: 100vh;
+        content: "";
+        cursor: pointer;
+        margin: auto;position: absolute;top: 0;left: 0;
+    }
+
+}

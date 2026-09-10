@@ -1,0 +1,486 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+@use "../../Admin/component/variable-admin" as a;
+//Description.........................................
+//
+// ボタンに対してのscss
+//
+//.......................................................
+button {
+    letter-spacing: 1px;
+}
+a {
+    vertical-align: middle;
+}
+
+.btn_link-wrap {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    .bg-element {
+        width: 100%;
+        height: 100%;
+        content: "";
+        background: #000;
+        margin: auto;position: absolute;right: -0.5rem;bottom: -0.5rem;
+        transition: 0.35s e.$Transition 0s;
+    }
+
+    &._w100 {
+        width: 100%;
+    }
+
+    &:hover {
+        .bg-element {
+            transition: 0.35s e.$Transition 0s;
+        }
+    }
+
+}
+
+// アップグレードをするボタン
+
+.btn_link.btn_link--upgrade {
+    box-sizing: border-box;
+    height: calc(3.65rem + 2px);
+    padding: 0.8rem 3rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    color: #fff;
+    background: #912dff;
+    border-color: #912dff;
+
+    &::after {
+        display: none;
+    }
+
+    // &::after {
+    //     background: #7500fa;
+    // }
+
+    span {
+        display: block;
+        color: #fff;
+    }
+
+    .btn_link__campaign {
+        font-size: 0.8rem;
+        line-height: 1;
+    }
+}
+
+// ================================================================================================
+//
+//  ボタン
+//
+// ================================================================================================
+.btn_link {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    font-weight: 700;
+    color: #000;
+    background: #fff;
+    line-height: 1em;
+    padding: 1.4rem 3rem 1.25rem 3rem;
+    border: 1px solid #000;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    &::after {
+        width: calc(100% - 0px);
+        height: calc(120% - 0px);
+        content: "";
+        background: #000;
+        margin: auto;position: absolute;top: 0;bottom: 0;left: 0;
+        transform-origin: 100% 50% 0;
+        transform: scale(0,2);
+        transition: transform 0.35s e.$Transition;
+        z-index: 1;
+    }
+
+    span {
+        position: relative;
+        z-index: 10;
+    }
+
+    &:hover {
+        span {
+            color: #fff;
+            transition: color 0.35s e.$Transition;
+        }
+        &::after {
+            transform-origin: 0 50% 0;
+            transform: scale(1,2);
+            transition: transform 0.35s e.$Transition;
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  ハッシュタグボタン
+//
+// ================================================================================================
+.btn_common {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 50px;
+    color: #000;
+    font-weight: 700;
+    @include e.ButtonPadding;
+    @include e.Flex-Left;
+    padding-right: 2rem;
+    gap: 1rem;
+    align-items: center;
+    padding-left: 4.25rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    .md_svg-icon {
+        right: auto;
+        left: 1.5rem;
+        top: -2px;
+    }
+
+    .number {
+        span {
+            font-size: 0.9rem;
+            letter-spacing: 0;
+            color: e.$Text-Light;
+            font-weight: normal;
+        }
+    }
+
+    &::after {
+        width: 100%;
+        height: 150%;
+        content: "";
+        margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+        background: #000;
+        z-index: 1;
+        transform: scaleX(0);
+        pointer-events: none;
+        transform-origin: 100% 50% 0;
+        transition: transform 0.35s e.$Transition 0s;
+    }
+
+    .md_svg-icon {
+        z-index: 10;
+        svg * {
+            will-change: stroke;
+        }
+    }
+    span {
+        will-change: color;
+        position: relative;
+        z-index: 10;
+    }
+    .number {
+        will-change: color;
+        z-index: 10;
+    }
+
+    //GhostType
+    &._ghost {
+        padding-right: 2rem;
+    }
+
+    //Square
+    &._square {
+        padding-right: 3rem;
+        border-radius: 0;
+    }
+
+    .chevron {
+        @include e.Chevron();
+        top: 1px;
+        right: 1.5rem;
+        transition: 0.35s e.$Transition 0s;
+    }
+
+    //LikeBtn
+    &._like {
+        svg {
+            g.fill {
+                opacity: 0;
+            }
+            g.stroke {
+                opacity: 1;
+            }
+        }
+    }
+    @at-root {
+        input[type=checkbox]:checked + .btn_common._like {
+            svg {
+                g.fill {
+                    opacity: 1;
+                    stroke: none !important;
+                    * {
+                        stroke: none !important;
+                    }
+                }
+                g.stroke {
+                    opacity: 0;
+                    * {
+                        stroke: none !important;
+                    }
+                }
+            }
+        }
+    }
+
+    //HomeAddBtn
+    &._home-add {
+        .ovl {
+            width: 100%;
+            height: 100%;
+            margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+            z-index: 100;
+            &._remove {
+                display: none;
+            }
+        }
+        span.add {
+            display: inline;
+        }
+        span.remove {
+            display: none;
+        }
+    }
+    @at-root {
+        input[type=checkbox]:checked + .btn_common._home-add {
+            .ovl {
+                &._show {
+                    display: none;
+                }
+                &._remove {
+                    display: block;
+                }
+            }
+            span.add {
+                display: none;
+            }
+            span.remove {
+                display: inline;
+            }
+            svg {
+                g {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    //編集用ボタン
+    &._edit {
+        padding-right: 4rem;
+        .close-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 100%;
+            background: #000;
+            content: "";
+            margin: auto;position: absolute;top: -2px;right: 1rem;bottom: 0;
+            &::after,
+            &::before {
+                height: 1px;
+                width: 55%;
+                background: #fff;
+                content: "";
+                margin: auto;position: absolute;top: -1px;right: 0;bottom: 0;left: 0;
+                transform: rotate(45deg);
+            }
+            &::before {
+                transform: rotate(-45deg);
+            }
+        }
+    }
+
+}
+
+a.btn_common:hover,
+div.btn_common:hover,
+button.btn_common:hover {
+
+    &::after {
+        transform: scaleX(1);
+        transform-origin: 0 50% 0;
+        transition: transform 0.35s e.$Transition 0s;
+    }
+
+    .md_svg-icon {
+        z-index: 10;
+        svg * {
+            stroke: #fff;
+        }
+    }
+    span {
+        will-change: color;
+        position: relative;
+        z-index: 10;
+        color: #fff;
+    }
+
+    .chevron {
+        border-color: #fff;
+        transform: translateX(5px) rotate(45deg) ;
+        transition: 0.35s e.$Transition 0.35s;
+    }
+
+}
+
+@keyframes LikeButtonShineRotate {
+    0%{
+        opacity: 1;
+        transform: rotate(0deg);
+    }
+    25%{
+        opacity: 1;
+    }
+    75%{
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(3650deg);
+    }
+
+}
+
+//================================================================================================
+//
+//  審査に進むボタン
+//
+//================================================================================================
+.btn_examination-wrap {
+    width: 100%;
+    padding: 2rem;
+    position: fixed;
+    bottom: 0;
+    z-index: 5000;
+    pointer-events: none;
+    @include e.Flex-Center;
+    align-items: center;
+    gap: 1rem;
+    transform: translateY(100%);
+    transition: 0.5s ease;
+
+    &._show {
+        transform: translateY(0%);
+        transition: 0.5s ease;
+    }
+
+    .btn_common {
+        // background: #000;
+        // color: #fff;
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
+        pointer-events: auto;
+    }
+
+    .md_icon-btn {
+        pointer-events: auto;
+    }
+
+}
+
+// ================================================================================================
+//
+//  ToggleContentBtn
+//
+// ================================================================================================
+// ================================================================================================
+//
+//  Icon
+//
+// ================================================================================================
+.btn_svg-icon {
+    width: 36px;
+    height: 36px;
+    // background: a.$Border-UltraLight;
+    border-radius: 100%;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.15s a.$Transition;
+
+    svg {
+        @include a.SvgIconSize;
+        margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+    }
+
+    svg path,
+    svg circle,
+    svg rect {
+        stroke: a.$Text-Light;
+        stroke-width: 4px;
+        transition: 0.15s a.$Transition;
+    }
+
+    &:hover {
+        // background: a.$Link;
+        transition: 0.15s a.$Transition;
+        svg path,
+        svg circle,
+        svg rect {
+            stroke: #fff;
+            stroke-width: 5px;
+            transition: 0.15s a.$Transition;
+        }
+    }
+
+    &._white {
+        background: #fff;
+        &:hover {
+            background: a.$Link;
+        }
+    }
+
+    //新着表示 ---------------------
+    &._notice {
+        &::after {
+            width: 10px;
+            height: 10px;
+            background: a.$Success;
+            content: "";
+            margin: auto;position: absolute;top: 0;right: 0;
+            border-radius: 100%;
+        }
+        &::before {
+            width: 24px;
+            height: 24px;
+            background: a.$Success;
+            content: "";
+            margin: auto;position: absolute;top: 0;right: 0;
+            border-radius: 100%;
+            transform: translate(29%,-29%);
+            opacity: 0.4;
+            animation-duration: 2s;
+            animation-delay: 0s;
+            animation-name: kf_NoticeLamp;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+        }
+    }
+
+}
+    @keyframes kf_NoticeLamp {
+        0%{
+            transform: translate(29%,-29%) scale(0);
+            opacity: 0;
+        }
+        66%{
+            opacity: 0.3;
+        }
+        100%{
+            transform: translate(29%,-29%) scale(1);
+            opacity: 0;
+        }
+    }
+

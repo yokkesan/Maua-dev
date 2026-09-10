@@ -1,0 +1,41 @@
+$color-text: #000;
+$color-text-light: #707070;
+
+$color-main: #000;
+$color-link: #912dff;
+
+$color-border-ultra-light: hsl(0, 0%, 95%);
+$color-border-light: hsl(0, 0%, 63%);
+$color-border: hsl(0, 0%, 40%);
+
+$color-success: #0adf86;
+$color-warning: #ffbb00;
+$color-error: hsl(350, 90%, 58%);
+
+$color-black: #000;
+$color-white: #fff;
+
+$font-family-base: "Poppins",
+    "Kosugi",
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    Meiryo,
+    sans-serif;
+
+$font-family-sub: "Bellefair",
+    "Kosugi",
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    Meiryo,
+    sans-serif;
+
+$transition-base: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+$breakpoint-mobile: 580px;
+$breakpoint-tablet-small: 819px;
+$breakpoint-tablet: 1100px;
+$breakpoint-desktop: 1300px;
+$breakpoint-wide: 1500px;
+
+$content-width: 1380px;
+$content-width-small: 1024px;

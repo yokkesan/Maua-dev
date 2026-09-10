@@ -1,0 +1,87 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// キーフレーム設定用のscss 主にコピペ用に用意しています。
+// 特に使用せずともOK
+//.......................................................
+
+	// プロパティコピペ用
+	//
+	// animation-duration: 1s;
+	// animation-delay: 0s;
+	// animation-name: KfCircleLoading;
+	// animation-timing-function: ease;
+	// animation-iteration-count: infinite;
+
+//================================================================================================
+//
+//  チェックマークアニメーション
+//
+//================================================================================================
+@mixin KfCircleLoading {
+	animation-duration: 1s;
+	animation-delay: 0s;
+	animation-name: KfCircleLoading;
+	animation-timing-function: ease;
+	animation-iteration-count: 1;
+}
+
+@keyframes KfCircleLoading {
+    0% {
+        stroke-dashoffset: 300px; /*# 0秒では間隔を300px */
+    }
+    100% {
+        stroke-dashoffset: 60px; /*# 3秒後に間隔を0px */
+    }
+}
+
+@mixin KfCircleLoadingScale {
+	animation-duration: 1s;
+	animation-delay: 0s;
+	animation-name: KfCircleLoadingScale;
+	animation-timing-function: ease;
+	animation-iteration-count: 1;
+}
+
+@keyframes KfCircleLoadingScale {
+    0% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1.1);
+    }
+    80% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+//================================================================================================
+//
+//  リロードAnimation
+//
+//================================================================================================
+@mixin KfReload {
+    transform-origin: 21px 30px;
+	animation-duration: 3s;
+	animation-delay: 0s;
+	animation-name: KfReload;
+	animation-timing-function: ease;
+	animation-iteration-count: infinite;
+}
+
+@keyframes KfReload {
+    0% {
+        transform: rotate(0deg);
+    }
+    80% {
+        transform: rotate(-360deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+

@@ -1,0 +1,350 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// リストに対してのscss
+//
+//.......................................................
+
+// ================================================================================================
+//
+//  コモンリスト
+//
+// ================================================================================================
+.list_common {
+    width: 100%;
+    border-top: 1px solid e.$Border-MediumLight;
+
+    & > li {
+        width: 100%;
+        @include e.Flex;
+        border-bottom: 1px solid e.$Border-MediumLight;
+
+        .title {
+            width: 30%;
+            padding: 1rem 2rem;
+            border-right: 1px solid e.$Border-MediumLight;
+            color: e.$Text-Light;
+            word-break: break-all;
+            @media only screen and (max-width: e.$Bp-7inch) {
+                width: 100%;
+                padding: 2rem 0rem 0rem 0rem;
+                border-right: 0px solid e.$Border-MediumLight;
+            }
+        }
+
+        .detail {
+            width: 70%;
+            padding: 1rem 2rem;
+            @media only screen and (max-width: e.$Bp-7inch) {
+                width: 100%;
+                padding: 0rem 0rem 2rem 0rem;
+            }
+        }
+
+    }
+
+    &._full {
+        li {
+            padding: 1rem 0 0.75rem;
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  ドットリスト
+//
+// ================================================================================================
+.list_dot {
+    width: 100%;
+
+    &-li {
+        width: 100%;
+    }
+
+    &-span {
+        position: relative;
+        padding-left: 1.25rem;
+        &::after {
+            width: 8px;
+            height: 8px;
+            border: 1px solid;
+            border-radius: 100%;
+            content: "";
+            margin: auto;position: absolute;top: 5px;left: 0;
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  取り扱いエリアリスト
+//
+// ================================================================================================
+.list_area {
+
+    //Lv3 --------------------------
+    &-lv3-ul {
+        width: 100%;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+        @include e.Flex-Left;
+        gap: 0.5rem 2rem;
+        &.edit-check {
+            gap: 0;
+        }
+    }
+    &-lv3-li {
+        color: e.$Text-Light;
+        &.form_checkbox {
+            width: 100%;
+        }
+    }
+
+    //Lv2 --------------------------
+    &-lv2-ul {
+        width: 100%;
+        padding: 0 2rem;
+        &:last-child {
+            .list_area-lv3-ul {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &-lv2-li {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+
+    //Lv1 --------------------------
+    &-lv1-ul {
+        width: 100%;
+        border: 1px solid e.$Border-MediumLight;
+        padding-bottom: 2rem;
+    }
+
+    &-lv1-li {
+        width: 100%;
+        padding: 1rem;
+        @include e.FontSize-L;
+        border-bottom: 1px solid e.$Border-MediumLight;
+        select {
+            padding: 1rem;
+            @include e.FontSize-L;
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  カテゴリーリスト
+//
+// ================================================================================================
+.list_category {
+    width: 100%;
+    li.lv1 {
+        width: 100%;
+        margin-top: 2rem;
+        &:nth-child(1) {
+            margin-top: 0rem;
+        }
+    }
+
+    ul.lv2 {
+        width: 100%;
+        margin-top: 0.5rem;
+        & > li {
+            width: 100%;
+        }
+    }
+
+    ul.lv3 {
+        @include e.Flex-Left;
+        gap: 0rem 0.5rem;
+        & > li {
+            // color: e.$Text-Light;
+            // @include e.FontSize-S;
+            &::after {
+                content: "/";
+                margin-left: 0.5rem;
+            }
+            &:last-child {
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  スラッシュの区切り
+//
+// ================================================================================================
+.list_slash-separate {
+    span::after {
+        content: "/";
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+    span:last-child::after {
+        display: none;
+        margin: 0;
+    }
+}
+
+// ================================================================================================
+//
+//  ■の区切り
+//
+// ================================================================================================
+.list_square-separate {
+    span::before {
+        content: "■";
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+}
+
+// ================================================================================================
+//
+//  番号付きリスト
+//
+// ================================================================================================
+.list_number {
+    width: 100%;
+
+    li {
+        width: 100%;
+        @include e.Flex-Left;
+        counter-increment: number;
+        .number {
+            width: 25px;
+            &::before {
+                content: counter(number)".";
+            }
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  SNSリスト
+//
+// ================================================================================================
+.list_sns {
+    @include e.Flex-Left;
+    gap: 0.5rem;
+    .md_icon-btn {
+        transition: 0.35s e.$Transition;
+    }
+
+    li:hover {
+        .md_icon-btn {
+            background: black;
+            transition: 0.35s e.$Transition;
+        }
+        path {
+            fill: white;
+        }
+    }
+
+}
+
+
+// ================================================================================================
+//
+//  NoteListV2
+//
+// ================================================================================================
+
+.list_note-link-v2 {
+    &-title {
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+
+    &-wrap {
+        @include e.Flex-Left;
+        gap: 200px;
+        margin-bottom: 8rem;
+        @media only screen and (max-width: e.$Bp-11inch) {
+            gap: 2rem;
+        }
+    }
+
+    &-logo {
+        width: 70px;
+        float: right;
+        margin-top: 3rem;
+    }
+
+    &-list {
+        flex: 1;
+        @media only screen and (max-width: e.$Bp-11inch) {
+            flex: auto;
+            width: 100%;
+        }
+    }
+
+    &-list-item {
+        width: 100%;
+        position: relative;
+    }
+
+    &-list-item + &-list-item {
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+    }
+
+    &-list-item + &-list-item {
+        border-top: 1px solid e.$Border-MediumLight;
+    }
+
+    &-list-item-body {
+        @include e.Flex-Left;
+    }
+
+    &-list-item-date {
+        width: 200px;
+        color: e.$Text-UltraLight;
+        @include e.FontSize-S;
+        translate: 0 2px;
+        font-weight: 700;
+        @media only screen and (max-width: e.$Bp-11inch) {
+            translate: 0;
+        }
+    }
+
+    &-list-item-detail {
+        flex: 1;
+        @include e.Flex-Left;
+        gap: 4rem;
+        @media only screen and (max-width: e.$Bp-11inch) {
+            flex: auto;
+            width: 100%;
+        }
+
+        .md_svg-icon {
+            position: relative;
+            svg path {
+                stroke: e.$Text-UltraLight;
+            }
+        }
+    }
+
+    &-list-item-text {
+        flex: 1;
+        position: relative;
+    }
+
+}

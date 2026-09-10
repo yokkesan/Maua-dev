@@ -1,0 +1,29 @@
+@use "../component/variables" as v;
+
+:root {
+    --color-main: #{v.$color-main};
+    --color-text: #{v.$color-text};
+    --color-text-light: #{v.$color-text-light};
+    --color-link: #{v.$color-link};
+    --color-white: #{v.$color-white};
+    --color-black: #{v.$color-black};
+}
+
+body {
+    color: v.$color-text;
+    font-family: v.$font-family-base;
+    font-weight: 400;
+    line-height: 1.75;
+    letter-spacing: 1px;
+    background: v.$color-white;
+}
+
+a {
+    color: inherit;
+}
+
+.root-wrap {
+    width: 100%;
+    overflow: hidden;
+    background: v.$color-white;
+}

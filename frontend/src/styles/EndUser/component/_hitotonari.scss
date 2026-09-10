@@ -1,0 +1,238 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// hitotonariのscss
+//
+//.......................................................
+.hitotonari_detail-container {
+    width: 100%;
+    // @include e.SectionInnerSize-S;
+
+    .item-wrap {
+        width: 100%;
+        @include e.Flex;
+        @include e.Flex-Left;
+        align-items: flex-start;
+        gap: 4rem;
+
+        //ImageWrap -------------------
+        .img-wrap {
+            width: 40%;
+            @include e.Flex;
+            gap: 2rem;
+            @media only screen and (max-width: e.$Bp-11inch) {
+                width: 100%;
+            }
+
+            //メイン画像
+            .main {
+                width: calc(70% - 2rem);
+                position: relative;
+                img {
+                    height: 100%;
+                    aspect-ratio: 5/5;
+                    object-fit: cover;
+                }
+                &.md_no-image {
+                    background: e.$Border-MediumLight url(/../img/no-image.svg)no-repeat center / cover;
+                }
+            }
+            //サブ画像
+            .sub-row {
+                width: 30%;
+                @include e.Flex;
+                gap: 2rem;
+                .sub {
+                    width: 100%;
+                    position: relative;
+                    img {
+                        height: 100%;
+                        aspect-ratio: 5/5;
+                        object-fit: cover;
+                    }
+                    &.md_no-image {
+                        background: e.$Border-MediumLight url(/../img/no-image.svg)no-repeat center / cover;
+                    }
+                }
+            }
+        }
+
+        //DetailWrap -------------------
+        .detail-wrap {
+            width: calc(60% - 4rem);
+            @media only screen and (max-width: e.$Bp-11inch) {
+                width: 100%;
+            }
+
+            //名前表示箇所
+            .personal-info {
+                width: 100%;
+                @include e.Flex-Left;
+                align-items: center;
+                margin-bottom: 2rem;
+                .role {
+                    color: e.$Text-Light;
+                    @media only screen and (max-width: e.$Bp-Mobile) {
+                        width: 100%;
+                    }
+                    span::after {
+                        content: ":";
+                        margin: 0 0.5rem;
+                    }
+                    &.form_text {
+                        margin-right: 1rem;
+                        @media only screen and (max-width: e.$Bp-Mobile) {
+                            margin: 0;
+                            margin-bottom: 2rem;
+                        }
+                    }
+                }
+                .name {
+                    font-weight: 700;
+                    @include e.FontSize-L;
+                    &.form_text {
+                        width: 50%;
+                        @media only screen and (max-width: e.$Bp-Mobile) {
+                            width: 100%;
+                        }
+                    }
+                }
+                .list_sns {
+                    margin-left: auto;
+                }
+            }
+
+            //テキスト表示箇所
+            .text-wrap {
+                margin-bottom: 2rem;
+                padding-bottom: 2rem;
+                border-bottom: 1px solid e.$Border-MediumLight;
+                h3 {
+                    @include e.FontSize-L;
+                    margin-bottom: 1rem;
+                    &.form_text {
+                        margin-bottom: 2rem;
+                    }
+                }
+                p {
+                    @include e.Justify;
+                    textarea {
+                        height: 8rem;
+                    }
+                }
+            }
+
+            //History表示
+            .history-wrap {
+                @include e.Flex-Left;
+                flex-wrap: nowrap;
+                gap: 1rem;
+                h3 {
+                    color: e.$Text-Light;
+                }
+                .form_text {
+                    flex: 1;
+                    textarea {
+                        height: 5.5rem;
+                    }
+                }
+            }
+
+        }//.detail-wrap
+
+    }//.item-wrap
+
+    //Recommend -------------------------------
+    .recommend {
+        width: 100%;
+        @include e.Flex-Left;
+        gap: 2rem;
+        margin-top: 2rem;
+
+        .item {
+            @include e.Flex-3col;
+            padding: 2rem;
+            background: e.$Border-UltraLight;
+            position: relative;
+            @media only screen and (max-width: e.$Bp-7inch) {
+                width: 100%;
+            }
+
+
+            h3 {
+                @include e.FontSize-L;
+                @include e.Justify;
+                margin-bottom: 1rem;
+                padding-left: 24px;
+                text-indent: -24px;
+                span::before {
+                    content: "Q.";
+                    margin-right: 0.5rem;
+                }
+                &.form_text {
+                    padding-left: 0px;
+                    text-indent: 0px;
+                    span {
+                        background: #fff;
+                        &::before {
+                            content: "";
+                            margin-right: 0rem;
+                        }
+                    }
+                }
+            }
+            p {
+                @include e.Justify;
+                padding-left: 23px;
+                text-indent: -23px;
+                span {
+                    content: "A.";
+                    margin-right: 0.75rem;
+                }
+                &.form_text {
+                    margin-top: 2rem;
+                    padding-left: 0px;
+                    text-indent: 0px;
+                    textarea {
+                        height: 15rem;
+                    }
+                    span {
+                        background: #fff;
+                        &::before {
+                            content: "";
+                            margin-right: 0rem;
+                        }
+                    }
+                }
+            }
+
+            .icon {
+                width: 50px;
+                height: 50px;
+                content: "";
+                border-radius: 100%;
+                background: #000;
+                margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+                @include e.PlusIcon;
+            }
+
+        }
+
+    }
+
+    .sns-edit {
+        width: 100%;
+        margin: 2rem 0;
+        @include e.Flex-Left;
+        gap: 2rem;
+        .item {
+            @include e.Flex-3col;
+            @media only screen and (max-width: e.$Bp-Mobile) {
+                width: 100%;
+            }
+        }
+    }
+
+}

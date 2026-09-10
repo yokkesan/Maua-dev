@@ -1,0 +1,62 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+
+//Description.........................................
+//
+// ライトテーマを定義するscss
+//
+//.......................................................
+.root-wrap.theme_light {
+
+    .heading_page-title .main {
+        color: e.$Black;
+    }
+
+
+    .md_common-bl {
+        background: #fff;
+    }
+
+    //aside
+    nav.menu_sidebar ul {
+        li {
+            width: 100%;
+            a {
+                &::before {
+                    background: #fff;
+                }
+                &:not(._current):after {
+                    background: #fff;
+                }
+                svg path {
+                    fill: #fff;
+                }
+
+                &._current {
+                    * {
+                        color: e.$Black;
+                    }
+                    svg path {
+                        fill: e.$Black;
+                    }
+                    &::after {
+                        background: e.$White-Light;
+                    }
+                }
+
+            }//a
+        }//li
+    }//ul
+
+    //ly_main
+    .ly_main .wrap {
+        background: e.$White-Light;
+    }
+
+    //fixed-heading
+    .heading_page-title-en {
+        color: e.$White-Dark;
+    }
+
+
+}

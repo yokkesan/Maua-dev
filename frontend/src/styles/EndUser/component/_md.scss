@@ -1,0 +1,1768 @@
+@charset "utf-8";
+@use "variable-end-user" as e;
+@use "keyframes" as k;
+@use "../../Admin/component/variable-admin" as a;
+
+//Description.........................................
+//
+// 分類枠の無いモジュールのscss
+//
+//.......................................................
+
+// ================================================================================================
+//
+//  ロゴ
+//
+// ================================================================================================
+.md_fixed-logo {
+    width: 100%;
+    max-height: e.$GlobalNavHeight;
+    padding: 1rem 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    @include e.Flex-Left;
+    align-items: center;
+    width: auto;
+    gap: 2rem;
+    mix-blend-mode: difference;
+
+    @media only screen and (max-width: e.$Bp-Mobile) {
+        gap: 0rem;
+        display: inline-block;
+        padding: 1rem 1rem;
+        top: 1px;
+    }
+
+    svg {
+        max-width: 150px;
+
+        @media only screen and (max-width: e.$Bp-Mobile) {
+            max-width: 120px;
+        }
+
+        * {
+            fill: white;
+            transition: 0.5s e.$Transition;
+        }
+    }
+
+    .copy {
+        font-size: 10px;
+        transition: 0.5s e.$Transition;
+        color: #fff;
+
+        @media only screen and (max-width: e.$Bp-Mobile) {
+            width: 100%;
+            text-align: center;
+            margin-top: 5px;
+        }
+    }
+
+    &._white {
+        .copy {
+            color: #fff;
+            transition: 0.5s e.$Transition;
+        }
+
+        svg * {
+            fill: white;
+            transition: 0.5s e.$Transition;
+        }
+    }
+
+}
+
+//================================================================================================
+//
+//  SvgIcon
+//
+//================================================================================================
+.md_svg-icon {
+    @include e.SvgIconSize;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    &._white {
+        svg * {
+            stroke: white;
+        }
+    }
+
+    &._small {
+        width: 18px;
+        height: 23px;
+    }
+}
+
+//================================================================================================
+//
+//  IconBtn
+//
+//================================================================================================
+.md_icon-btn {
+    @include e.IconBtnSize;
+    position: relative;
+    border-radius: 100%;
+
+    .inner {
+        @include e.SvgIconSize;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        &._small {
+            width: 18px;
+            height: 23px;
+        }
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    &._small {
+        @include e.IconBtnSizeSmall;
+    }
+
+    &._white {
+        background: #fff;
+    }
+
+    &._gray {
+        background: e.$Border-UltraLight;
+    }
+
+    &._outline {
+        outline: 1px solid;
+        outline-offset: -1px;
+    }
+
+    &._small {
+        width: 23px;
+        height: 23px;
+    }
+
+    &._stroke-white {
+        svg * {
+            stroke: white;
+        }
+    }
+
+    &._fill:hover {
+        svg * {
+            fill: white;
+            transition: 0.35s e.$Transition;
+        }
+    }
+
+    &._hover {
+        transition: 0.35s e.$Transition;
+
+        svg * {
+            transition: 0.35s e.$Transition;
+        }
+    }
+
+    &._hover:hover {
+        background: #000;
+        transition: 0.35s e.$Transition;
+
+        svg * {
+            stroke: white;
+            transition: 0.35s e.$Transition;
+        }
+    }
+
+    //MySelectRoomButton -----------------
+    &._my-select-room {
+        position: fixed;
+        top: 50%;
+        right: 50%;
+        mix-blend-mode: difference;
+        z-index: 9999;
+        top: 16px;
+        right: calc(68px + 37px + 2rem);
+
+        @media only screen and (max-width: e.$Bp-Mobile) {
+            right: calc(62px + 37px + 1rem);
+            top: 13px;
+        }
+
+        svg {
+
+            path,
+            rect {
+                stroke: white;
+            }
+        }
+    }
+
+
+}
+
+//================================================================================================
+//
+//  SvgIcon
+//
+//================================================================================================
+.md_annotation {
+    @include e.FontSize-S;
+    color: e.$Text-Light;
+    text-indent: -1em;
+    padding-left: 1rem;
+    @include e.Justify;
+
+    &::before {
+        content: "※";
+    }
+}
+
+//================================================================================================
+//
+//  アイコン付テキスト
+//
+//================================================================================================
+.md_icon-text {
+    position: relative;
+
+    span {
+        padding-left: 2.75rem;
+        position: relative;
+    }
+
+    .icon {
+        @include e.SvgIconSize;
+        content: "";
+        z-index: 1;
+        pointer-events: none;
+        margin: auto;
+        position: absolute;
+        top: 49%;
+        left: 0;
+        transform: translateY(-50%);
+
+        svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            vertical-align: top;
+        }
+    }
+
+}
+
+//================================================================================================
+//
+//  縦スクロール
+//
+//================================================================================================
+.md_scroll-content {
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    padding-bottom: 60vh;
+    -ms-overflow-style: none; // IE,edge用
+    scrollbar-width: none; // FireFox用
+
+    &::-webkit-scrollbar {
+        // Chrome,Safari用
+        display: none;
+    }
+}
+
+//================================================================================================
+//
+//  カーテン
+//
+//================================================================================================
+
+// CurtainClip =============
+@mixin CurtainClipClose {
+    clip-path: polygon(0 0, 100% 0, 100% 0%, 0% 0%);
+    transition: 0.5s e.$TransitionMenu;
+}
+
+@mixin CurtainClipOpen {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    transition: 0.5s e.$TransitionMenu;
+}
+
+.md_curtain-container {
+    width: 100%;
+    height: 100%;
+    content: "";
+    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    pointer-events: none;
+
+    &>div {
+        width: 100%;
+        height: 100%;
+        content: "";
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        @include CurtainClipClose;
+
+        &.no1 {
+            background: hsl(0, 0%, 30%);
+            opacity: 0.7;
+            z-index: 1;
+            transition-delay: 0.12s;
+        }
+
+        &.no2 {
+            background: hsl(0, 0%, 15%);
+            opacity: 0.7;
+            z-index: 2;
+            transition-delay: 0.06s;
+        }
+
+        &.no3 {
+            background: hsl(0, 0%, 0%);
+            opacity: 0.7;
+            z-index: 3;
+            transition-delay: 0s;
+        }
+    }
+}
+
+@mixin CurtainClipOpenDelay {
+    &>div {
+        @include CurtainClipOpen;
+
+        &.no1 {
+            transition-delay: 0s;
+        }
+
+        &.no2 {
+            transition-delay: 0.06s;
+        }
+
+        &.no3 {
+            transition-delay: 0.12s;
+        }
+    }
+}
+
+//OpenStyle -----------------------------
+.md_curtain-container._open {
+    @include CurtainClipOpenDelay;
+    pointer-events: auto;
+}
+
+//================================================================================================
+//
+//  CursorPointer
+//
+//================================================================================================
+
+// CURSOR
+
+.md_cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 10001;
+    mix-blend-mode: difference;
+    transform: scale(1);
+    display: none; //TODO: 開発中は一旦非表示
+
+    span {
+        background: #fff;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        display: block;
+        transform: scale(0.4);
+        transition: 0.5s e.$Transition;
+    }
+
+    @media only screen and (max-width: e.$Bp-11inch) {
+        display: none;
+    }
+
+    &.active {
+        span {
+            transform: scale(1);
+            transition: 0.5s e.$Transition;
+        }
+    }
+
+}
+
+.md_cursor-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 10000;
+    will-change: transform;
+    mix-blend-mode: difference;
+    display: none; //TODO: 開発中は一旦非表示
+
+    span {
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+        display: block;
+        background: rgba($color: #fff, $alpha: 0.05);
+        transform: scale(0.3);
+        transition: 0.5s e.$Transition;
+    }
+
+    //overflow: hidden;
+    @media only screen and (max-width: e.$Bp-11inch) {
+        display: none;
+    }
+
+    &.active {
+        span {
+            background: rgba($color: #fff, $alpha: 0.05);
+            transform: scale(1);
+            transition: 0.5s e.$Transition;
+        }
+    }
+
+}
+
+//================================================================================================
+
+//  テキストリンク
+//
+//================================================================================================
+
+.md_text-link {
+    span {
+        padding-right: 1.5rem;
+        position: relative;
+        display: inline-block;
+
+        &::after {
+            pointer-events: none;
+            width: 18px;
+            height: 18px;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 2px;
+            right: 0;
+            background: url(/../img/icon/link-black.svg)no-repeat center / contain;
+        }
+
+        &::before {
+            width: 100%;
+            height: 1px;
+            background: #000;
+            content: "";
+            margin: auto;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transform-origin: 100% 50% 0;
+            transform: scaleX(0);
+            transition: transform 0.35s e.$Transition 0s;
+        }
+    }
+
+    &:hover {
+        span {
+            &::before {
+                transform-origin: 0 50% 0;
+                transform: scaleX(1);
+                transition: transform 0.35s e.$Transition 0s;
+            }
+        }
+    }
+
+    //GrayStyle
+    &._op5 {
+        opacity: 0.5;
+    }
+
+    //Left
+    &._left {
+        span {
+            padding-right: 0;
+            padding-left: 1.5rem;
+        }
+    }
+
+    //Pin
+    &._pin {
+        span::after {
+            margin: auto;
+            position: absolute;
+            top: 1px;
+            right: auto;
+            left: 0;
+            background: url(/../img/icon/pin-black.svg)no-repeat center / contain;
+        }
+    }
+
+    //Tel
+    &._tel {
+        span::after {
+            margin: auto;
+            position: absolute;
+            top: 1px;
+            right: auto;
+            left: 0;
+            background: url(/../img/icon/tel-black.svg)no-repeat center / contain;
+        }
+    }
+}
+
+
+//================================================================================================
+//
+//  SwiperBg
+//
+//================================================================================================
+
+.md_swiper-bg {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+
+    &._fixed {
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    .swiper {
+        width: 100%;
+        height: 100%;
+
+        .swiper-wrapper {
+            height: 100%;
+            pointer-events: none;
+
+            .swiper-slide {
+                height: 100%;
+                pointer-events: none;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    filter: brightness(80%) blur(30px);
+                    transform: scale(1.2);
+                }
+            }
+        }
+    }
+
+    &._non-blur {
+        opacity: 1;
+
+        .swiper {
+            .swiper-wrapper {
+                .swiper-slide {
+                    img {
+                        filter: brightness(100%) blur(0px);
+                        transform: scale(1);
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+//================================================================================================
+//
+//  チェックマークアニメーション
+//
+//================================================================================================
+
+.md_kf-check-mark {
+    svg {
+        transform: scale(1);
+
+        circle {
+            stroke-dasharray: 300px;
+            stroke-dashoffset: 300px;
+            opacity: 0;
+            transition: 0.5s ease;
+        }
+
+        path {
+            stroke-dasharray: 300px;
+            stroke-dashoffset: 300px;
+            opacity: 0;
+            transition: 0.5s ease;
+        }
+    }
+}
+
+._svgAnimation .md_kf-check-mark {
+    svg {
+        @include k.KfCircleLoadingScale;
+        animation-duration: 1s;
+        animation-timing-function: e.$Transition;
+        animation-fill-mode: forwards;
+        animation-delay: 2s;
+
+        circle {
+            @include k.KfCircleLoading;
+            animation-duration: 2s;
+            animation-timing-function: e.$Transition;
+            animation-fill-mode: forwards;
+            animation-delay: 0.5s;
+            opacity: 1;
+            transition: 0.5s ease
+        }
+
+        path {
+            @include k.KfCircleLoading;
+            animation-duration: 1s;
+            animation-timing-function: e.$Transition;
+            animation-fill-mode: forwards;
+            animation-delay: 2s;
+            opacity: 1;
+            transition: 0.5s ease
+        }
+    }
+}
+
+//================================================================================================
+//
+//  チェックマークアニメーション
+//
+//================================================================================================
+.md_kf-resend {
+    svg g {
+        @include k.KfReload;
+    }
+}
+
+//================================================================================================
+//
+//  Cropper
+//
+//================================================================================================
+
+.twitter-cropper {
+    height: 650px;
+
+    &__background {
+        background-color: #edf2f4;
+    }
+
+    &__foreground {
+        background-color: #edf2f4;
+    }
+
+    &__stencil {
+        border: solid 5px rgb(29, 161, 242);
+    }
+}
+
+.twitter-navigation {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+
+    &__wrapper {
+        display: flex;
+        align-items: center;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    &__zoom-icon {
+        height: 18.75px;
+        width: 18.75px;
+        fill: rgb(101, 119, 134);
+        flex-shrink: 0;
+
+        &--left {
+            margin-right: 10px;
+        }
+
+        &--right {
+            margin-left: 10px;
+        }
+    }
+
+    &__line-wrapper {
+        width: 100%;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    &__line {
+        background: rgb(142, 208, 249);
+        height: 5px;
+        width: 100%;
+        border-radius: 5px;
+        display: flex;
+        position: relative;
+        align-items: center;
+    }
+
+    &__fill {
+        background: rgb(29, 161, 242);
+        align-self: stretch;
+        flex-basis: auto;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+
+    &__circle {
+        width: 30px;
+        height: 30px;
+        margin-left: -15px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        transition-duration: 0.2s;
+        transition-property: background-color, box-shadow;
+        background-color: transparent;
+
+        &:hover {
+            background-color: rgba(29, 161, 242, 0.1);
+        }
+
+        &--focus {
+            background-color: rgba(29, 161, 242, 0.2);
+        }
+    }
+
+    &__inner-circle {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: rgb(29, 161, 242);
+        transform: scale(1);
+        transition-duration: 0.1s;
+        transition-property: transform;
+        box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 7px,
+            rgba(101, 119, 134, 0.15) 0px 1px 3px 1px;
+
+        &--focus {
+            transform: scale(1.2);
+        }
+    }
+}
+
+//================================================================================================
+//
+//  ページイラスト
+//
+//================================================================================================
+.md_page-element {
+    padding: 2rem 2rem;
+    position: relative;
+    animation-duration: 4s;
+    animation-delay: 0s;
+    animation-name: PageElementYoYo;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+
+    .inner {
+        position: relative;
+        z-index: 1;
+    }
+
+    .img-wrap {
+        @include e.Flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+
+        .img {
+            width: calc((100% - 2rem * 1) / 2);
+            aspect-ratio: 5/5;
+            background: e.$Border-MediumLight;
+            position: relative;
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: 0.5s ease;
+
+            .icon {
+                width: 50%;
+                margin: auto;
+                position: absolute;
+                top: 50%;
+                right: 0;
+                left: 0;
+                transform: translateY(-50%);
+
+                svg {
+                    opacity: 1;
+                    transform: scale(0);
+                    transition: 0.5s ease;
+                }
+
+                svg * {
+                    stroke: e.$Border-Light;
+                }
+            }
+
+        }
+    }
+
+    .text {
+        width: 100%;
+        height: 2rem;
+        background: e.$Border-MediumLight;
+        margin-bottom: 1rem;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: 0.5s ease;
+
+        &._heading {
+            width: 50%;
+            border-left: 1rem solid e.$Border-Light;
+        }
+    }
+
+    .btn-wrap {
+        width: 100%;
+        margin-top: 2rem;
+        @include e.Flex-Right;
+        gap: 1rem;
+
+        .btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            background: e.$Border-MediumLight;
+            transform: scale(0);
+            transition: 0.5s ease;
+
+            &._right {
+                width: 40%;
+                border-radius: 0px;
+                background: e.$Border-Light;
+            }
+        }
+    }
+
+    .bg {
+        content: "";
+        background: #fff;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: scale(0);
+        opacity: 0;
+        transition: 0.5s ease 1.5s;
+    }
+
+    //AnimationStyle
+    .swiper-slide-active &,
+    &._on {
+        .bg {
+            opacity: 1;
+            transform: scale(1);
+            transition: 0.5s cubic-bezier(0, .45, .35, 1.5);
+        }
+
+        .img {
+            opacity: 1;
+            transform: translateY(0);
+            transition: 1s ease 0.6s;
+
+            .icon svg {
+                opacity: 1;
+                transform: scale(1);
+                transition: 0.5s cubic-bezier(0, .45, .35, 1.5);
+            }
+
+            &._no01 {
+                transition-delay: 0.5s;
+
+                .icon svg {
+                    transition-delay: 0.8s;
+                }
+            }
+
+            &._no02 {
+                transition-delay: 0.6s;
+
+                .icon svg {
+                    transition-delay: 0.9s;
+                }
+            }
+        }
+
+        .text {
+            animation-duration: 0.5s;
+            animation-delay: 0s;
+            animation-name: PageElementText;
+            animation-timing-function: linear;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+
+            &._heading {
+                animation-delay: 0.7s;
+            }
+
+            &._no01 {
+                animation-delay: 0.8s;
+            }
+
+            &._no02 {
+                animation-delay: 0.9s;
+            }
+
+            &._no03 {
+                animation-delay: 1s;
+            }
+        }
+
+        .btn-wrap {
+            .btn {
+                transform: scale(1);
+                transition: 0.5s cubic-bezier(0, .45, .35, 1.5);
+
+                &._no01 {
+                    transition-delay: 1.2s;
+                }
+
+                &._no02 {
+                    transition-delay: 1.3s;
+                }
+
+                &._no03 {
+                    transition-delay: 1.4s;
+                }
+            }
+        }
+
+    }
+
+    //Seiper の場合のdelay調整
+    .swiper-slide-active & {
+        .bg {
+            transition-delay: 1s;
+        }
+
+        .img {
+            transition: 1s ease 1.6s;
+
+            &._no01 {
+                transition-delay: 1.5s;
+
+                .icon svg {
+                    transition-delay: 1.8s;
+                }
+            }
+
+            &._no02 {
+                transition-delay: 1.6s;
+
+                .icon svg {
+                    transition-delay: 1.9s;
+                }
+            }
+        }
+
+        .text {
+            &._heading {
+                animation-delay: 1.7s;
+            }
+
+            &._no01 {
+                animation-delay: 1.8s;
+            }
+
+            &._no02 {
+                animation-delay: 1.9s;
+            }
+
+            &._no03 {
+                animation-delay: 2s;
+            }
+        }
+
+        .btn-wrap {
+            .btn {
+                &._no01 {
+                    transition-delay: 2.2s;
+                }
+
+                &._no02 {
+                    transition-delay: 2.3s;
+                }
+
+                &._no03 {
+                    transition-delay: 2.4s;
+                }
+            }
+        }
+
+    }
+
+}
+
+@keyframes PageElementText {
+
+    0% {
+        transform: scaleX(0);
+    }
+
+    80% {
+        transform: scaleX(1);
+    }
+
+    90% {
+        transform: scaleX(0.9);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes PageElementYoYo {
+
+    0% {
+        transform: translateY(-6px);
+    }
+
+    50% {
+        transform: translateY(6px);
+    }
+
+    100% {
+        transform: translateY(-6px);
+    }
+}
+
+//================================================================================================
+//
+//  トースト
+//
+//================================================================================================
+
+.md_toast {
+    position: fixed;
+    margin: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 2rem 2rem;
+    text-align: center;
+    transform: translateY(110%);
+    transition: 0.5s e.$Transition;
+    pointer-events: none;
+    z-index: 10100;
+
+    &._show {
+        transform: translateY(0%);
+        transition: 0.5s e.$Transition;
+    }
+
+    &>.inner {
+        background: #000;
+        color: #fff;
+        display: inline-block;
+        padding: 0.75rem 3rem;
+    }
+
+}
+
+//================================================================================================
+//
+//  ラベル
+//
+//================================================================================================
+
+.md_label {
+    width: 100%;
+    display: block;
+
+    span {
+        display: inline-block;
+        background: e.$Border-UltraLight;
+        color: e.$Border-Light;
+        padding: 0 2rem;
+        padding-top: 2px;
+        font-weight: 700;
+        @include e.FontSize-S;
+    }
+
+    &._center {
+        text-align: center;
+    }
+
+}
+
+// ================================================================================================
+//
+//  HiddenContent
+//
+// ================================================================================================
+.md_hidden-content-wrap {
+    width: 100%;
+
+    .trigger {
+        width: 100%;
+        padding: 1.5rem 2rem;
+        border: 1px solid #000;
+        position: relative;
+
+        span {
+            @include e.FontSize-L;
+        }
+
+        &::after {
+            width: 10px;
+            height: 10px;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 0;
+            right: 2rem;
+            bottom: 0;
+            border-right: 1px solid #000;
+            border-bottom: 1px solid #000;
+            transform: translateY(-3px) rotate(45deg);
+            transition: 0.35s ease;
+        }
+
+        &._on::after {
+            transform: translateY(1px) rotate(225deg);
+            transition: 0.35s ease;
+        }
+    }
+
+    .content {
+        width: 100%;
+        clip-path: polygon(0 0, 100% 0, 100% 0%, 0% 0%);
+        background: e.$Border-UltraLight;
+        transition: 0.35s ease;
+
+        .content-inner {
+            padding: 2rem;
+            display: none;
+        }
+    }
+
+    .trigger._on+.content {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        transition: 0.35s ease;
+
+        .content-inner {
+            display: block;
+        }
+    }
+
+}
+
+// ================================================================================================
+//
+//  HiddenContent
+//
+// ================================================================================================
+.md_add-del-wrap {
+    width: 100%;
+    @include e.Flex;
+
+    button {
+        @include e.Flex-2col;
+        padding: 1.5rem 1rem;
+        position: relative;
+
+        &.dele {
+            background: e.$Border-MediumLight;
+
+            .md_icon-btn {
+                margin: auto;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+        }
+
+        &.add {
+            background: #000;
+            @include e.PlusIcon;
+        }
+    }
+
+    &._w100 {
+        button {
+            margin-top: 1rem;
+            width: 100%;
+        }
+    }
+
+}
+
+
+//================================================================================================
+//
+//  ログインパネル
+//
+//================================================================================================
+.md_login-panel {
+    width: 100%;
+    height: 100vh;
+    padding: 12vh 2rem;
+    background: e.$Border-UltraLight;
+    position: relative;
+    display: flex;
+
+    @media only screen and (max-width: e.$Bp-11inch) {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    &::after {
+        width: 36vw;
+        height: 100%;
+        background: #000;
+        content: "";
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+    }
+
+    .wrap {
+        width: 100%;
+        height: 100%;
+        max-width: 768px;
+        margin: 0 auto;
+        background: #fff;
+        align-self: center;
+        @include e.Flex-Left;
+        position: relative;
+        z-index: 2;
+
+        @media only screen and (max-width: e.$Bp-11inch) {
+            max-width: 480px;
+        }
+
+
+        //input
+        .input-wrap {
+            width: 50%;
+            height: 100%;
+            background: #fff;
+            padding: 3rem 4rem 4rem 4rem;
+
+            @media only screen and (max-width: e.$Bp-11inch) {
+                width: 100%;
+                height: auto;
+                order: 2;
+                padding: 2rem;
+            }
+
+            .inner {
+                height: 100%;
+                @include e.Flex;
+                align-items: flex-start;
+
+                .group {
+                    width: 100%;
+                    @include e.Flex;
+                    gap: 2rem;
+
+                    &._end {
+                        align-self: flex-end;
+
+                        .md_text-link {
+                            width: 100%;
+                            display: inline-block;
+                            text-align: center;
+                        }
+                    }
+                }
+
+                h2 {
+                    @include e.FontAntonio;
+                    @include e.FontSize-Xxl;
+                    letter-spacing: 1px;
+                    line-height: 1;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                }
+
+                .item {
+                    width: 100%;
+                    text-align: center;
+
+                    input {
+                        // border: 1px solid e.$Border-MediumLight;
+                    }
+                }
+
+            }
+
+        }
+
+        //input-wrap
+
+        //Img
+        .img-wrap {
+            width: 50%;
+            height: 100%;
+
+            @media only screen and (max-width: e.$Bp-11inch) {
+                width: 100%;
+                height: 25vh;
+                order: 1;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+    }
+
+    //wrap
+
+    .bg-text {
+        width: 100%;
+        margin: auto;
+        position: absolute;
+        bottom: 0;
+        left: -4rem;
+        padding: 2rem;
+
+        span {
+            font-family: e.$Font-Sub;
+            white-space: nowrap;
+            @include e.BackGroundText;
+            color: e.$Border-MediumLight;
+        }
+    }
+
+}
+
+//================================================================================================
+//
+//  アコーディオンアイテム
+//
+//================================================================================================
+.md_accordion-item {
+    width: 100%;
+    max-width: 780px;
+    margin: auto;
+    position: relative;
+
+    &+& {
+        margin-top: 2rem
+    }
+
+    .trigger-item {
+        width: 100%;
+        background: #fff;
+        position: relative;
+        border: 1px solid #000;
+        padding: 1.5rem 4rem 1.3rem 2rem;
+        cursor: pointer;
+        overflow: hidden;
+
+        p {
+            @include e.FontSize-L;
+            position: relative;
+            z-index: 10;
+        }
+
+        &::before,
+        &::after {
+            width: 20px;
+            height: 1px;
+            background: #000;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 31px;
+            right: 1.25rem;
+            transition: 0.25s ease-in-out;
+        }
+
+        &::after {
+            transform: rotate(90deg)
+        }
+
+        .background {
+            width: 100%;
+            background: #000;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            transform-origin: 100% 50% 0;
+            transform: scale(0, 2);
+            transition: transform 0.35s e.$Transition;
+        }
+    }
+
+    .hidden-item {
+        width: 100%;
+        background: #fff;
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        transition: 0.25s ease-in-out;
+        border: 1px solid;
+        border-top: 0;
+
+        .inner {
+            padding: 2rem;
+            display: none;
+        }
+    }
+
+    //Nestitem --------------------
+    .nest-item {
+        counter-reset: FlowChartNumber;
+        counter-increment: FlowChartNumber 1;
+
+        &+.nest-item {
+            margin-top: 4rem;
+            padding-top: 4rem;
+            border-top: 1px solid e.$Border-MediumLight;
+        }
+
+        &__title {
+            margin-bottom: 1rem;
+
+            &::before {
+                font-weight: 700;
+                content: "STEP" counter(FlowChartNumber);
+                margin-right: 1rem;
+            }
+        }
+
+    }
+
+    //OnStyle --------------------
+    .trigger-item._on {
+        color: white;
+
+        &::before,
+        &::after {
+            background: #fff;
+            transition: 0.25s ease-in-out 0.25s;
+        }
+
+        &::before {
+            transform: rotate(-360deg)
+        }
+
+        &::after {
+            transform: rotate(0deg)
+        }
+
+        .background {
+            transform-origin: 0 50% 0;
+            transform: scale(1, 2);
+            transition: transform 0.35s e.$Transition;
+        }
+
+        &+.hidden-item {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            transition: 0.25s ease-in-out;
+
+            .inner {
+                display: block;
+            }
+        }
+    }
+
+}
+
+//================================================================================================
+//
+//  CTA
+//
+//================================================================================================
+.md_cta {
+    width: 100%;
+    padding: 12rem 2rem;
+    background: #fff;
+    text-align: center;
+    position: relative;
+
+    @media only screen and (max-width: e.$Bp-7inch) {
+        padding: 6rem 1rem;
+    }
+
+    .title {
+        @include e.FontSize-Xxl;
+        margin-bottom: 1rem;
+        font-weight: 700;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            @include e.FontSize-Xl;
+        }
+
+        &+p {
+            margin-bottom: 3rem;
+        }
+    }
+
+    .body {
+        max-width: 680px;
+        margin: auto;
+        margin-bottom: 1rem;
+        background: #fff;
+        padding: 4rem 2rem;
+        border: 1px solid #000;
+        position: relative;
+        z-index: 10;
+        // opacity: 0;
+        // transform: translateY(20px);
+        transition: 0.8s ease-in-out;
+    }
+
+    .background-image {
+        height: 100%;
+        width: 100%;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            filter: blur(100px);
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.25;
+            transform: scale(1.2);
+        }
+    }
+
+    //ShowStyle -----------------
+    // &._on {
+    //     .body {
+    //         opacity: 1;
+    //         transform: translateY(0);
+    //         transition: 0.8s ease-in-out;
+    //     }
+    // }
+
+}
+
+//================================================================================================
+//
+//  Footer
+//
+//================================================================================================
+.md_footer {
+    width: 100%;
+    padding: 8rem 2rem 4rem;
+    background: #000;
+    position: relative;
+    z-index: 10;
+
+    .inner {
+        @include e.Flex;
+        max-width: 1500px;
+        margin: auto;
+    }
+
+    .logo-wrap {
+        width: 180px;
+
+        @media only screen and (max-width: e.$Bp-11inch) {
+            margin-bottom: 4rem;
+        }
+
+        svg {
+            path {
+                fill: white;
+            }
+        }
+    }
+
+    .menu-wrap {
+        width: calc(100%);
+        max-width: 768px;
+    }
+
+    .copy {
+        width: 100%;
+        font-weight: 700;
+        @include e.FontSize-S;
+        color: e.$Text-Light;
+        text-align: center;
+        margin-top: 5rem;
+    }
+
+}
+
+// ================================================================================================
+//
+//  TimeLine
+//
+// ================================================================================================
+.md_timeline {
+    width: 100%;
+    @include e.Flex;
+    counter-reset: FlowChartNumber;
+    max-width: 620px;
+    margin: auto;
+    padding: 4rem 0 0 0;
+
+    @media only screen and (max-width: e.$Bp-11inch) {}
+
+    .item {
+        padding-left: 5rem;
+        counter-increment: FlowChartNumber 1;
+        position: relative;
+
+        @media only screen and (max-width: e.$Bp-11inch) {
+            padding-left: 4rem;
+        }
+
+        &::before {
+            //Label
+            @include e.FontSize-L;
+            font-weight: 700;
+            margin: auto;
+            position: absolute;
+            top: -2px;
+            left: 0;
+            content: "STEP" counter(FlowChartNumber);
+            display: inline-block;
+            color: e.$Border-Light;
+            background: #fff;
+            border: 2px solid;
+            border-color: e.$Border-Light;
+            padding: 0.25rem 1rem;
+            @include e.FontSize-S;
+            transform: translate(-50%, 0%);
+        }
+
+        //Title
+        .title {
+            font-weight: 700;
+            position: relative;
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: 0.8s ease-in-out;
+
+            span {
+                @include e.FontSize-L;
+            }
+        }
+
+        .detail {
+            margin-top: 1rem;
+            @include e.Justify;
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: 0.8s ease-in-out;
+        }
+
+        &+.item {
+            margin-top: 8rem;
+
+            @media only screen and (max-width: e.$Bp-11inch) {
+                margin-top: 4rem;
+            }
+        }
+    }
+
+    //ShowStyle -------------
+    .item._on {
+        &::before {
+            //Label
+            color: #000;
+            background: #fff;
+            border-color: #000;
+            transition: 0.8s ease-in-out;
+        }
+
+        .title,
+        .detail {
+            transform: translateX(0px);
+            opacity: 1;
+            transition: 0.8s ease-in-out;
+        }
+
+        .detail {
+            transition: 0.8s ease-in-out 0.25s;
+        }
+    }
+
+    .progress-bar {
+        width: 0.25rem;
+        height: 100%;
+        content: "";
+        background: e.$Border-Light;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        .bar {
+            width: 100%;
+            height: 100%;
+            content: "";
+            background: #000;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: top;
+        }
+    }
+
+}
