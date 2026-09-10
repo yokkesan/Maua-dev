@@ -1,0 +1,253 @@
+@charset "utf-8";
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// 基本的なリセットをするscss
+//
+//.......................................................
+// Asterisk ====================
+*,
+*:after,
+*::before {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	width: 100%;
+	font-size: 13px;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	height: -webkit-fill-available;
+}
+
+body {
+	width: 100%;
+	color: e.$Text;
+	font-weight: normal;
+	font-family: e.$Font;
+	overflow-x: hidden;
+	@include e.LineHeight();
+	letter-spacing: 1px;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+// LINK ====================
+a {
+	text-decoration: none;
+	outline: none;
+}
+
+a:focus {
+	outline: none;
+}
+
+// IMG ====================
+img,
+svg {
+	width: 100%;
+	height: auto;
+	border: none;
+	vertical-align: bottom;
+}
+
+// hr ====================
+hr {
+	height: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+// h ====================
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	padding: 0rem;
+	margin: 0rem;
+	font-size: 1rem;
+	font-weight: normal;
+	font-family: e.$Font;
+	@include e.LineHeight();
+}
+
+// p ====================
+p {
+	padding: 0rem;
+	margin: 0rem;
+	@include e.LineHeight();
+}
+
+// div ====================
+div {
+	@include e.LineHeight();
+}
+
+// 構造タグ ====================
+article,
+aside,
+details,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+	display: block;
+}
+
+// ul ====================
+ul,
+ol {
+	list-style: none;
+}
+
+ul {
+	font-size: 0;
+}
+
+ul li {
+	font-size: 1rem;
+	margin: 0rem;
+	display: inline-block;
+}
+
+//iframe
+iframe {
+	vertical-align: bottom;
+}
+
+// ============================================================
+//
+//  PLACEHOLDER
+//
+// ============================================================
+::-webkit-input-placeholder {
+	font-family: e.$Font;
+	font-size: 0.8rem;
+	color: e.$Text-UltraLight;
+}
+
+:-ms-input-placeholder {
+	font-family: e.$Font;
+	font-size: 0.8rem;
+	color: e.$Text-UltraLight;
+}
+
+::-moz-placeholder {
+	font-family: e.$Font;
+	font-size: 0.8rem;
+	color: e.$Text-UltraLight;
+}
+
+// ================================================================================================
+//
+// * SELECTION *
+//
+// ================================================================================================*/
+::selection {
+	background: e.$Main;
+	/* 選択色 */
+	color: #fff;
+	/*文字色*/
+}
+
+::-moz-selection {
+	background: e.$Main;
+	/* 選択色 */
+	color: #fff;
+	/*文字色*/
+}
+
+// ============================================================
+//
+//  FORM
+//
+// ============================================================
+// メインとなる入力要素のリセット ====================
+input[type=text],
+input[type=email],
+input[type=number],
+input[type=tel],
+input[type=submit],
+input[type=search],
+input[type=password],
+button,
+textarea,
+select {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	font-size: 1rem;
+	font-family: e.$Font;
+	overflow-x: hidden;
+	@include e.LineHeight();
+	letter-spacing: 1px;
+	background: none;
+	border: none;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+button {
+	width: auto;
+	cursor: pointer;
+	display: inline-block;
+}
+
+// チェックボックスとラジオボタンのデフォルトの□や◯を消す ====================
+input[type=checkbox],
+input[type=radio] {
+	display: none;
+}
+
+// IEでセレクトボックスの矢印を消す ====================
+select::-ms-expand {
+	display: none;
+}
+
+// ============================================================
+//
+//  CONTACT FORM 7
+//
+// ============================================================
+
+// 余計なマージンをリセット ====================
+span.wpcf7-list-item {
+	display: block;
+	margin: 0;
+}
+
+// 送信後のMESSAGEスタイルをリセット ====================
+div.wpcf7-response-output {
+	padding: 2rem 1rem;
+	margin: 0;
+	border: 0px;
+}
+
+// エラーメッセージ ====================
+div.wpcf7-validation-errors,
+div.wpcf7-acceptance-missing,
+div.wpcf7-response-output {
+	background: e.$Error;
+	text-align: center;
+	color: #fff;
+	font-weight: 700;
+}
+
+// 送信成功MESSAGE ====================
+div.wpcf7-mail-sent-ok {
+	background: e.$Main;
+	text-align: center;
+	color: #fff;
+	font-weight: 700;
+}

@@ -1,0 +1,235 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// DM画面に対してのscss
+//
+//.......................................................
+.dm_component {
+
+    .md_common-bl {
+        &>.inner {
+            padding: 0;
+            @include e.Flex;
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                flex-direction: column;
+            }
+        }
+    }
+
+    .control-wrap {
+        p {
+            max-width: 480px;
+            @include e.Justify;
+            color: a.$Text-Light;
+        }
+
+        .item {
+            margin-bottom: 1rem;
+        }
+    }
+
+    //登録Column -------------------------------------
+    .register-wrap {
+        width: 50%;
+        padding: 4rem 2rem;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            width: 100%;
+            order: 2;
+        }
+
+        .post-body {
+            padding-left: 0;
+            padding-right: 0;
+            padding-top: 0;
+            border: none;
+            margin-top: 3rem;
+        }
+
+        textarea {
+            min-height: 500px;
+        }
+
+        .btn_link-wrap {
+            margin-top: 2rem;
+        }
+    }
+
+    //プレビューColumn -------------------------------------
+    .preview-wrap {
+        width: 50%;
+        position: relative;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            width: calc(100% - 4rem);
+            order: 1;
+            margin: 0 auto;
+        }
+
+        &>.wrap {
+            height: 500px;
+            overflow-y: scroll;
+            position: relative;
+            z-index: 10;
+            overflow-y: scroll;
+            -ms-overflow-style: none; // IE,edge用
+            scrollbar-width: none; // FireFox用
+
+            &::-webkit-scrollbar {
+                // Chrome,Safari用
+                display: none;
+            }
+        }
+
+        h3 {
+            width: 100%;
+            padding: 1rem 2rem;
+            color: #fff;
+            background: e.$Black-UltraLight;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 15;
+        }
+
+        &.talk_component {
+            min-height: auto;
+        }
+
+    }
+
+    //Setting ----------------------------
+    &._setting {
+        .control-wrap {
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .register-wrap {
+            padding: 0 2rem;
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                padding: 0 2rem 2rem;
+            }
+
+            .post-body {
+                margin-top: 0;
+            }
+        }
+
+        .register-wrap,
+        .preview-wrap {
+            opacity: 0;
+
+            &>.inner {
+                display: none;
+            }
+
+            &._on {
+                opacity: 1;
+                transition: 0.5s ease 0.15s;
+
+                &>.inner {
+                    display: block;
+                }
+            }
+        }
+    }
+
+}
+
+.form_toggle {
+    @include e.Flex-Left;
+    align-items: center;
+
+    label.text {
+        cursor: pointer;
+        padding-right: 1rem;
+    }
+
+    label.btn {
+        width: 72px;
+        height: 30px;
+        @include e.Flex;
+        position: relative;
+        padding: 0.55rem 1.5rem 0.45rem;
+        background: #fff;
+        border: 1px solid e.$Border-MediumLight;
+        background: a.$Main-UltraLight;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: 0.5s ease;
+
+        span {
+            font-weight: 700;
+            color: a.$Text-Light;
+        }
+
+        .circle {
+            width: 24px;
+            height: 24px;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 3px;
+            background: a.$Text-Light;
+            border-radius: 100%;
+            transition: 0.25s ease;
+        }
+
+        .text {
+            @include a.FontSize-S;
+            line-height: 1;
+            margin: auto;
+            position: absolute;
+            top: 52%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: a.$Text-Light;
+            font-weight: 700;
+            transition: 0.5s ease 0.25s;
+
+            &._on {
+                right: auto;
+                left: 17px;
+                opacity: 0;
+                transition: 0.25s ease 0s;
+            }
+        }
+
+    }
+
+    //Checked ------------------------------------------
+    input[type=checkbox]:checked+label {
+        background: a.$Link;
+        border-color: a.$Link;
+        transition: 0.5s ease;
+
+        .circle {
+            transform: translateX(41px);
+            transition: 0.25s ease;
+            background: #fff;
+        }
+
+        .text {
+            &._off {
+                opacity: 0;
+                transition: 0.25s ease;
+            }
+
+            &._on {
+                opacity: 1;
+                color: #fff;
+                transition: 0.5s ease 0.25s;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,44 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// エディタ用スタイルを定義するscss
+//
+//.......................................................
+#codex-editor,
+.codex-editor,
+.news_component .post-body {
+    a {
+        // margin: 1rem 0;
+        // display: inline-block;
+        font-weight: 700;
+        color: a.$Link;
+        position: relative;
+        padding: 1rem 1rem 1rem 0rem;
+        text-decoration: none;
+        &::after {
+            height: 7px;
+            width: 7px;
+            content: "";
+            border-top: 2px solid;
+            border-right: 2px solid;
+            margin: auto;position: absolute;top: -2px;right: 0;bottom: 0;
+            transform: translateX(0) rotate(45deg) ;
+            transition: 0.25s a.$Transition;
+        }
+        &:hover::after {
+            transform: translateX(4px) rotate(45deg) ;
+            transition: 0.25s a.$Transition;
+        }
+    }
+}
+
+.ce-toolbar__content {
+    display: none;
+}
+.ce-block__content,
+.block__content {
+    max-width: 100%;
+}

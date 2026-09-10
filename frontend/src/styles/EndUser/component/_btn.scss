@@ -1,6 +1,7 @@
 @charset "utf-8";
-@use "variable-end-user" as e;
+@use "variables" as e;
 @use "../../Admin/component/variable-admin" as a;
+
 //Description.........................................
 //
 // ボタンに対してのscss
@@ -9,6 +10,7 @@
 button {
     letter-spacing: 1px;
 }
+
 a {
     vertical-align: middle;
 }
@@ -17,12 +19,16 @@ a {
     cursor: pointer;
     display: inline-block;
     position: relative;
+
     .bg-element {
         width: 100%;
         height: 100%;
         content: "";
         background: #000;
-        margin: auto;position: absolute;right: -0.5rem;bottom: -0.5rem;
+        margin: auto;
+        position: absolute;
+        right: -0.5rem;
+        bottom: -0.5rem;
         transition: 0.35s e.$Transition 0s;
     }
 
@@ -90,14 +96,19 @@ a {
     position: relative;
     z-index: 10;
     overflow: hidden;
+
     &::after {
         width: calc(100% - 0px);
         height: calc(120% - 0px);
         content: "";
         background: #000;
-        margin: auto;position: absolute;top: 0;bottom: 0;left: 0;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
         transform-origin: 100% 50% 0;
-        transform: scale(0,2);
+        transform: scale(0, 2);
         transition: transform 0.35s e.$Transition;
         z-index: 1;
     }
@@ -112,9 +123,10 @@ a {
             color: #fff;
             transition: color 0.35s e.$Transition;
         }
+
         &::after {
             transform-origin: 0 50% 0;
-            transform: scale(1,2);
+            transform: scale(1, 2);
             transition: transform 0.35s e.$Transition;
         }
     }
@@ -142,6 +154,7 @@ a {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+
     .md_svg-icon {
         right: auto;
         left: 1.5rem;
@@ -161,7 +174,12 @@ a {
         width: 100%;
         height: 150%;
         content: "";
-        margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         background: #000;
         z-index: 1;
         transform: scaleX(0);
@@ -172,15 +190,18 @@ a {
 
     .md_svg-icon {
         z-index: 10;
+
         svg * {
             will-change: stroke;
         }
     }
+
     span {
         will-change: color;
         position: relative;
         z-index: 10;
     }
+
     .number {
         will-change: color;
         z-index: 10;
@@ -210,23 +231,28 @@ a {
             g.fill {
                 opacity: 0;
             }
+
             g.stroke {
                 opacity: 1;
             }
         }
     }
+
     @at-root {
-        input[type=checkbox]:checked + .btn_common._like {
+        input[type=checkbox]:checked+.btn_common._like {
             svg {
                 g.fill {
                     opacity: 1;
                     stroke: none !important;
+
                     * {
                         stroke: none !important;
                     }
                 }
+
                 g.stroke {
                     opacity: 0;
+
                     * {
                         stroke: none !important;
                     }
@@ -240,35 +266,48 @@ a {
         .ovl {
             width: 100%;
             height: 100%;
-            margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
             z-index: 100;
+
             &._remove {
                 display: none;
             }
         }
+
         span.add {
             display: inline;
         }
+
         span.remove {
             display: none;
         }
     }
+
     @at-root {
-        input[type=checkbox]:checked + .btn_common._home-add {
+        input[type=checkbox]:checked+.btn_common._home-add {
             .ovl {
                 &._show {
                     display: none;
                 }
+
                 &._remove {
                     display: block;
                 }
             }
+
             span.add {
                 display: none;
             }
+
             span.remove {
                 display: inline;
             }
+
             svg {
                 g {
                     display: none;
@@ -280,22 +319,34 @@ a {
     //編集用ボタン
     &._edit {
         padding-right: 4rem;
+
         .close-icon {
             width: 24px;
             height: 24px;
             border-radius: 100%;
             background: #000;
             content: "";
-            margin: auto;position: absolute;top: -2px;right: 1rem;bottom: 0;
+            margin: auto;
+            position: absolute;
+            top: -2px;
+            right: 1rem;
+            bottom: 0;
+
             &::after,
             &::before {
                 height: 1px;
                 width: 55%;
                 background: #fff;
                 content: "";
-                margin: auto;position: absolute;top: -1px;right: 0;bottom: 0;left: 0;
+                margin: auto;
+                position: absolute;
+                top: -1px;
+                right: 0;
+                bottom: 0;
+                left: 0;
                 transform: rotate(45deg);
             }
+
             &::before {
                 transform: rotate(-45deg);
             }
@@ -316,10 +367,12 @@ button.btn_common:hover {
 
     .md_svg-icon {
         z-index: 10;
+
         svg * {
             stroke: #fff;
         }
     }
+
     span {
         will-change: color;
         position: relative;
@@ -329,23 +382,26 @@ button.btn_common:hover {
 
     .chevron {
         border-color: #fff;
-        transform: translateX(5px) rotate(45deg) ;
+        transform: translateX(5px) rotate(45deg);
         transition: 0.35s e.$Transition 0.35s;
     }
 
 }
 
 @keyframes LikeButtonShineRotate {
-    0%{
+    0% {
         opacity: 1;
         transform: rotate(0deg);
     }
-    25%{
+
+    25% {
         opacity: 1;
     }
-    75%{
+
+    75% {
         opacity: 1;
     }
+
     100% {
         opacity: 1;
         transform: rotate(3650deg);
@@ -403,7 +459,6 @@ button.btn_common:hover {
 .btn_svg-icon {
     width: 36px;
     height: 36px;
-    // background: a.$Border-UltraLight;
     border-radius: 100%;
     position: relative;
     display: inline-block;
@@ -412,7 +467,9 @@ button.btn_common:hover {
 
     svg {
         @include a.SvgIconSize;
-        margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+        margin: auto;
+        position: absolute;
+        inset: 0;
     }
 
     svg path,
@@ -424,8 +481,8 @@ button.btn_common:hover {
     }
 
     &:hover {
-        // background: a.$Link;
         transition: 0.15s a.$Transition;
+
         svg path,
         svg circle,
         svg rect {
@@ -437,50 +494,52 @@ button.btn_common:hover {
 
     &._white {
         background: #fff;
+
         &:hover {
             background: a.$Link;
         }
     }
 
-    //新着表示 ---------------------
     &._notice {
         &::after {
             width: 10px;
             height: 10px;
             background: a.$Success;
             content: "";
-            margin: auto;position: absolute;top: 0;right: 0;
+            position: absolute;
+            top: 0;
+            right: 0;
             border-radius: 100%;
         }
+
         &::before {
             width: 24px;
             height: 24px;
             background: a.$Success;
             content: "";
-            margin: auto;position: absolute;top: 0;right: 0;
+            position: absolute;
+            top: 0;
+            right: 0;
             border-radius: 100%;
-            transform: translate(29%,-29%);
+            transform: translate(29%, -29%);
             opacity: 0.4;
-            animation-duration: 2s;
-            animation-delay: 0s;
-            animation-name: kf_NoticeLamp;
-            animation-timing-function: ease;
-            animation-iteration-count: infinite;
+            animation: kf_NoticeLamp 2s ease infinite;
         }
     }
-
 }
-    @keyframes kf_NoticeLamp {
-        0%{
-            transform: translate(29%,-29%) scale(0);
-            opacity: 0;
-        }
-        66%{
-            opacity: 0.3;
-        }
-        100%{
-            transform: translate(29%,-29%) scale(1);
-            opacity: 0;
-        }
+
+@keyframes kf_NoticeLamp {
+    0% {
+        transform: translate(29%, -29%) scale(0);
+        opacity: 0;
     }
 
+    66% {
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translate(29%, -29%) scale(1);
+        opacity: 0;
+    }
+}

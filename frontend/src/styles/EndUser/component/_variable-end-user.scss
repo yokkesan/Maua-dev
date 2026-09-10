@@ -1,148 +1,123 @@
-$color-text: #000;
-$color-text-light: #707070;
+@charset "utf-8";
+//Description.........................................
+//
+// 変数/関数を定義するscss
+//
+//.......................................................
 
-$color-main: #000;
-$color-link: #912dff;
-
-$color-border-ultra-light: hsl(0, 0%, 95%);
-$color-border-light: hsl(0, 0%, 63%);
-$color-border: hsl(0, 0%, 40%);
-
-$color-success: #0adf86;
-$color-warning: #ffbb00;
-$color-error: hsl(350, 90%, 58%);
-
-$color-black: #000;
-$color-white: #fff;
-
-$font-family-base: "Poppins",
-    "Kosugi",
-    "Hiragino Kaku Gothic ProN",
-    "Hiragino Sans",
-    Meiryo,
-    sans-serif;
-
-$font-family-sub: "Bellefair",
-    "Kosugi",
-    "Hiragino Kaku Gothic ProN",
-    "Hiragino Sans",
-    Meiryo,
-    sans-serif;
-
-$transition-base: cubic-bezier(0.215, 0.61, 0.355, 1);
-
-$breakpoint-mobile: 580px;
-$breakpoint-tablet-small: 819px;
-$breakpoint-tablet: 1100px;
-$breakpoint-desktop: 1300px;
-$breakpoint-wide: 1500px;
-
-$content-width: 1380px;
-$content-width-small: 1024px;
-
-// -----------------------------------------------------------------------------
-// Legacy compatibility
-// 既存SCSSを段階的に新命名へ移行するまで使用
-// -----------------------------------------------------------------------------
-
-// Text
+// TextColor ==============
 $Text-UltraLight: hsl(0, 0%, 80%);
-$Text-Light: $color-text-light;
-$Text: $color-text;
+$Text-Light: #707070;
+$Text: #000;
 $Text-Dark: #000;
 $Text-UltraDark: #000;
 
-// Main
+// MainColor ==============
 $Main-UltraLight: #000;
 $Main-Light: #000;
-$Main: $color-main;
+$Main: #000;
 $Main-Dark: #000;
 $Main-UltraDark: #000;
 
-// Sub
+// SubColor ==============
 $Sub-UltraLight: #000;
 $Sub-Light: #000;
 $Sub: #000;
 $Sub-Dark: #000;
 $Sub-UltraDark: #000;
 
-// Accent
+// AccentColor ==============
 $Accent-UltraLight: #000;
 $Accent-Light: #000;
 $Accent: #000;
 $Accent-Dark: rgb(231, 231, 231);
 $Accent-UltraDark: #000;
 
-// Border
-$Border-UltraLight: $color-border-ultra-light;
+// Border ==============
+$Border-UltraLight: hsl(0, 0%, 95%);
 $Border-MediumLight: hsl(0, 0%, 90%);
-$Border-Light: $color-border-light;
-$Border: $color-border;
+$Border-Light: hsl(0, 0%, 63%);
+$Border: hsl(0, 0%, 40%);
 $Border-Dark: hsl(0, 0%, 20%);
 $Border-UltraDark: #000;
 
-// Link
+// Link ==============
 $Link-Light: #000;
-$Link: $color-link;
+$Link: #912dff;
 $Link-Dark: #000;
 
-// Registration
+// Register ==============
 $RegistrationProgress-Light: #f6fdff;
 
-// Status
-$Success: $color-success;
-$Yellow: $color-warning;
+@mixin LinkGrad {
+    background: $Link;
+    background: linear-gradient(50deg, $Link 50%, #F22F91 100%);
+}
+
+// Success ==============
+$Success: #0adf86;
+
+// Success ==============
+$Yellow: #ffbb00;
+
+// Submit ==============
 $Submit: #000;
-$Error: $color-error;
+
+// Error ==============
+$Error: hsl(350, 90%, 58%);
 $Error-Dark: #6e0e0e;
 
-// Background
+// BackGround ==============
 $White-Light: rgb(248, 251, 251);
 $White-Dark: rgb(239, 242, 242);
 $White-UltraDark: rgb(242, 245, 245);
 
-// Black
+// $BackGround: #fff;
+
+// Black ==============
 $Black-UltraLight: rgb(35, 35, 35);
 $Black-Light: rgb(29, 29, 29);
 $Black-Medium: rgb(18, 18, 18);
-$Black: $color-black;
+$Black: rgb(0, 0, 0);
 
-// Font
-$Font: $font-family-base;
-$Font-Sub: $font-family-sub;
+// Font family =============
+$Font: 'Poppins', 'Kosugi', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
+$Font-Sub: 'Bellefair', 'Kosugi', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
 
-// Transition
-$Transition: $transition-base;
+$Transition: cubic-bezier(0.215, 0.61, 0.355, 1);
 $TransitionMenu: cubic-bezier(1, 0, 0.75, 1);
 
-// Breakpoints
-$Bp-Mobile: $breakpoint-mobile !default;
-$Bp-7inch: $breakpoint-tablet-small !default;
-$Bp-11inch: $breakpoint-tablet !default;
-$Bp-13inch: $breakpoint-desktop !default;
-$Bp-15inch: $breakpoint-wide !default;
-$Bp-BrandList: 1400px !default;
+//Description.........................................
+//
+// mixin でプロパティごと定義する
+// 以下のように使用すればここで定義したプロパティが適用される
+//
+// @mixin justify {
+//		text-align: justify;
+//		word-break: break-all;
+//  }
+//
+//	[scss]
+// .hogehoge {
+//		@include Justify;
+// }
+//
+// [cssコンパイル結果]
+// .hogehoge {
+//		text-align: justify;
+//		word-break: break-all;
+// }
+//.......................................................
 
-// Global
-$GlobalNavHeight: 72px;
-
-// -----------------------------------------------------------------------------
-// Mixins
-// -----------------------------------------------------------------------------
-
-@mixin LinkGrad {
-    background: $Link;
-    background: linear-gradient(50deg, $Link 50%, #f22f91 100%);
-}
-
+// FontFamily =============
 @mixin FontAuma {
-    font-family: "Auma";
+    font-family: 'Auma';
     letter-spacing: -0.23em;
     text-indent: -0.2em;
 }
 
 @mixin FontBellefair {
-    font-family: "Bellefair";
+    font-family: 'Bellefair';
     letter-spacing: -0.03em;
 }
 
@@ -152,31 +127,36 @@ $GlobalNavHeight: 72px;
 }
 
 @mixin FontAntonio {
-    font-family: "Antonio";
+    font-family: 'Antonio';
     line-height: 1;
     font-weight: 300;
     letter-spacing: -1px;
 }
 
+// FlexBox =============
 @mixin Flex {
+    //左右詰め
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
 @mixin Flex-Left {
+    //左詰め
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
 }
 
 @mixin Flex-Right {
+    //右詰め
     display: flex;
     justify-content: flex-end;
     flex-wrap: wrap;
 }
 
 @mixin Flex-Center {
+    //中央寄せ
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -202,6 +182,8 @@ $GlobalNavHeight: 72px;
     width: calc((100% - #{$FlexColGap} * 9) / 10);
 }
 
+
+// Font Size ( type scale ) =============
 @mixin FontSize-Special {
     font-size: 4rem;
     line-height: 1.3;
@@ -238,24 +220,29 @@ $GlobalNavHeight: 72px;
     pointer-events: none;
 }
 
+// Line Height =============
 @mixin LineHeight {
     line-height: 1.75;
 }
 
+// Line Height =============
 @mixin LineHeight-L {
     line-height: 2.25;
 }
 
+// Text Stylet =============
 @mixin Justify {
     text-align: justify;
     word-break: break-all;
 }
 
+//SvgIconSize - svg icon のサイズ =============
 @mixin SvgIconSize {
     width: 27px;
     height: 27px;
 }
 
+//IconBtnSize - IconBtnのサイズ =============
 @mixin IconBtnSize {
     width: 37px;
     height: 37px;
@@ -266,37 +253,53 @@ $GlobalNavHeight: 72px;
     height: 31px;
 }
 
+//Ellipsis1 - 1行省略表示 =============
 @mixin Ellipsis1 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+//MediaQuery ====================
+$Bp-Mobile: 580px !default;
+$Bp-7inch: 819px !default;
+$Bp-11inch: 1100px !default;
+$Bp-13inch: 1300px !default;
+$Bp-15inch: 1500px !default;
+
+// BrandList
+$Bp-BrandList: 1400px !default;
+
+//ButtonPadding ====================
 @mixin ButtonPadding {
-    padding: 9px 3rem 8px;
+    padding: 9px 3rem 8px 3rem;
 }
 
 @mixin SectionInnerSize {
     width: 100%;
-    max-width: $content-width;
+    max-width: 1380px;
     margin: auto;
 }
 
 @mixin SectionInnerSize-S {
     width: 100%;
-    max-width: $content-width-small;
+    max-width: 1024px;
     margin: auto;
 }
 
+//1024pxInnerSize =============
 @mixin px1024InnerSize {
     width: 100%;
     max-width: 768px;
     margin: auto;
 }
 
-@mixin Chevron($ChevronBorder: $Border-UltraDark,
-    $ChevronRotate: 45deg,
-    $ChevronRight: 10px) {
+// GlobalNavHeight =============
+$GlobalNavHeight: 72px;
+
+//Chevron =============
+@mixin Chevron($ChevronBorder: $Border-UltraDark, $ChevronRotate: 45deg, $ChevronRight: 10px) {
+
     width: 7px;
     height: 7px;
     border-top: 1px solid;
@@ -308,11 +311,12 @@ $GlobalNavHeight: 72px;
     top: -4px;
     right: $ChevronRight;
     bottom: 0;
-    transform: translate(0) rotate($ChevronRotate);
+    transform: translate(0px) rotate($ChevronRotate);
     pointer-events: none;
     z-index: 10;
 }
 
+// GlobalSectionPaddingTop =============
 @mixin GlobalSectionPadding {
     padding: 8rem 2rem;
 }
@@ -321,6 +325,7 @@ $GlobalNavHeight: 72px;
     padding-top: 8rem;
 }
 
+//PlusIcon ==================
 @mixin PlusIcon($PlusIconColor: #fff) {
 
     &::after,
@@ -331,7 +336,10 @@ $GlobalNavHeight: 72px;
         content: "";
         margin: auto;
         position: absolute;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
     }
 
     &::before {

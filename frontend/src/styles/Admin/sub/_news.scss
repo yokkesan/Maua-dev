@@ -1,0 +1,103 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// お知らせページを定義するscss
+//
+//.......................................................
+.news_component {
+
+    //PostTitle ----------------------------------------
+    .post-title {
+        width: 100%;
+        border-left: 5px solid a.$Link;
+        padding-left: 2rem;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            padding-left: 1rem;
+        }
+
+        h2 {
+            @include e.Justify;
+            @include a.FontSize-Xl;
+        }
+
+        time {
+            color: a.$Text-Light;
+        }
+    }
+
+    //PostBody ----------------------------------------
+    .post-body {
+        width: 100%;
+        margin-top: 2rem;
+        padding: 0 2rem;
+        padding-top: 4rem;
+        border-top: 1px solid e.$Border-MediumLight;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            padding: 2rem 1rem 0;
+        }
+
+        p {
+            @include e.Justify;
+        }
+    }
+
+    //LinkWrap -----------------------------------------
+    .link-wrap {
+        margin-top: 4rem;
+    }
+
+    //RecentPosts -----------------------------------------
+    .recent-title {
+        width: 100%;
+        margin-bottom: 2rem;
+
+        p.main {
+            @include e.FontAntonio;
+            @include e.FontSize-Xxl;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        p.sub {
+            color: a.$Text-Light;
+        }
+    }
+
+    ul.recent-posts {
+        width: 100%;
+        margin-bottom: 2rem;
+
+        li {
+            width: 100%;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid e.$Border-MediumLight;
+
+            a {
+                display: block;
+                transition: 0.25s ease;
+
+                &:hover {
+                    color: a.$Link;
+                    transition: 0.25s ease;
+                }
+            }
+        }
+    }
+
+    .md_common-bl .right-col._news-setting {
+        @include e.Flex-Left;
+        flex-direction: column;
+        gap: 2rem;
+
+        .btn_link-wrap {
+            margin-top: 1rem;
+        }
+    }
+
+}

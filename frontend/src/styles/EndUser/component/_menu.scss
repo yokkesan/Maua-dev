@@ -1,5 +1,5 @@
 @charset "utf-8";
-@use "variable-end-user" as e;
+@use "variables" as e;
 @use "../../Admin/component/variable-admin" as a;
 
 //Description.........................................
@@ -519,6 +519,7 @@
     }
 
     &._none {
+
         // MenuOpen --------------------
         .btn_floating-action {
             opacity: 0;
@@ -1104,36 +1105,40 @@
     opacity: 1;
     pointer-events: auto;
     transition: 0.25s ease;
+
     @media only screen and (max-width: e.$Bp-13inch) {
-      bottom: 2rem;
-      right: 2rem;
+        bottom: 2rem;
+        right: 2rem;
     }
+
     &-body {
-      @include e.Flex-Center;
-      align-items: center;
-      svg {
-        width: 2.75rem;
-      }
+        @include e.Flex-Center;
+        align-items: center;
+
+        svg {
+            width: 2.75rem;
+        }
     }
 
     // IsHover --------------------------
     &:hover {
-      background: #000;
-      .btn_floating-action-body svg circle,
-      .btn_floating-action-body svg path {
-        stroke: #fff;
-        transition: 0.25s ease;
-      }
+        background: #000;
+
+        .btn_floating-action-body svg circle,
+        .btn_floating-action-body svg path {
+            stroke: #fff;
+            transition: 0.25s ease;
+        }
     }
 
     // MenuOpen --------------------
     &._menu-open {
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.5s ease;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.5s ease;
     }
 
-  }
+}
 
 // ================================================================================================
 //
@@ -1166,4 +1171,3 @@
         background-color: #474646;
     }
 }
-

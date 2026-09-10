@@ -1,0 +1,525 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// フォームに対してのscss
+//
+//.......................................................
+//================================================================================================
+//
+//  リセット
+//
+//================================================================================================
+input[type=text],
+input[type=email],
+input[type=number],
+input[type=tel],
+input[type=password],
+input[type=postal-code],
+button,
+textarea,
+select {
+    color: a.$Main;
+}
+
+input[type=submit] {
+    color: a.$Main;
+}
+
+.form_admin-container {
+
+    .input-group {
+        margin-bottom: 3rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid e.$Border-MediumLight;
+
+        &:last-of-type {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: 0px solid e.$Border-MediumLight;
+        }
+    }
+
+    .item {
+        margin-bottom: 2rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+}
+
+input[type=file] {
+    display: none;
+}
+
+//================================================================================================
+//
+//  テキストを添える場合のスタイル
+//
+//================================================================================================
+.form_item-text {
+    margin-bottom: 2rem;
+    max-width: 480px;
+
+    p.sup {
+        margin-top: 0.5rem;
+        @include e.Justify;
+        color: a.$Text-Light;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+
+//================================================================================================
+//
+//  テキストフィールド
+//
+//================================================================================================
+.form_text {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    max-width: 380px;
+
+    @media only screen and (max-width: e.$Bp-11inch) {
+        min-width: auto;
+    }
+
+    label {
+        @include a.FontSize-S;
+        color: a.$Text-Light;
+        transition: 0.25s ease;
+    }
+
+    .input-row {
+        order: 2;
+        width: 100%;
+        position: relative;
+
+        input {
+            padding: 0.55rem 1rem 0.45rem;
+            border: 1px solid e.$Border-MediumLight;
+            background: a.$Main-UltraLight;
+            // background: e.$Border-UltraLight;
+            transition: 0.25s ease;
+
+            &:focus {
+                border: 1px solid a.$Link;
+                transition: 0.25s ease;
+            }
+        }
+    }
+
+    .input-row:focus-within+label {
+        font-weight: 700;
+        color: a.$Link;
+        transition: 0.25s ease;
+    }
+
+    p.sup {
+        order: 3;
+    }
+
+    //BigText -----------------
+    &._big {
+        max-width: 100%;
+
+        input {
+            @include a.FontSize-Xl;
+        }
+    }
+
+    //バリデーション --------------------------
+    .input-row {
+        input._error {
+            border-color: a.$Error;
+        }
+    }
+
+    label._error {
+        &::after {
+            content: "入力内容に誤りがあるようです";
+            color: a.$Error;
+            padding: 0.25rem 1rem;
+            font-weight: 700;
+        }
+    }
+
+    label._required {
+        &::after {
+            content: "必須項目を入力してください";
+        }
+    }
+
+}
+
+//================================================================================================
+//
+//  テキストエリア
+//
+//================================================================================================
+.form_textarea {
+
+    textarea {
+        width: 100%;
+        border: 1px solid e.$Border-MediumLight;
+        background: a.$Main-UltraLight;
+        padding: 2rem;
+        vertical-align: bottom;
+        transition: 0.25s ease;
+
+        &:focus {
+            border: 1px solid a.$Link;
+            transition: 0.25s ease;
+        }
+    }
+
+}
+
+
+//================================================================================================
+//
+//  パスワードフィールド
+//
+//================================================================================================
+.form_text._password {
+
+    //パスワードの可視化ボタン
+    .passview {
+        height: 100%;
+        width: 70px;
+        background: a.$Link;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        span::after {
+            content: "Show";
+            font-size: 0.9rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        &._on {
+            background: a.$Link-Dark;
+
+            span::after {
+                content: "Hide";
+            }
+        }
+    }
+
+}
+
+//================================================================================================
+//
+//  チェックボックス
+//
+//================================================================================================
+@mixin LabelMaxWidth {
+    max-width: 620px;
+    @include e.Justify;
+}
+
+@mixin Checkbox {
+    width: 23px;
+    height: 23px;
+    display: inline-block;
+    background: a.$Main-UltraLight;
+    border: 1px solid e.$Border-MediumLight;
+    cursor: pointer;
+    transition: 0.25s a.$Transition;
+    position: relative;
+
+    &::before {
+        width: 8px;
+        height: 2px;
+        background: #fff;
+        content: "";
+        margin: auto;
+        position: absolute;
+        top: -3px;
+        right: 0;
+        bottom: 0;
+        left: -5px;
+        transform-origin: left;
+        transform: rotate(45deg) scaleX(0);
+    }
+
+    &::after {
+        transform-origin: left;
+        width: 11px;
+        height: 2px;
+        background: #fff;
+        content: "";
+        margin: auto;
+        position: absolute;
+        top: 8px;
+        right: 0;
+        bottom: 0;
+        left: 8px;
+        transform-origin: left;
+        transform: rotate(-45deg) scaleX(0);
+    }
+}
+
+@mixin CheckboxChecked {
+    background: a.$Link;
+    border-color: a.$Link;
+    transition: 0.15s a.$Transition;
+
+    &::before {
+        transform: rotate(45deg) scaleX(1);
+        transition: 0.15s a.$Transition;
+    }
+
+    &::after {
+        transform: rotate(-45deg) scaleX(1);
+        transition: 0.15s a.$Transition 0.15s;
+    }
+}
+
+.form_checkbox {
+    label {
+        @include Checkbox;
+    }
+
+    input[type=checkbox]:checked+label {
+        @include CheckboxChecked;
+    }
+}
+
+//================================================================================================
+//
+//  チェックボックス - withテキスト
+//
+//================================================================================================
+.form_checkbox-text {
+
+    label {
+        @include LabelMaxWidth;
+        padding-left: 2.75rem;
+        position: relative;
+        cursor: pointer;
+        transition: 0.25s ease;
+        display: inline-block;
+
+        .mark {
+            @include Checkbox();
+            margin: auto;
+            position: absolute;
+            top: -1px;
+            left: 0;
+        }
+    }
+
+    input[type=checkbox]:checked+label .mark {
+        @include CheckboxChecked;
+    }
+
+}
+
+
+//================================================================================================
+//
+//  ラジオボタン - withテキスト
+//
+//================================================================================================
+.form_radio-text {
+
+    label {
+        @include LabelMaxWidth;
+        padding-left: 2.75rem;
+        position: relative;
+        cursor: pointer;
+        transition: 0.25s ease;
+        display: inline-block;
+
+        .mark {
+            @include Checkbox();
+            border-radius: 100%;
+            margin: auto;
+            position: absolute;
+            top: -1px;
+            left: 0;
+
+            &::after {
+                display: none;
+            }
+
+            &::before {
+                background: a.$Link;
+                width: 13px;
+                height: 13px;
+                margin: auto;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                transform: rotate(0) scale(0);
+                transform-origin: center;
+                border-radius: 100%;
+                transition: 0.25s ease;
+            }
+        }
+    }
+
+    input[type=radio]:checked+label .mark {
+        @include CheckboxChecked;
+        background: #fff;
+
+        &::before {
+            transform: rotate(0) scale(1);
+        }
+    }
+
+}
+
+
+//================================================================================================
+//
+//  検索欄
+//
+//================================================================================================
+.form_search {
+    position: relative;
+    max-width: 380px;
+
+    input[type=search] {
+        width: 100%;
+        padding: 11px 3.5rem 11px 2rem;
+        line-height: 1;
+        background: #fff;
+        border: 1px solid e.$Border-MediumLight;
+        border-radius: 50px;
+        min-width: 250px;
+        transition: 0.35s a.$Transition;
+    }
+
+    .md_svg-icon {
+        right: 1rem;
+        left: auto;
+        cursor: pointer;
+        top: 0px;
+
+        svg circle,
+        svg path {
+            stroke: e.$Border-Light;
+            transition: 0.35s a.$Transition;
+        }
+    }
+
+    input[type=submit] {
+        display: none;
+    }
+
+
+    input[type=search]:focus {
+        border-color: a.$Link;
+        color: a.$Link;
+        transition: 0.35s a.$Transition;
+
+        &+.md_svg-icon {
+
+            svg circle,
+            svg path {
+                stroke: a.$Link;
+                transition: 0.35s a.$Transition;
+            }
+        }
+    }
+
+    ::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
+}
+
+//================================================================================================
+//
+//  セレクトボックス
+//
+//================================================================================================
+.form_select {
+    max-width: 380px;
+    @include e.Flex;
+    flex-direction: column;
+
+    @media only screen and (max-width: e.$Bp-7inch) {
+        width: 100%;
+        max-width: initial;
+    }
+
+    .text-row {
+        color: a.$Text-Light;
+    }
+
+    .input-row {
+        position: relative;
+
+        &::after {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 7px 5px 0 5px;
+            border-color: a.$Link transparent transparent transparent;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            bottom: 0;
+        }
+    }
+
+    select {
+        cursor: pointer;
+        padding: 0.55rem 1rem 0.45rem;
+        border: 1px solid e.$Border-MediumLight;
+        background: a.$Main-UltraLight;
+        padding-right: 3rem;
+    }
+
+}
+
+
+//================================================================================================
+//
+//  チェックボックスとラジオボタンの水平方向用
+//
+//================================================================================================
+.input-group._horizontal {
+    @include e.Flex-Left;
+    gap: 1rem 3rem;
+
+    .item {
+        margin-bottom: 0;
+    }
+
+    .form_checkbox-text,
+    .form_radio-text,
+    .form_select {
+        width: calc((100% - 3rem * 2) / 3);
+
+        @media only screen and (max-width: e.$Bp-13inch) {
+            width: calc((100% - 3rem * 1) / 2);
+        }
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            width: calc((100% - 0rem * 1) / 1);
+        }
+    }
+
+    .heading_component-s {
+        margin-bottom: 2rem;
+    }
+}

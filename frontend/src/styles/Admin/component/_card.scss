@@ -1,0 +1,78 @@
+@charset "utf-8";
+@use "../../EndUser/component/variable-end-user" as e;
+@use "../../Admin/component/variable-admin" as a;
+
+//Description.........................................
+//
+// カードに対してのscss
+//
+//.......................................................
+
+//================================================================================================
+//
+//  いいねを押した一覧カード
+//
+//================================================================================================
+.card_like-us {
+
+    .swiper {
+        overflow: visible;
+    }
+
+    .swiper-slide {
+        background: #fff;
+        position: relative;
+        img {
+            aspect-ratio: 5/5;
+            object-fit: cover;
+        }
+        .detail {
+            padding: 1rem;
+            & * {
+                @include a.Ellipsis1;
+            }
+        }
+        a {
+            content: "";
+            margin: auto;position: absolute;top: 0;right: 0;bottom: 0;left: 0;
+            &::before {
+                width: 100%;
+                height: calc(100% - 49px);
+                background: rgba($color: a.$Link, $alpha: 0.15);
+                backdrop-filter: blur(5px) saturate(180%);;
+                content: "";
+                margin: auto;position: absolute;top: 0;right: 0;left: 0;
+                opacity: 0;
+                transition: 0.35s ease;
+            }
+            span {
+                display: inline-block;
+                position: relative;
+                z-index: 10;
+                margin: auto;position: absolute;top: 43%;left: 50%;
+                transform: translate(-43%,-50%);
+                color: #fff;
+                font-weight: 700;
+                opacity: 0;
+                transition: 0.35s ease;
+            }
+        }
+
+        //Hover -----------------------
+        &:hover {
+            a {
+                &::before {
+                    opacity: 1;
+                    transition: 0.35s ease;
+                }
+                span {
+                    opacity: 1;
+                    transition: 0.35s ease;
+                }
+            }
+        }
+
+    }
+
+
+}

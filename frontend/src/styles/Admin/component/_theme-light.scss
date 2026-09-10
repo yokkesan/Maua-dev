@@ -1,5 +1,6 @@
 @charset "utf-8";
-@use "variables" as e;
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
 
 //Description.........................................
 //
@@ -40,7 +41,7 @@
                         fill: e.$Black;
                     }
                     &::after {
-                        background: e.$White-Light;
+                        background: a.$White-Light;
                     }
                 }
 
@@ -50,12 +51,12 @@
 
     //ly_main
     .ly_main .wrap {
-        background: e.$White-Light;
+        background: a.$White-Light;
     }
 
     //fixed-heading
     .heading_page-title-en {
-        color: e.$White-Dark;
+        color: a.$White-Dark;
     }
 
 

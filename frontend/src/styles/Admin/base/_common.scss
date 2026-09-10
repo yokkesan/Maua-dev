@@ -1,0 +1,94 @@
+@charset "utf-8";
+@use "../component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// 全てのページに共通する、基本的な定義に対してのscss
+//
+//.......................................................
+
+body {
+}
+a {
+	color: e.$Black;
+}
+
+code {
+    font-family: a.$Font;
+    color: a.$Link;
+    padding: 0 0.5rem;
+    font-weight: 700;
+}
+
+
+// ================================================================================================
+//
+//  INNER STYLE
+//
+// ================================================================================================
+
+.root-wrap{
+	width: 100%;
+	background: e.$Black;
+	overflow: hidden;
+}
+
+.p768{
+	max-width: 768px;
+	margin: 0 auto;
+}
+.p960{
+	max-width: 960px;
+	margin: 0 auto;
+}
+.p1024{
+	max-width: 1024px;
+	margin: 0 auto;
+}
+.p1240{
+	max-width: 1240px;
+	margin: 0 auto;
+}
+// ================================================================================================
+//
+//  deSVG
+//
+// ================================================================================================
+.svg-main path,
+.svg-main polygon {
+	color: a.$Main;
+	fill: currentColor;
+}
+.svg-white path,
+.svg-white polygon {
+	color: #fff;
+	fill: currentColor;
+}
+.svg-stroke-white path,
+.svg-stroke-white polygon,
+.svg-stroke-white polyline,
+.svg-stroke-white line {
+	stroke: #fff;
+	fill: none;
+}
+.svg-black path,
+.svg-black polygon {
+	color: #000;
+	fill: currentColor;
+}
+
+// ================================================================================================
+//
+//  メディアクエリ
+//
+// ================================================================================================
+
+// @media only screen and (max-width: e.$Bp-11inch) {
+// }
+
+// @media only screen and (max-width: e.$Bp-7inch) {
+// }
+
+// @media only screen and (max-width: e.$Bp-Mobile) {
+// }

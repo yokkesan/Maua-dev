@@ -1,0 +1,345 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// トーク画面に対してのscss
+//
+//.......................................................
+.talk_component {
+    width: calc(100% + 0rem);
+    // min-height: 80vh;
+    min-height:auto;
+    position: relative;
+    margin-left: 0rem;
+    background: #fff;
+
+    &::after {
+        width: calc(100% + 8rem);
+        height: calc(100% + 8rem);
+        opacity: 0.7;
+        content: "";
+        filter: blur(60px) brightness(1.4) opacity(90%) saturate(70%);
+        margin: auto;
+        position: absolute;
+        top: -4rem;
+        left: -4rem;
+        background: url(/../img/talk.jpg)no-repeat center center / cover;
+        // background-attachment: fixed;
+        pointer-events: none;
+        // transform: scale(1.2);
+        z-index: 1;
+    }
+
+    .wrap {
+        width: 100%;
+        padding: 8rem 2rem;
+        padding-bottom: 150px;
+        position: relative;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            padding: 4rem 2rem 8rem;
+        }
+
+        @media only screen and (max-width: e.$Bp-Mobile) {
+            padding: 4rem 1rem 8rem;
+        }
+
+        .talk-inner {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+    }
+
+    //Wrap
+
+    .bubble-item {
+        width: 100%;
+        max-width: 570px;
+        @include e.Flex-Left;
+        gap: 2rem;
+        margin-bottom: 4rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .avatar-wrap {
+            width: 90px;
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                width: 70px;
+            }
+
+            @media only screen and (max-width: e.$Bp-Mobile) {
+                width: 50px;
+            }
+
+            .avatar {
+                width: 90px;
+                height: 90px;
+                border-radius: 100%;
+                object-fit: cover;
+
+                @media only screen and (max-width: e.$Bp-7inch) {
+                    width: 70px;
+                    height: 70px;
+                    margin-top: 2rem;
+                }
+
+                @media only screen and (max-width: e.$Bp-Mobile) {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+        }
+
+        .bubble-wrap {
+            max-width: calc(100% - 90px - 2rem);
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                max-width: calc(100% - 70px - 2rem);
+            }
+
+            @media only screen and (max-width: e.$Bp-Mobile) {
+                max-width: calc(100% - 50px - 2rem);
+            }
+
+            .bubble-body {
+                min-width: 180px;
+                min-height: 74.75px;
+                background: #fff;
+                border-radius: 3px;
+                padding: 2rem;
+                margin-bottom: 0.25rem;
+                position: relative;
+
+                @media only screen and (max-width: e.$Bp-Mobile) {
+                    min-width: inherit;
+                }
+
+                &::after {
+                    width: 10px;
+                    height: 10px;
+                    background-color: #fff;
+                    content: "";
+                    margin: auto;
+                    position: absolute;
+                    top: 33px;
+                    left: -5px;
+                    transform: rotate(45deg);
+
+                    @media only screen and (max-width: e.$Bp-Mobile) {
+                        top: 25px;
+                    }
+                }
+
+                p {
+                    @include a.Justify;
+                }
+            }
+
+            time {
+                width: calc(100% - 2rem);
+                margin: auto;
+                display: block;
+                @include a.FontSize-S;
+                opacity: 0.25;
+                font-weight: 700;
+                text-align: left;
+            }
+        }
+
+        //MyBubble ---------------------------
+        &._my-bubble {
+            @include e.Flex-Right;
+            margin-left: auto;
+
+            .avatar-wrap {
+                order: 2;
+            }
+
+            .bubble-wrap {
+                order: 1;
+
+                .bubble-body {
+                    &::after {
+                        left: auto;
+                        right: -5px;
+                    }
+                }
+            }
+
+            time {
+                text-align: right;
+            }
+        }
+
+    }
+
+    //BubbleItem
+
+        .control-wrap {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom);
+
+        .input-wrap {
+            width: 100%;
+            padding: 2rem;
+            background: rgba($color: e.$Black-UltraLight, $alpha: 1);
+
+            .input-row {
+                width: 100%;
+                position: relative;
+            }
+
+            textarea {
+                background: #fff;
+                border-radius: 40px;
+                padding: 1rem 2rem;
+                padding-right: 9rem;
+                padding-left: 4rem;
+                height: 49px;
+                font-size: 16px;
+                vertical-align: bottom;
+                overflow-y: scroll;
+                -ms-overflow-style: none; // IE,edge用
+                scrollbar-width: none; // FireFox用
+
+                &::-webkit-scrollbar {
+                    // Chrome,Safari用
+                    display: none;
+                }
+            }
+
+            button:not(._add),
+            input[type=submit] {
+                color: #fff;
+                width: auto;
+                padding: 1rem 2rem;
+                border-top-right-radius: 40px;
+                border-bottom-right-radius: 40px;
+                margin: auto;
+                position: absolute;
+                top: 0;
+                right: -1px;
+                bottom: 0;
+                background: a.$Link;
+                font-weight: 700;
+            }
+
+            label._add {
+                margin: auto;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 7px;
+            }
+
+            .file-clear {
+                margin: auto;
+                position: absolute;
+                top: -53px;
+                left: -45px;
+                transform: translateY(0px);
+                opacity: 1;
+                pointer-events: auto;
+                transition: 0.35s ease;
+            }
+
+            .file-name-bubble {
+                width: 10px;
+                height: 10px;
+                background: #fff;
+                content: "";
+                margin: auto;
+                position: absolute;
+                bottom: 61px;
+                left: 2rem;
+                transform: translateY(0px) rotate(45deg);
+                opacity: 1;
+                pointer-events: none;
+                transition: 0.35s ease;
+            }
+
+            .file-name {
+                max-width: 280px;
+                @include a.Ellipsis1;
+                padding: 0.75rem 2rem 0.5rem 2rem;
+                background: #fff;
+                margin: auto;
+                position: absolute;
+                top: -1.25rem;
+                left: 0;
+                pointer-events: auto;
+                transform: translateY(-100%);
+                transition: 0.35s ease;
+
+                &:empty {
+                    opacity: 0;
+                    transform: translateY(calc(-100% + 5px));
+                    pointer-events: none;
+                    transition: 0.35s ease;
+
+                    &~.file-name-bubble {
+                        transform: translateY(5px) rotate(45deg);
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: 0.35s ease;
+                    }
+
+                    &~.file-clear {
+                        transform: translateY(5px);
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: 0.35s ease;
+                    }
+                }
+            }
+        }
+
+        //FloatingActionBtn -------------------------
+        .fab-wrap {
+            width: 100%;
+            display: inline-block;
+            text-align: right;
+            margin-bottom: 1rem;
+            pointer-events: none;
+            padding: 0 1rem;
+            @include e.Flex;
+            align-items: flex-end;
+
+            p {
+                @include a.FontSize-S;
+                color: a.$Link;
+                font-weight: 700;
+                mix-blend-mode: multiply;
+            }
+
+            .fab {
+                @include a.FloatingActionButton;
+                display: block;
+                pointer-events: auto;
+                position: relative;
+                margin: auto;
+
+                &._back {
+                    background: rgba($color: #fff, $alpha: 0.5);
+                }
+            }
+        }
+
+    }
+
+    //control-wrap
+
+}

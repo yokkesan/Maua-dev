@@ -1,0 +1,161 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+
+//Description.........................................
+//
+// リストに対してのscss
+//
+//.......................................................
+
+// ================================================================================================
+//
+//  リスト
+//
+// ================================================================================================
+ul.list_common {
+    width: 100%;
+
+    li {
+        width: 100%;
+        border-bottom: 1px solid a.$Border;
+        padding: 13px 0 10px 0;
+        &:last-child {
+            border-bottom: 0px;
+        }
+        span {
+            @include a.Justify;
+        }
+        .date {
+            white-space: nowrap;
+            color: a.$Text-Light;
+        }
+    }
+
+    &._link {
+
+        li {
+            padding: 0rem 0;
+            a {
+                @include a.ListPaddingY;
+                padding-right: 1rem;
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                gap: 1.5rem;
+                position: relative;
+                * {
+                    color: a.$Text-Light;
+                    transition: 0.35s a.$Transition;
+                }
+
+                &:hover {
+                    * {
+                        color: a.$Link;
+                        transition: 0.35s a.$Transition;
+                    }
+                }//hover
+
+            }//a
+
+            .detail {
+                @include a.Ellipsis1;
+            }
+
+            //Unread --------------
+            &._unread {
+                a {
+                    * {
+                        color: a.$Link;
+                        font-weight: 700;
+                    }
+                }
+                a:hover {
+                    * {
+                        color: a.$Link;
+                    }
+                }
+            }
+
+            //Operating --------------
+            &._operating {
+                position: relative;
+                &::after {
+                    background: a.$Link;
+                    content: "運営";
+                    @include a.FontSize-S;
+                    margin: auto;position: absolute;top: 48%;left: 90px;
+                    color: #fff;
+                    line-height: 1;
+                    padding: 9px 1.5rem 7px 1.5rem;
+                    font-weight: 700;
+                    transform: translateY(-50%);
+                }
+                .detail {
+                    position: relative;
+                    span {
+                        padding-left: 77px;
+                    }
+                }
+            }
+
+        }//li
+
+    }//_news
+
+}
+
+// ================================================================================================
+//
+//  ドットリスト
+//
+// ================================================================================================
+ul.list_check {
+    width: 100%;
+
+    li {
+        width: 100%;
+        padding-left: 1.5rem;
+        text-indent: -1.5rem;
+        margin-bottom: 1rem;
+        span {
+            padding-left: 1.5rem;
+            position: relative;
+            &::after {
+                width: 6px;
+                height: 10px;
+                content: "";
+                margin: auto;position: absolute;top: 3px;left: 3px;
+                border-bottom: 2px solid;
+                border-right: 2px solid;
+                border-color: a.$Success;
+                transform: rotate(45deg);
+            }
+        }
+        &._disable {
+            color: a.$Text-Light;
+            span {
+                &::after {
+                    width: 12px;
+                    height: 2px;
+                    background: a.$Link;
+                    content: "";
+                    margin: auto;position: absolute;top: 8px;left: 0;
+                    transform: rotate(45deg);
+                    border: none;
+                }
+            }
+            span {
+                &::before {
+                    width: 12px;
+                    height: 2px;
+                    background: a.$Link;
+                    content: "";
+                    margin: auto;position: absolute;top: 8px;left: 0;
+                    transform: rotate(-45deg);
+                    border: none;
+                }
+            }
+        }//disable
+    }//li
+
+}

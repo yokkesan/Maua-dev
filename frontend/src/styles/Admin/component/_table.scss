@@ -1,0 +1,212 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// テーブルのscss
+//
+//.......................................................
+
+th {
+    text-align: left;
+    font-weight: normal;
+}
+
+//================================================================================================
+//
+//  SvgIcon
+//
+//================================================================================================
+.table_common {
+    width: 100%;
+
+    // overflow-x: scroll;
+    // -ms-overflow-style: none; // IE,edge用
+    // scrollbar-width: none; // FireFox用
+    // &::-webkit-scrollbar { // Chrome,Safari用
+    // 	display:none;
+    // }
+    @media only screen and (max-width: e.$Bp-7inch) {
+        overflow-x: scroll;
+    }
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+
+        // width: calc(1280px - 4rem);
+        @media only screen and (max-width: e.$Bp-7inch) {
+            min-width: 680px;
+        }
+
+
+        thead {
+            tr {
+                border-bottom: 1px solid a.$Border-Dark;
+            }
+
+            th {
+                @include a.ListPaddingY;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                @include a.FontSize-S;
+                font-weight: 700;
+                color: a.$Text-Light;
+
+                &:last-child {
+                    padding-right: 0;
+                }
+
+                &._small {
+                    width: 120px;
+                }
+
+                &._medium {
+                    width: 200px;
+                }
+
+                &._pointer {
+                    cursor: pointer;
+                }
+            }
+        }
+
+        //thead
+        tbody {
+            tr {
+                border-bottom: 1px solid a.$Border;
+                position: relative;
+
+                &:last-child {
+                    border-bottom: 0px;
+                }
+
+                a.ovl {
+                    width: 100%;
+                    height: 100%;
+                    content: "";
+                    margin: auto;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 1;
+                }
+
+            }
+
+            //tr
+            td {
+                max-width: 0;
+                @include a.ListPaddingY;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                @include a.Ellipsis1;
+
+                &._small {
+                    width: 120px;
+                }
+
+                &._medium {
+                    width: 200px;
+                }
+            }
+        }
+
+        //tbody
+    }
+
+        &._brand-list {
+            table {
+                @media only screen and (max-width: e.$Bp-BrandList) {
+                    min-width: 1000px;
+                }
+
+            th._brand-name,
+            td._brand-name {
+                width: 23%;
+            }
+
+            th._brand-plan-change,
+            td._brand-plan-change {
+                width: 23%;
+            }
+
+            th._brand-current-plan,
+            td._brand-current-plan {
+                width: 15%;
+                padding-left: 3rem;
+            }
+
+            th._brand-status,
+            td._brand-status {
+                width: 15%;
+            }
+
+            th._brand-approval,
+            td._brand-approval {
+                width: 15%;
+            }
+
+            td._brand-plan-change {
+                max-width: none;
+                overflow: visible;
+                text-overflow: clip;
+                white-space: normal;
+            }}
+        }
+    th,
+    td {}
+
+    .form_checkbox {
+        width: 25px;
+        padding: 0;
+        z-index: 2;
+        position: relative;
+
+        label {
+            position: relative;
+            z-index: 3;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+    }
+
+    .icon {
+        width: 46px;
+        position: relative;
+        z-index: 2;
+        padding: 0;
+
+        .btn_svg-icon {
+            margin-left: auto;
+        }
+    }
+
+    //icon
+
+    &:not(._use-checkbox) {
+        thead {
+            th:nth-child(1) {
+                padding-left: 0;
+            }
+        }
+
+        tbody {
+            td:nth-child(1) {
+                padding-left: 0;
+            }
+
+            td:last-child {
+                padding-right: 0;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,23 @@
+@charset "utf-8";
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// Cropperに対してのscss
+//
+//.......................................................
+
+.cropper_component {
+    &-control {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        @include e.Flex;
+        .title {
+            width: 100%;
+            color: #fff;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+    }
+}

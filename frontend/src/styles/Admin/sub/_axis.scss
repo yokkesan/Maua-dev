@@ -1,0 +1,157 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// 価格軸設定画面に対してのscss
+//
+//.......................................................
+.axis_component {
+
+    .row-item {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid e.$Border-MediumLight;
+
+        .title {
+            color: a.$Text-Light;
+            width: 100%;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail {
+            @include a.FontSize-Xl;
+            width: 100%;
+
+            span {
+                &::after {
+                    content: "/";
+                    padding: 0 1rem;
+                }
+
+                &:last-child::after {
+                    display: none;
+                }
+            }
+        }
+
+    }
+
+    //row-item
+
+    //EditItemWrap ----------------------
+    .edit-item-wrap {
+        margin-top: 4rem;
+        @include e.Flex;
+        gap: 2rem 4rem;
+
+        @media only screen and (max-width: e.$Bp-11inch) {
+            flex-direction: column;
+        }
+
+        &>.title {
+            width: 100%;
+            color: a.$Text-Light;
+        }
+
+        //LeftColumn ----------------------
+        .select-item-wrap {
+            @include e.Flex-2col(4rem);
+
+            @media only screen and (max-width: e.$Bp-11inch) {
+                width: 100%;
+            }
+
+            .select-row {
+                @include e.Flex-Left;
+                align-items: center;
+                border-bottom: 1px solid e.$Border-MediumLight;
+                gap: 0rem;
+                margin-bottom: 2rem;
+                padding-bottom: 2rem;
+
+                @media only screen and (max-width: e.$Bp-7inch) {
+                    margin-bottom: 1rem;
+                    padding-bottom: 1rem;
+                }
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                    padding-bottom: 0;
+                    border-bottom: 0px solid e.$Border-MediumLight;
+                }
+
+                .title {
+                    width: 150px;
+                    padding-right: 1rem;
+
+                    @media only screen and (max-width: e.$Bp-7inch) {
+                        width: 100%;
+                        padding-left: 0;
+                    }
+                }
+
+                .form_select {
+                    width: calc(100% - 300px);
+
+                    @media only screen and (max-width: e.$Bp-7inch) {
+                        width: 100%;
+                    }
+                }
+
+                .detail {
+                    width: 150px;
+                    padding-left: 1rem;
+                    color: a.$Link;
+                    font-weight: 700;
+
+                    @media only screen and (max-width: e.$Bp-7inch) {
+                        width: 100%;
+                        padding-left: 0;
+                    }
+                }
+            }
+        }
+
+        //ResultWrap -------------------------
+        .result-wrap {
+            @include e.Flex;
+            justify-content: center;
+            align-items: center;
+            @include e.Flex-2col(4rem);
+            font-weight: 700;
+            padding: 2rem;
+
+            @media only screen and (max-width: e.$Bp-11inch) {
+                width: 100%;
+            }
+
+            .box {
+                p {
+                    text-align: center;
+
+                    &.middle {
+                        @include a.FontSize-Xxl;
+                        background: a.$Link;
+                        color: #fff;
+                        padding: 0.5rem 1rem;
+                        font-weight: normal;
+                    }
+                }
+            }
+        }
+
+    }
+
+    //edit-item-wrap
+
+    .btn_link-wrap {
+        margin-top: 8rem;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            margin-top: 4rem;
+        }
+    }
+
+}

@@ -1,0 +1,166 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// 見出しに対してのscss
+//
+//.......................................................
+
+//================================================================================================
+//
+//  ページタイトル
+//
+//================================================================================================
+.heading_page-title {
+    width: 100%;
+    margin-bottom: 4rem;
+    position: relative;
+
+    @media only screen and (max-width: e.$Bp-7inch) {
+        gap: 1rem;
+    }
+
+    .main {
+        @include e.FontSize-Xl;
+        z-index: 2;
+        position: relative;
+        color: #000;
+    }
+
+    //Controller ===============================
+    .controller {
+        z-index: 10;
+        position: relative;
+
+        @media only screen and (max-width: e.$Bp-7inch) {
+            gap: 1rem;
+        }
+
+        @media only screen and (max-width: e.$Bp-Mobile) {
+            justify-content: center;
+        }
+
+        &>div {
+            margin-left: 2rem;
+
+            @media only screen and (max-width: e.$Bp-Mobile) {
+                margin-left: 0;
+            }
+
+            &:nth-child(1) {
+                margin-left: 0;
+            }
+        }
+    }
+
+}
+
+.heading_page-title-en {
+    @include a.MainContentWidth;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    line-height: 1;
+    font-weight: 700;
+    font-family: "Antonio";
+    font-size: min(15vw, 280px);
+    pointer-events: none;
+    color: e.$Border-MediumLight;
+    opacity: 0.4;
+    transform: skewX(-15deg) translate3d(-1%, -14%, 0);
+    letter-spacing: -0.3vw;
+
+    span {
+        white-space: nowrap;
+    }
+
+    span::after {
+        text-transform: capitalize;
+    }
+}
+
+//欧文タイトルの出し分け
+.ly_main._dashboard {
+
+    //ダッシュボードトップの場合
+    .heading_page-title-en span::after {
+        content: "dashboard";
+    }
+}
+
+.ly_main._brand {
+
+    //ブランドページ群の場合
+    .heading_page-title-en span::after {
+        content: "brand";
+    }
+}
+
+.ly_main._shop {
+
+    //ショップページ群の場合
+    .heading_page-title-en span::after {
+        content: "shop";
+    }
+}
+
+.ly_main._plan-select {
+
+    //ショップページ群の場合
+    .heading_page-title-en span::after {
+        content: "plan select";
+    }
+}
+
+//================================================================================================
+//
+//  Componentページ用
+//
+//================================================================================================
+.heading_component {
+    width: 100%;
+    @include e.FontSize-Xl;
+    padding: 1rem 2rem;
+    border-left: 5px solid a.$Link;
+    margin-bottom: 2rem;
+
+    &~section {
+        width: 100%;
+        margin-bottom: 12rem;
+    }
+
+    +.comment {
+        margin-bottom: 4rem;
+        max-width: 580px;
+        @include e.Justify;
+    }
+
+}
+
+//================================================================================================
+//
+//  Componentページ用 - 小
+//
+//================================================================================================
+.heading_component-s {
+    width: 100%;
+    margin-bottom: 3rem;
+    border-left: 5px solid e.$Border-MediumLight;
+    padding: 1rem;
+
+    p.main {
+        font-weight: 700;
+        position: relative;
+        max-width: 620px;
+        @include e.Justify;
+    }
+
+    p.sub {
+        color: a.$Text-Light;
+        max-width: 620px;
+        @include e.Justify;
+    }
+}

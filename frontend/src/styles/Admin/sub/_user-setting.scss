@@ -1,0 +1,102 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// ユーザー設定ページを定義するscss
+//
+//.......................................................
+.us_component {
+
+    //SwitchBtn --------------------
+    .switch-btn-wrap {
+
+        label {
+            display: block;
+            text-align: center;
+            padding: 1.5rem 1rem 1.25rem;
+            background: e.$Border-MediumLight;
+            color: e.$Border-Light;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.25s ease;
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                padding: 1.5rem .5rem 1.25rem;
+            }
+        }
+
+        .swiper-slide {
+            &._current {
+                label {
+                    background: #fff;
+                    color: a.$Link;
+                    font-weight: 700;
+                    transition: 0.25s ease;
+                }
+            }
+        }
+
+    }
+
+    //switch-btn
+
+    .switch-contents {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(5px);
+        transition: 0.5s ease;
+
+        .md_common-bl {
+            display: none;
+        }
+
+        .btn_link-wrap {
+            margin-top: 3rem;
+        }
+
+    }
+
+    //switch-contents
+
+    //CurrentContents ===========================
+    input[type=radio]:checked+.switch-contents {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0px);
+        transition: 0.5s ease 0.1s;
+
+        .md_common-bl {
+            display: block;
+        }
+    }
+
+    //Description.........................................
+    // ユーザー情報
+    //.......................................................
+    .user-info-wrap {
+        @include e.Flex-Center;
+        align-items: center;
+        gap: 2rem 2rem;
+
+        p.text {
+            max-width: 380px;
+            @include e.Justify;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-image-wrap {
+            @include a.AvatarImageSize;
+            margin-bottom: 1rem;
+        }
+
+        .avatar-image-control {
+            @include e.Flex-Center;
+            gap: 1rem;
+        }
+
+    }
+
+
+}

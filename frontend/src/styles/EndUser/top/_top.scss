@@ -1,15 +1,19 @@
+@charset "utf-8";
+@use "../component/variables" as e;
+
 .top-page {
     min-height: 100svh;
     background: #fff;
 
     &__first-view {
         min-height: 100svh;
-        padding: 6vh 2rem;
+        padding: 6vh 2rem 8vh;
+        position: relative;
     }
 
     &__inner {
         width: min(100%, 1500px);
-        min-height: calc(100svh - 12vh);
+        min-height: calc(100svh - 14vh);
         margin-inline: auto;
         display: grid;
         grid-template-columns: minmax(280px, 45%) 1fr;
@@ -19,14 +23,15 @@
 
     &__info {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         padding-left: 4rem;
+        padding-top: 4vh;
     }
 
     &__logo {
         width: 100%;
         max-width: 420px;
-        margin-bottom: clamp(3rem, 10vh, 7rem);
+        margin-bottom: 11vh;
 
         img {
             display: block;
@@ -36,23 +41,107 @@
     }
 
     &__text {
+        width: 100%;
         max-width: 520px;
+        margin-bottom: 11vh;
+        position: relative;
+        z-index: 1;
 
         h1 {
             margin: 0 0 2rem;
-            font-size: clamp(2rem, 3vw, 3.5rem);
-            line-height: 1.2;
+            font-size: clamp(1.5rem, 2vw, 2rem);
+            line-height: 1.5;
+            font-weight: 400;
         }
 
         p {
             margin: 0;
-            font-size: 1rem;
-            line-height: 1.8;
+            color: e.$Text-Light;
+            line-height: 2.25;
+            text-align: justify;
+            word-break: break-all;
         }
     }
 
+    // ============================================================
+    // Menu
+    // ボタン本体のデザインは component/_btn.scss を使用
+    // ============================================================
+    &__menu {
+        width: 45vw;
+        max-width: 580px;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+
+        .btn_link-wrap {
+            width: calc((100% - 2rem) / 2);
+            min-width: 0;
+
+            &._upgrade {
+                width: 100%;
+            }
+
+            .btn_link {
+                width: 100%;
+            }
+        }
+    }
+
+    // ============================================================
+    // Hero
+    // ============================================================
+    &__hero {
+        min-width: 0;
+        height: min(86svh, 900px);
+        position: relative;
+        z-index: 1;
+
+        &::after {
+            width: 36vw;
+            height: 100%;
+            content: "";
+            background: #000;
+            position: absolute;
+            top: 0;
+            right: -2rem;
+            z-index: -1;
+        }
+
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-pagination {
+            text-align: left;
+        }
+
+        .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border: 1px solid #000;
+            opacity: 1;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #000;
+        }
+    }
+
+    &__hero-slide {
+        height: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 63%) minmax(220px, 37%);
+        align-items: center;
+        gap: 4rem;
+        padding-top: 2rem;
+    }
+
     &__hero-image {
-        height: min(80svh, 850px);
+        height: 100%;
         overflow: hidden;
 
         img {
@@ -63,39 +152,238 @@
         }
     }
 
-    @media (max-width: 1024px) {
-        &__first-view {
-            min-height: auto;
-            padding: 4rem 2rem;
+    &__hero-detail {
+        color: #fff;
+
+        h2 {
+            margin: 0 0 4rem;
+            font-family: "Bellefair", serif;
+            font-size: clamp(3rem, 4vw, 4.5rem);
+            line-height: 1;
+            font-weight: 400;
         }
 
-        &__inner {
-            min-height: auto;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-        }
-
-        &__info {
-            padding-left: 0;
-        }
-
-        &__logo {
-            max-width: 360px;
-            margin-bottom: 3rem;
-        }
-
-        &__hero-image {
-            height: 60svh;
+        p {
+            margin: 0;
+            line-height: 2.25;
+            text-align: justify;
+            word-break: break-all;
         }
     }
 
-    @media (max-width: 600px) {
+    &__hero-number {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        line-height: 1.5;
+    }
+
+    &__hero-bar {
+        flex: 1;
+        height: 1px;
+        background: #fff;
+    }
+
+    // ============================================================
+    // 11inch
+    // ============================================================
+    @media only screen and (max-width: e.$Bp-11inch) {
         &__first-view {
-            padding: 2rem 1rem;
+            min-height: auto;
+            padding: 8vh 0 0;
+        }
+
+        &__inner {
+            width: min(100%, 800px);
+            min-height: auto;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        &__info {
+            order: 2;
+            width: 100%;
+            padding: 0;
+        }
+
+        &__logo {
+            max-width: 45vw;
+            margin: 0;
+            position: absolute;
+            top: 4vh;
+            left: 4rem;
+            z-index: 3;
+        }
+
+        &__text {
+            margin-bottom: 4rem;
+            color: #fff;
+
+            p {
+                color: #fff;
+            }
+        }
+
+        &__menu {
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+
+        &__hero {
+            order: 1;
+            width: 100%;
+            height: auto;
+            margin-bottom: 4rem;
+
+            &::after {
+                width: 100vw;
+                height: 50%;
+                top: auto;
+                right: 50%;
+                bottom: 0;
+                transform: translateX(50%);
+            }
+
+            .swiper-pagination {
+                display: none;
+            }
+        }
+
+        &__hero-slide {
+            grid-template-columns: minmax(0, 63%) minmax(220px, 37%);
+            gap: 4rem;
+            padding-top: 2rem;
         }
 
         &__hero-image {
-            height: 55svh;
+            height: 55vh;
+        }
+
+        &__hero-detail {
+            color: #000;
+
+            p {
+                color: #000;
+            }
+        }
+
+        &__hero-bar {
+            background: #000;
+        }
+    }
+
+    // ============================================================
+    // 7inch
+    // ============================================================
+    @media only screen and (max-width: e.$Bp-7inch) {
+        &__inner {
+            width: min(100%, 612px);
+        }
+
+        &__hero {
+            &::after {
+                display: none;
+            }
+        }
+
+        &__hero-slide {
+            grid-template-columns: 1fr;
+            gap: 0;
+            padding: 0 2rem;
+        }
+
+        &__hero-image {
+            width: 100%;
+            height: 70vh;
+        }
+
+        &__hero-detail {
+            width: calc(100% - 4rem);
+            margin: -6.25rem auto 0;
+            padding: 3rem 0;
+            color: #fff;
+            position: relative;
+            z-index: 2;
+
+            h2 {
+                margin-bottom: 1rem;
+            }
+
+            p {
+                color: #fff;
+            }
+        }
+
+        &__hero-bar {
+            background: #fff;
+        }
+
+        &__info {
+            padding: 2rem;
+            background: #000;
+        }
+
+        &__text {
+            margin-bottom: 2rem;
+        }
+
+        &__menu {
+            margin-bottom: 1rem;
+        }
+    }
+
+    // ============================================================
+    // Mobile
+    // ============================================================
+    @media only screen and (max-width: e.$Bp-Mobile) {
+        &__first-view {
+            padding-top: 2rem;
+        }
+
+        &__inner {
+            width: 100%;
+        }
+
+        &__logo {
+            width: calc(100% - 6rem);
+            max-width: none;
+            margin: auto;
+            top: 1rem;
+            right: 0;
+            left: 0;
+        }
+
+        &__menu {
+            gap: 1rem;
+
+            .btn_link-wrap,
+            .btn_link-wrap._upgrade {
+                width: 100%;
+            }
+        }
+
+        &__hero-slide {
+            gap: 1rem;
+        }
+
+        &__hero-image {
+            height: 70vh;
+        }
+
+        &__hero-detail {
+            margin-top: -7rem;
+
+            h2 {
+                font-size: 3rem;
+            }
+        }
+
+        &__hero-number {
+            gap: 1rem;
+            font-size: 2rem;
         }
     }
 }

@@ -1,0 +1,145 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// チーム画面に対してのscss
+//
+//.......................................................
+.team_component {
+
+    ul.team_list {
+        width: 100%;
+        margin: auto;
+        @include e.Flex;
+        gap: 2rem;
+
+        li {
+            width: calc((100% - 2rem * 1) / 2);
+            background: #fff;
+            padding: 2rem;
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                width: 100%;
+            }
+
+            &>.inner {
+                width: 100%;
+                @include e.Flex-Left;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            //Avatar --------------
+            .avatar {
+                width: 90px;
+                height: 90px;
+
+                @media only screen and (max-width: e.$Bp-Mobile) {
+                    order: 1;
+                    margin: 0 auto 0 0;
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 100%;
+                }
+            }
+
+            //Detail --------------
+            .detail {
+                width: calc(100% - 90px - 3rem - 36px - 36px);
+                padding: 0 1rem;
+
+                @media only screen and (max-width: e.$Bp-Mobile) {
+                    order: 4;
+                    width: 100%;
+                }
+
+                .role {
+                    margin-bottom: 0.5rem;
+
+                    span {
+                        color: a.$Text-Light;
+                        @include a.FontSize-S;
+                        display: inline-block;
+                        padding: 0.25rem 1rem 0.15rem 1rem;
+                        background: e.$Border-UltraLight;
+                    }
+
+                    &._admin span {
+                        background: a.$Link;
+                        color: #fff
+                    }
+                }
+
+                .name {
+                    @include a.Ellipsis1;
+                }
+
+                .email {
+                    @include a.Ellipsis1;
+                    color: a.$Text-Light;
+                }
+            }
+
+            .edit {
+                @media only screen and (max-width: e.$Bp-Mobile) {
+                    order: 3;
+                }
+            }
+
+        }
+
+        //li
+
+    }
+
+    //ul
+
+}
+
+//Company ----------------------------
+.company {
+    &-section {
+        width: 100%;
+        padding: 0 2rem;
+        margin-top: 3rem;
+
+        .btn_link-wrap {
+            margin-top: 1.5rem;
+        }
+    }
+
+    &-contact {
+        .form_text {
+            margin-top: 1rem;
+            max-width: 100%;
+        }
+
+        input[type=url] {
+            width: 100%;
+            margin: 0;
+            font-size: 1rem;
+            font-family: "Poppins", "Kosugi", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+            overflow-x: hidden;
+            line-height: 1.75;
+            letter-spacing: 1px;
+            border-radius: 0;
+            outline: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    }
+
+    &-detail {
+        .form_textarea {
+            margin-top: 1.5rem;
+        }
+    }
+
+}

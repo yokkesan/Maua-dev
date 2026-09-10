@@ -1,0 +1,171 @@
+@charset "utf-8";
+@use "../../EndUser/component/variable-end-user" as e;
+@use "../component/variable-admin" as a;
+
+//Description.........................................
+//
+// 基本layoutに対してのscss
+//
+//.......................................................
+// ================================================================================================
+//
+//  画面割
+//
+// ================================================================================================
+.ly_aside {
+    height: 100vh;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    @include a.AsideWidth;
+    transition: transform 300ms;
+
+    @media only screen and (max-width: e.$Bp-Mobile) {
+        min-height: 100vh;
+        min-height: 100dvh;
+        min-height: -webkit-fill-available;
+        height: 100dvh;
+    }
+
+    a *,
+    button * {
+        color: #fff;
+    }
+
+    svg path,
+    svg rect {
+        stroke: #fff;
+    }
+
+    svg.setting {
+        path {
+            stroke: none;
+            fill: #fff;
+        }
+
+        circle {
+            stroke: #fff;
+        }
+    }
+
+    h1 {
+        padding: 2rem 1rem 1.5rem 1rem;
+        text-align: center;
+        line-height: 1;
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-width: 100px;
+
+            path {
+                stroke: none;
+                fill: #fff;
+            }
+        }
+    }
+
+    .md_user-avatar-wrap {
+        padding: 0 2rem;
+
+        .name {
+            color: #fff;
+        }
+    }
+
+}
+
+.ly_main {
+    @include a.MainContentWidth;
+
+    &>.wrap {
+        padding: 3rem 2rem;
+        padding-bottom: calc(60vh - 3rem);
+        background: e.$Border-UltraLight;
+        min-height: 100vh;
+        position: relative;
+
+        &>.inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+    }
+
+    //FullWidth
+    &>.wrap._full {
+        padding: 3rem 0rem;
+        padding-bottom: calc(60vh - 3rem);
+        background: e.$Border-UltraLight;
+        min-height: 100vh;
+        position: relative;
+
+        &>.inner {
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .heading_page-title,
+        .heading_component,
+        .heading_component+.comment {
+            max-width: calc(1280px + 4rem);
+            padding-left: 2rem;
+            padding-right: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    }
+
+}
+
+// ================================================================================================
+//
+//  ダッシュボード用レイアウト
+//
+// ================================================================================================
+.ly_dashboard-card-wrap {
+    width: 100%;
+
+    .row {
+        width: 100%;
+        gap: 4rem;
+        margin-bottom: 4rem;
+
+        .md_common-bl:last-child {
+            margin-bottom: 0;
+        }
+
+        .block {
+            width: calc((100% - 4rem * 1) / 2);
+
+            @media only screen and (max-width: e.$Bp-7inch) {
+                width: 100%;
+            }
+
+            .md_common-bl:last-child {
+                margin-bottom: 0;
+
+            }
+
+            &._min-h {
+                .md_common-bl {
+                    min-height: 100%;
+                }
+            }
+
+        }
+
+        //block
+
+    }
+
+    //row
+
+}

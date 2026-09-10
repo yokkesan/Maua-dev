@@ -1,5 +1,5 @@
 @charset "utf-8";
-@use "variable-end-user" as e;
+@use "variables" as e;
 @use "keyframes" as k;
 @use "../../Admin/component/variable-admin" as a;
 
@@ -78,8 +78,6 @@
             }
         }
 
-        //detail-wrap
-
         .img-wrap {
             width: 100%;
             aspect-ratio: 1/1.4142;
@@ -118,10 +116,7 @@
                     object-fit: contain;
                 }
             }
-
         }
-
-        //img-wrap
 
         .hover-element {
             aspect-ratio: 1/1.4142;
@@ -153,10 +148,7 @@
                 transform: scaleY(0);
                 transition: 0.35s e.$Transition 0.15s;
             }
-
         }
-
-        //hover-element
 
         .btn_link-wrap {
             z-index: 5;
@@ -178,17 +170,13 @@
             }
         }
 
-        //HoverStyle --------------------
         &:hover {
             .hover-element {
                 &::after {
                     transform: scaleY(1);
                     transition: 0.35s e.$Transition;
                 }
-
             }
-
-            //hover-element
 
             .btn_link-wrap {
                 transform: scale(0.8) translateZ(200px);
@@ -196,12 +184,8 @@
                 transition: 0.35s e.$Transition 0.15s;
             }
         }
-
     }
 
-    //card
-
-    //DelaySetting --------------------
     .row {
 
         .card:nth-child(2) .img-wrap._on,
@@ -242,9 +226,6 @@
             }
         }
     }
-
-    //DelaySetting
-
 }
 
 //================================================================================================
@@ -304,14 +285,11 @@
                     pointer-events: auto;
                 }
             }
-
         }
-
     }
 
     .card {
         width: calc((100% - 0rem * 1) / 1);
-        // width: 100%;
         background: #fff;
         position: relative;
         color: #000;
@@ -373,17 +351,13 @@
                 width: 100%;
                 @include e.Ellipsis1;
             }
-
         }
-
-        //detail-wrap
 
         .chevron {
             @include e.Chevron;
             right: 1.5rem;
         }
 
-        //疑似リンク用オーバーレイ
         .link-ovl {
             width: 100%;
             height: 100%;
@@ -398,7 +372,6 @@
             cursor: pointer;
         }
 
-        //編集用オーバーレイ
         .edit-ovl {
             width: 100%;
             height: calc(100% + 2px);
@@ -439,7 +412,6 @@
                 }
             }
 
-            //削除用オーバーレイ
             .delete-ovl {
                 width: 100%;
                 height: 100%;
@@ -481,18 +453,9 @@
                         }
                     }
                 }
-
             }
-
-            //削除用オーバーレイ
-
         }
-
-        //編集オーバーレイ
-
     }
-
-    //card
 
     &._editActive .edit-ovl {
         opacity: 1;
@@ -505,7 +468,6 @@
         visibility: visible;
         transition: 0.35s ease;
     }
-
 }
 
 //================================================================================================
@@ -602,10 +564,7 @@ $CardRegistrationStepInnerSize: 520px;
         opacity: 0;
         transition: 0.8s ease;
         transform: translateX(50px);
-    }
 
-    // パーソナルカウント非表示用
-    .card {
         &.personal-disabled {
             position: relative;
             pointer-events: none !important;
@@ -616,12 +575,12 @@ $CardRegistrationStepInnerSize: 520px;
             }
 
             &::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.6);
-            pointer-events: none;
-            z-index: 5;
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: rgba(255, 255, 255, 0.6);
+                pointer-events: none;
+                z-index: 5;
             }
 
             .personal-text {
@@ -675,7 +634,6 @@ $CardRegistrationStepInnerSize: 520px;
                     border-bottom: 0px solid e.$Border-MediumLight;
                 }
             }
-
         }
 
         .question-wrap {
@@ -775,7 +733,6 @@ $CardRegistrationStepInnerSize: 520px;
                 }
             }
 
-            //再送信用のOVL
             .resend-ovl {
                 width: 100%;
                 height: 100%;
@@ -816,7 +773,6 @@ $CardRegistrationStepInnerSize: 520px;
             &._reSendShow span.visible {
                 display: inline;
             }
-
         }
 
         .item {
@@ -830,7 +786,6 @@ $CardRegistrationStepInnerSize: 520px;
         .form_select-wrap .item {
             margin-top: 0;
         }
-
     }
 
     .control-wrap {
@@ -879,10 +834,8 @@ $CardRegistrationStepInnerSize: 520px;
                 font-weight: 700;
             }
         }
-
     }
 
-    //完了用 / 仮設置用のカード
     .card._finish {
         background: none;
 
@@ -899,7 +852,6 @@ $CardRegistrationStepInnerSize: 520px;
             margin-top: 1rem;
             margin-bottom: 2rem;
             text-align: center;
-
         }
 
         .control-wrap {
@@ -930,10 +882,8 @@ $CardRegistrationStepInnerSize: 520px;
                 }
             }
         }
-
     }
 
-    //編集用のカード
     .swiper-slide-inner._confirm {
         max-width: 100%;
 
@@ -959,9 +909,7 @@ $CardRegistrationStepInnerSize: 520px;
                 display: none;
             }
         }
-
     }
-
 }
 
 //================================================================================================
@@ -972,9 +920,7 @@ $CardRegistrationStepInnerSize: 520px;
 .card_plan-select {
     width: 100%;
 
-    &-container {
-        // background: #000;
-    }
+    &-container {}
 
     &-wrap {
         @include e.Flex;
@@ -995,8 +941,6 @@ $CardRegistrationStepInnerSize: 520px;
             position: relative;
             margin: 0;
 
-            // border: 1px solid e.$Border-MediumLight;
-            // box-shadow: 1rem 1rem 0 0 rgba($color: #000000, $alpha: 1.0);
             @media only screen and (max-width: e.$Bp-11inch) {
                 width: 100%;
             }
@@ -1022,8 +966,6 @@ $CardRegistrationStepInnerSize: 520px;
                 }
             }
 
-            //title
-
             .detail {
                 text-align: center;
                 margin-bottom: 1rem;
@@ -1033,7 +975,6 @@ $CardRegistrationStepInnerSize: 520px;
                 text-align: center;
 
                 span {
-                    // @include e.FontSize-Xxxl;
                     font-family: "Antonio";
                     font-size: 5rem;
                     line-height: 1;
@@ -1059,8 +1000,6 @@ $CardRegistrationStepInnerSize: 520px;
                 }
             }
 
-            //price
-
             .recommend {
                 color: #000;
                 margin-top: 4rem;
@@ -1077,7 +1016,6 @@ $CardRegistrationStepInnerSize: 520px;
             .comment {
                 margin-bottom: 2rem;
                 color: #000;
-                margin-bottom: 2rem;
                 padding-bottom: 2rem;
                 border-bottom: 1px solid e.$Border-MediumLight;
                 margin-top: 2rem;
@@ -1141,11 +1079,9 @@ $CardRegistrationStepInnerSize: 520px;
                             left: 0;
                         }
                     }
-
                 }
             }
 
-            //Main ==========================
             &._main {
                 background: e.$Border-Dark;
                 transform: scale(1.1);
@@ -1175,7 +1111,6 @@ $CardRegistrationStepInnerSize: 520px;
                 }
             }
 
-            //Soon ===========================
             &._soon {
                 background: e.$Border-Light;
 
@@ -1201,7 +1136,6 @@ $CardRegistrationStepInnerSize: 520px;
                     }
                 }
             }
-
         }
 
         .registration-flow {
@@ -1258,13 +1192,8 @@ $CardRegistrationStepInnerSize: 520px;
                 padding-right: 1rem;
             }
         }
-
     }
 
-    //wrap
-
-
-    //2col -------------------------------
     &-wrap._2col {
         gap: 2rem;
 
@@ -1280,10 +1209,7 @@ $CardRegistrationStepInnerSize: 520px;
             }
         }
     }
-
-
 }
-
 
 //================================================================================================
 //
@@ -1291,7 +1217,6 @@ $CardRegistrationStepInnerSize: 520px;
 //
 //================================================================================================
 .card_like-us {
-
     .swiper {
         overflow: visible;
     }
@@ -1328,7 +1253,6 @@ $CardRegistrationStepInnerSize: 520px;
                 height: calc(100% - 49px);
                 background: rgba($color: a.$Link, $alpha: 0.15);
                 backdrop-filter: blur(5px) saturate(180%);
-                ;
                 content: "";
                 margin: auto;
                 position: absolute;
@@ -1354,10 +1278,8 @@ $CardRegistrationStepInnerSize: 520px;
                 transition: 0.35s ease;
             }
         }
-
     }
 
-    //Hover -----------------------
     .swiper-slide:hover {
         a {
             &::before {
@@ -1372,8 +1294,6 @@ $CardRegistrationStepInnerSize: 520px;
         }
     }
 
-
-    //CardStyle ----------------------------------------
     &._flex {
         @include e.Flex-Left;
         gap: 2rem;
@@ -1421,9 +1341,7 @@ $CardRegistrationStepInnerSize: 520px;
             top: 1rem;
             right: 1rem;
         }
-
     }
-
 }
 
 .brand-free-note {

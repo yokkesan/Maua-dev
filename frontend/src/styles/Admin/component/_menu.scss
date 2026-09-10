@@ -1,0 +1,497 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// メニューに対してのscss
+//
+//.......................................................
+// ================================================================================================
+//
+//  サイドメニュー
+//
+// ================================================================================================
+nav.menu_sidebar ul {
+    width: 100%;
+    padding: 0 1rem 0 2rem;
+
+    @media only screen and (max-width: e.$Bp-13inch) {
+        padding: 0 1rem;
+    }
+
+    li {
+        width: 100%;
+        position: relative;
+
+        a,
+        button {
+            width: 100%;
+            padding: 1rem 1rem;
+            display: block;
+            text-align: left;
+            position: relative;
+
+            &::before {
+                width: calc(100% - 2rem - 2px);
+                height: 1px;
+                background: #fff;
+                content: "";
+                margin: auto;
+                position: absolute;
+                top: -4px;
+                bottom: 0;
+                left: 1rem;
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.35s e.$Transition 0s;
+            }
+
+            &:not(._current):after {
+                width: 9px;
+                height: 9px;
+                background: #fff;
+                border-radius: 100%;
+                content: "";
+                margin: auto;
+                position: absolute;
+                top: -4px;
+                right: 1rem;
+                bottom: 0;
+                transform: scale(0);
+                transition: 0.35s e.$Transition 0.35s;
+                ;
+            }
+
+            span {
+                z-index: 1;
+            }
+
+            &._current {
+                &::after {
+                    pointer-events: none;
+                    width: calc(100% + 1rem + 2px);
+                    content: "";
+                    background: e.$Black-Medium;
+                    border-top-left-radius: 5px;
+                    border-bottom-left-radius: 5px;
+                    margin: auto;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 0;
+                }
+            }
+
+            //hover
+            &:hover {
+                &::before {
+                    transform-origin: left;
+                    transform: scaleX(1);
+                    transition: transform 0.35s e.$Transition 0s;
+                }
+
+                &:not(._current):after {
+                    transform: scale(1);
+                    transition: 0.35s e.$Transition 0.25s;
+                }
+            }
+
+            //hover
+
+        }
+
+        //a
+
+        //アコーディオンメニュー -----------------------------------------------
+        .accordion {
+            .close {
+                display: block;
+            }
+
+            .open {
+                display: none;
+            }
+
+            &._on {
+                .close {
+                    display: none;
+                }
+
+                .open {
+                    display: block;
+                }
+            }
+        }
+
+        ul.nest {
+            padding-left: 16px;
+            opacity: 0;
+            transition: 0.35s ease;
+
+            li {
+                display: none;
+                background: e.$Black-Medium;
+            }
+        }
+
+        .accordion._on+ul.nest {
+            opacity: 1;
+            transition: 0.35s ease 0.1s;
+
+            li {
+                display: block;
+            }
+        }
+
+    }
+
+    //li
+}
+
+nav.menu_sidebar {
+    @media only screen and (max-width: e.$Bp-Mobile) {
+        overflow: hidden;
+    }
+}
+
+//ul
+
+aside button.logout {
+    width: 100%;
+    content: "";
+    padding: 1rem;
+    color: #fff;
+    background: e.$Black-Medium;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @include a.LinkHoverColor;
+    z-index: 105;
+
+    @media only screen and (max-width: e.$Bp-Mobile) {
+    width: auto;
+    padding: 1rem 1.5rem;
+    bottom: 0;
+    }
+}
+
+// ================================================================================================
+//
+//  ブランド変更メニュー
+//
+// ================================================================================================
+nav.menu_brand-change {
+    @include a.AsideWidth;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px) saturate(180%);
+    -webkit-backdrop-filter: blur(5px) saturate(180%);
+    background-color: rgba($color: #fff, $alpha: 0.8);
+    transform: translateX(0%);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.35s e.$Transition;
+
+    &._open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+        transition: 0.35s e.$Transition;
+    }
+
+    h4 {
+        background: e.$Black;
+        color: #fff;
+        text-align: center;
+        padding: 1.5rem;
+        position: relative;
+
+        .back {
+            width: 60px;
+            height: 100%;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+    }
+
+    .md_scroll-content {
+        height: calc(100vh - 61.75px);
+    }
+
+    ul {
+        width: 100%;
+
+        li {
+            width: 100%;
+            padding: 1rem 1rem;
+            border-bottom: 1px solid rgba($color: e.$Border-Dark, $alpha: 0.1);
+            gap: 1rem;
+            color: e.$Black;
+            cursor: pointer;
+
+            .avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 100%;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            .detail {
+                width: calc(100% - 50px - 1rem);
+                @include a.Ellipsis1;
+            }
+
+        }
+
+        //li
+
+    }
+
+    //ul
+
+}
+
+//nav.menu_brand-change
+
+// ================================================================================================
+//
+//  ブランド変更メニュー
+//
+// ================================================================================================
+button.button-sidenav {
+    width: 68px;
+    height: 69px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    cursor: pointer;
+    z-index: 10000;
+    // mix-blend-mode: difference;
+    background: #000;
+    display: none;
+
+    @media only screen and (max-width: e.$Bp-11inch) {
+        display: block;
+        // bottom: 30px;
+        bottom: 0;
+    }
+
+    .inner {
+        width: 50%;
+        height: 50%;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        span {
+            width: 100%;
+            height: 1px;
+            background: #fff;
+            content: "";
+            margin: auto;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform-origin: left;
+        }
+
+        &._default {
+            z-index: 100;
+
+            span {
+                transform: scaleX(33.333%);
+                transform-origin: left;
+                transition: 0.15s e.$Transition;
+            }
+
+            span:nth-child(1) {
+                top: 8px;
+                bottom: auto;
+                transition-delay: 0.35s;
+            }
+
+            span:nth-child(2) {
+                transform: scaleX(66.666%);
+                transition-delay: 0.45s;
+            }
+
+            span:nth-child(3) {
+                transform: scaleX(100%);
+                top: auto;
+                bottom: 8px;
+                transition-delay: 0.55s;
+            }
+        }
+
+        &._hover {
+            z-index: 100;
+
+            span {
+                transform: scaleX(0%);
+                transition: 0.15s e.$Transition;
+            }
+
+            span:nth-child(1) {
+                top: 8px;
+                bottom: auto;
+            }
+
+            span:nth-child(2) {
+                transition-delay: 0.1s;
+            }
+
+            span:nth-child(3) {
+                top: auto;
+                bottom: 8px;
+                transition-delay: 0.2s;
+            }
+        }
+
+        &._close {
+            z-index: 90;
+            pointer-events: none;
+
+            span {
+                width: 75%;
+                transform-origin: center;
+                transition: 0.15s e.$Transition;
+            }
+
+            span:nth-child(1) {
+                transform: rotate(45deg) scaleX(0%);
+            }
+
+            span:nth-child(2) {
+                transform: rotate(-45deg) scaleX(0%);
+                transition-delay: 0.1s;
+            }
+        }
+
+    }
+
+    //HoverStyle -------------------------
+    &:hover {
+        .inner {
+
+            &._default {
+                span {
+                    transform: scaleX(0);
+                    transition: 0.15s e.$Transition;
+                }
+            }
+
+            &._hover {
+                span {
+                    transform: scaleX(100%);
+                    transition: 0.15s e.$Transition;
+                }
+
+                span:nth-child(1) {
+                    transition-delay: 0.25s;
+                }
+
+                span:nth-child(2) {
+                    transition-delay: 0.35s;
+                }
+
+                span:nth-child(3) {
+                    transition-delay: 0.45s;
+                }
+            }
+        }
+
+        //inner
+    }
+
+    //hover
+
+    //OpenStyle -------------------------
+    &._open,
+    &._searchActive {
+        .inner {
+
+            &._default {
+                z-index: 90;
+                pointer-events: none;
+
+                span {
+                    transform: scaleX(0);
+                    transition: 0.15s e.$Transition;
+                }
+            }
+
+            &._hover {
+                z-index: 90;
+                pointer-events: none;
+
+                span {
+                    transform: scaleX(0%);
+                    transition: 0.15s e.$Transition;
+                }
+
+                span:nth-child(1) {
+                    transition-delay: 0s;
+                }
+
+                span:nth-child(2) {
+                    transition-delay: 0.1s;
+                }
+
+                span:nth-child(3) {
+                    transition-delay: 0.2s;
+                }
+            }
+
+            &._close {
+                z-index: 100;
+                pointer-events: auto;
+
+                span {
+                    transition: 0.35s e.$Transition;
+                }
+
+                span:nth-child(1) {
+                    transform: rotate(45deg) scaleX(100%);
+                    transition-delay: 0.45s;
+                }
+
+                span:nth-child(2) {
+                    transform: rotate(-45deg) scaleX(100%);
+                    transition-delay: 0.55s;
+                }
+            }
+
+        }
+
+        //inner
+
+        &+.ly_aside {
+            transform: translateX(0);
+        }
+    }
+}

@@ -1,0 +1,40 @@
+@charset "utf-8";
+@use "../../Admin/component/variable-admin" as a;
+@use "../../EndUser/component/variable-end-user" as e;
+
+//Description.........................................
+//
+// 価格軸設定画面に対してのscss
+//
+//.......................................................
+.payment_component {
+    section {
+        padding: 4rem 2rem;
+        background: e.$Border-UltraLight;
+        & > .inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+    }
+
+    h1 {
+        margin-bottom: 8rem;
+    }
+
+    .btn_link-wrap {
+        margin-top: 8rem;
+    }
+
+    .logo-element {
+        width: 100%;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid a.$Border;
+        img {
+            max-width: 280px;
+        }
+    }
+
+}
