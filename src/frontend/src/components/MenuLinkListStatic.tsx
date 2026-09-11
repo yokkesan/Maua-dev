@@ -33,14 +33,14 @@ export default function MenuLinkListStatic() {
             <li className="_about">
                 <button
                     type="button"
-                    className="js-toggle-on"
+                    className={`js-toggle-on${openSubMenu === "about" ? " _on" : ""}`}
                     onClick={() => toggleSubMenu("about")}
                     aria-expanded={openSubMenu === "about"}
                 >
                     <span>AUMAについて（料金プラン）</span>
                 </button>
 
-                <ul className={`menu_lv2-nest${openSubMenu === "about" ? " _open" : ""}`}>
+                <ul className="menu_lv2-nest">
                     <li>
                         <Link to="/brand/about">
                             <span>ブランド様用</span>
@@ -57,14 +57,14 @@ export default function MenuLinkListStatic() {
             <li>
                 <button
                     type="button"
-                    className="js-toggle-on"
+                    className={`js-toggle-on${openSubMenu === "guide" ? " _on" : ""}`}
                     onClick={() => toggleSubMenu("guide")}
                     aria-expanded={openSubMenu === "guide"}
                 >
                     <span>ご利用ガイド</span>
                 </button>
 
-                <ul className={`menu_lv2-nest${openSubMenu === "guide" ? " _open" : ""}`}>
+                <ul className="menu_lv2-nest">
                     <li>
                         <Link to="/brand/guide">
                             <span>ブランド様用</span>
@@ -99,14 +99,14 @@ export default function MenuLinkListStatic() {
             <li>
                 <button
                     type="button"
-                    className="js-toggle-on"
+                    className={`js-toggle-on${openSubMenu === "terms" ? " _on" : ""}`}
                     onClick={() => toggleSubMenu("terms")}
                     aria-expanded={openSubMenu === "terms"}
                 >
                     <span>利用規約</span>
                 </button>
 
-                <ul className={`menu_lv2-nest${openSubMenu === "terms" ? " _open" : ""}`}>
+                <ul className="menu_lv2-nest">
                     <li>
                         <Link to="/brand/rule">
                             <span>ブランド様用</span>

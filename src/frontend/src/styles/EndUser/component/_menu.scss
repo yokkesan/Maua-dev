@@ -413,29 +413,18 @@
 
 // NestMenu -------------------------------
 .menu_lv2-nest {
+    display: none;
     padding-left: 2rem;
-    opacity: 0;
-    transition: 0.25s ease-in-out;
 
     li {
         span {
             color: e.$Text-UltraLight;
         }
     }
-
-    .inner {
-        display: none;
-        padding-bottom: 1rem;
-    }
 }
 
 .js-toggle-on._on+ul.menu_lv2-nest {
-    opacity: 1;
-    transition: 0.25s ease-in-out 0.15s;
-
-    .inner {
-        display: block;
-    }
+    display: block;
 }
 
 // ================================================================================================

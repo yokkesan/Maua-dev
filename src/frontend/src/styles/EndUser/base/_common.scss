@@ -1,29 +1,101 @@
-@use "../component/variables" as v;
-
-:root {
-    --color-main: #{v.$color-main};
-    --color-text: #{v.$color-text};
-    --color-text-light: #{v.$color-text-light};
-    --color-link: #{v.$color-link};
-    --color-white: #{v.$color-white};
-    --color-black: #{v.$color-black};
-}
-
-body {
-    color: v.$color-text;
-    font-family: v.$font-family-base;
-    font-weight: 400;
-    line-height: 1.75;
-    letter-spacing: 1px;
-    background: v.$color-white;
-}
+@charset "utf-8";
+@use "../component/variable-end-user" as e;
 
 a {
-    color: inherit;
+    color: e.$Black;
 }
 
 .root-wrap {
     width: 100%;
+    background: #fff;
     overflow: hidden;
-    background: v.$color-white;
+}
+
+.p768 {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+.p960 {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.p1024 {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.p1240 {
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.svg-main path,
+.svg-main polygon {
+    color: e.$Main;
+    fill: currentColor;
+}
+
+.svg-white path,
+.svg-white polygon {
+    color: #fff;
+    fill: currentColor;
+}
+
+.svg-stroke-white path,
+.svg-stroke-white polygon,
+.svg-stroke-white polyline,
+.svg-stroke-white line {
+    stroke: #fff;
+    fill: none;
+}
+
+.svg-black path,
+.svg-black polygon {
+    color: #000;
+    fill: currentColor;
+}
+
+:root {
+    --shadow-color: 0deg 0% 80%;
+
+    --shadow-elevation-low:
+        0 1px 0.9px hsl(var(--shadow-color) / 0.27),
+        0 1.3px 1.2px -2px hsl(var(--shadow-color) / 0.2),
+        0 3px 2.7px -4px hsl(var(--shadow-color) / 0.13);
+
+    --shadow-elevation-medium:
+        0 1px 0.9px hsl(var(--shadow-color) / 0.28),
+        0 2px 1.8px -1.3px hsl(var(--shadow-color) / 0.23),
+        0 5.6px 5px -2.7px hsl(var(--shadow-color) / 0.18),
+        -0.1px 15px 13.5px -4px hsl(var(--shadow-color) / 0.12);
+
+    --shadow-elevation-high:
+        0 1px 0.9px hsl(var(--shadow-color) / 0.23),
+        0 1.9px 1.7px -0.5px hsl(var(--shadow-color) / 0.21),
+        0 3.1px 2.8px -1px hsl(var(--shadow-color) / 0.19),
+        0 5.3px 4.8px -1.5px hsl(var(--shadow-color) / 0.17),
+        -0.1px 9px 8.1px -2px hsl(var(--shadow-color) / 0.15),
+        -0.1px 14.7px 13.2px -2.5px hsl(var(--shadow-color) / 0.13),
+        -0.2px 23.1px 20.8px -3px hsl(var(--shadow-color) / 0.12),
+        -0.3px 34.6px 31.1px -3.5px hsl(var(--shadow-color) / 0.1),
+        -0.4px 50px 45px -4px hsl(var(--shadow-color) / 0.08);
+}
+
+.swiper-pagination-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    outline: 1px solid #000;
+    outline-offset: -1px;
+    background-color: #fff !important;
+    opacity: 1 !important;
+
+    &.swiper-pagination-bullet-active {
+        background-color: #000 !important;
+    }
+}
+
+._display_none {
+    display: none;
 }
