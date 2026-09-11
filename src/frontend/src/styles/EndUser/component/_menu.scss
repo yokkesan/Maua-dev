@@ -1,13 +1,13 @@
 @charset "utf-8";
+
 @use "variables" as e;
 @use "../../Admin/component/variable-admin" as a;
 
-//Description.........................................
+// Description.........................................
 //
 // メニューに対してのscss
 //
-//.......................................................
-
+// ....................................................
 
 // ================================================================================================
 //
@@ -15,7 +15,6 @@
 //
 // ================================================================================================
 .menu_hmbg-container {
-
 
     // ================================================================================================
     //  ボタン
@@ -49,7 +48,6 @@
                 width: 100%;
                 height: 1px;
                 background: #fff;
-                content: "";
                 margin: auto;
                 position: absolute;
                 top: 0;
@@ -63,24 +61,23 @@
                 z-index: 100;
 
                 span {
-                    transform-origin: right;
                     transition: 0.15s e.$Transition;
                 }
 
                 span:nth-child(1) {
-                    transform: scaleX(100%);
+                    transform: scaleX(1);
                     top: 8px;
                     bottom: auto;
                     transition-delay: 0.35s;
                 }
 
                 span:nth-child(2) {
-                    transform: scaleX(66.666%);
+                    transform: scaleX(0.66666);
                     transition-delay: 0.45s;
                 }
 
                 span:nth-child(3) {
-                    transform: scaleX(33.333%);
+                    transform: scaleX(0.33333);
                     top: auto;
                     bottom: 8px;
                     transition-delay: 0.55s;
@@ -91,7 +88,7 @@
                 z-index: 100;
 
                 span {
-                    transform: scaleX(0%);
+                    transform: scaleX(0);
                     transition: 0.15s e.$Transition;
                 }
 
@@ -122,23 +119,18 @@
                 }
 
                 span:nth-child(1) {
-                    transform: rotate(45deg) scaleX(0%);
+                    transform: rotate(45deg) scaleX(0);
                 }
 
                 span:nth-child(2) {
-                    transform: rotate(-45deg) scaleX(0%);
+                    transform: rotate(-45deg) scaleX(0);
                     transition-delay: 0.1s;
                 }
             }
-
         }
 
-        //inner
-
-        //HoverStyle -------------------------
         &:hover {
             .inner {
-
                 &._default {
                     span {
                         transform: scaleX(0);
@@ -148,7 +140,7 @@
 
                 &._hover {
                     span {
-                        transform: scaleX(100%);
+                        transform: scaleX(1);
                         transition: 0.15s e.$Transition;
                     }
 
@@ -165,17 +157,11 @@
                     }
                 }
             }
-
-            //inner
         }
 
-        //hover
-
-        //OpenStyle -------------------------
         &._open,
         &._searchActive {
             .inner {
-
                 &._default {
                     z-index: 90;
                     pointer-events: none;
@@ -191,7 +177,7 @@
                     pointer-events: none;
 
                     span {
-                        transform: scaleX(0%);
+                        transform: scaleX(0);
                         transition: 0.15s e.$Transition;
                     }
 
@@ -217,22 +203,17 @@
                     }
 
                     span:nth-child(1) {
-                        transform: rotate(45deg) scaleX(100%);
+                        transform: rotate(45deg) scaleX(1);
                         transition-delay: 0.45s;
                     }
 
                     span:nth-child(2) {
-                        transform: rotate(-45deg) scaleX(100%);
+                        transform: rotate(-45deg) scaleX(1);
                         transition-delay: 0.55s;
                     }
                 }
-
             }
-
-            //inner
         }
-
-        //open
 
         &._white {
             .inner {
@@ -242,12 +223,7 @@
                 }
             }
         }
-
-        //検索メニューがアクティブな場合
-
     }
-
-    //button
 
     // ================================================================================================
     //  メニュー
@@ -273,10 +249,8 @@
             transform: translateY(-50px);
             transition: 0.5s e.$TransitionMenu;
 
-            &>.inner {
-                padding: 4rem;
-                padding-bottom: 0;
-                padding-top: 6rem;
+            >.inner {
+                padding: 6rem 4rem 0;
                 @include e.GlobalSectionPaddingTop;
             }
         }
@@ -289,14 +263,13 @@
             }
         }
 
-        //MenuListCommon -----------------------------------
+        // MenuListCommon -----------------------------------
         .title {
             width: 100%;
             color: #fff;
             @include e.FontAuma;
             @include e.FontSize-Xxl;
-            line-height: 0.8em;
-            margin-bottom: 0rem;
+            margin-bottom: 0;
             position: relative;
             display: flex;
             justify-content: space-between;
@@ -347,14 +320,9 @@
                     padding: 1rem 1.5rem;
                     transition: 0.25s e.$Transition;
                 }
-
-                // &:hover a {
-                //     color: a.$Link-Light;
-                //     transition: 0.25s e.$Transition;
-                // }
             }
 
-            //PageList -----------------------------------
+            // PageList -----------------------------------
             &.page {
                 position: relative;
 
@@ -371,29 +339,30 @@
                         top: 7px;
                         left: 0;
                         opacity: 0;
-                        transition: transform 0.35s e.$Transition 0.35s, opacity 0.35s e.$Transition 0s;
+                        transition:
+                            transform 0.35s e.$Transition 0.35s,
+                            opacity 0.35s e.$Transition;
                     }
 
                     &:hover {
                         &::after {
                             opacity: 1;
-                            transition: transform 0.35s e.$Transition 0.35s, opacity 0.35s e.$Transition 0s;
                         }
                     }
                 }
             }
 
-            //SnsList -----------------------------------
+            // SnsList -----------------------------------
             &.sns {
                 display: flex;
-                justify-content: start;
+                justify-content: flex-start;
                 flex-wrap: wrap;
                 gap: 0 0.5rem;
 
                 li {
                     width: 41px;
                     height: 41px;
-                    border-radius: 100%;
+                    border-radius: 50%;
                     background: rgba($color: a.$Link, $alpha: 0);
                     transition: 0.35s e.$Transition;
 
@@ -410,39 +379,26 @@
 
                     &:hover {
                         background: rgba($color: #fff, $alpha: 1);
-                        transition: 0.35s e.$Transition;
 
                         a {
-                            padding: 0;
-
                             svg * {
                                 fill: #000;
                                 transition: 0.35s e.$Transition;
                             }
                         }
                     }
-
-                    //hover
                 }
-
-                //li:not(.title)
             }
-
-            //ul.sns
-
         }
-
-        //ul
-
     }
 
-    //OpenStyle ------------------------------------
+    // OpenStyle ------------------------------------
     button.hmbg-button._open+nav.hmbg-menu {
         pointer-events: auto;
 
         .md_scroll-content {
             opacity: 1;
-            transform: translateY(0px);
+            transform: translateY(0);
             transition: 0.5s e.$Transition;
             transition-delay: 0.5s;
         }
@@ -452,14 +408,10 @@
                 transition-delay: 0s;
             }
         }
-
     }
-
-    //OpenStyle
-
 }
 
-//NestMenu -------------------------------
+// NestMenu -------------------------------
 .menu_lv2-nest {
     padding-left: 2rem;
     opacity: 0;
@@ -501,26 +453,21 @@
         position: fixed;
         top: 16px;
         right: calc(68px + 1rem);
-        transition: 0.5s ease 0.8s;
         z-index: 10000;
+        pointer-events: auto;
+        transition: 0.5s ease 0.8s;
 
         svg * {
             stroke: #fff;
         }
 
         @media only screen and (max-width: e.$Bp-Mobile) {
-            right: calc(62px);
             top: 13px;
+            right: 62px;
         }
     }
 
-    .md_icon-btn._menu-open {
-        pointer-events: auto;
-    }
-
     &._none {
-
-        // MenuOpen --------------------
         .btn_floating-action {
             opacity: 0;
             pointer-events: none;
@@ -550,7 +497,7 @@
         ////////////////////////////////////////////////////
         .tab-selector-wrap {
             width: 100%;
-            padding: 0 0rem;
+            padding: 0;
             @include e.Flex;
             align-items: center;
             border-bottom: 1px solid;
@@ -558,12 +505,12 @@
             transition: 0.5s ease;
 
             @media only screen and (max-width: e.$Bp-11inch) {
-                border-bottom: 0px solid;
+                border-bottom: 0;
                 border-top: 1px solid e.$Border-Dark;
             }
 
             .grid {
-                width: calc((100% - 0rem * 5) / 6);
+                width: calc(100% / 6);
 
                 @media only screen and (max-width: e.$Bp-11inch) {
                     width: 100%;
@@ -573,12 +520,12 @@
                     display: block;
                     width: 100%;
                     text-align: center;
-                    padding: 1rem 2rem 0.75rem 2rem;
+                    padding: 1rem 2rem 0.75rem;
                     cursor: pointer;
                     transition: 0.35s ease;
 
                     @media only screen and (max-width: e.$Bp-11inch) {
-                        padding: 1.75rem 2rem 1.5rem 2rem;
+                        padding: 1.75rem 2rem 1.5rem;
                         border-bottom: 1px solid e.$Border-Dark;
                     }
                 }
@@ -595,12 +542,7 @@
                         }
                     }
                 }
-
-                //not:(._free) span
-
             }
-
-            //grid
 
             @at-root {
                 .menu_search-container._none._open .tab-selector-wrap {
@@ -609,21 +551,17 @@
                     transition: 0.5s ease;
                 }
             }
-
         }
-
-        //tab-selector-wrap
-
     }
 
-    //Tab切り替えのコンテンツ
+    // Tab切り替えのコンテンツ
     .search-contents-container {
         width: 100%;
         position: relative;
         height: calc(100vh - 45.5px - 6rem);
         background: rgba($color: #fff, $alpha: 0.025);
         opacity: 0;
-        transition: 0.5s ease 0s;
+        transition: 0.5s ease;
 
         @media only screen and (max-width: e.$Bp-11inch) {
             background: rgba($color: #fff, $alpha: 0.05);
@@ -658,7 +596,7 @@
 
             @media only screen and (max-width: e.$Bp-11inch) {
                 backdrop-filter: blur(15px);
-                background: rgba($color: #000000, $alpha: 0.9);
+                background: rgba($color: #000, $alpha: 0.9);
             }
 
             .search-contents-inner {
@@ -674,19 +612,16 @@
             .scroll-inner {
                 width: 100%;
                 height: 100%;
-                padding: 3rem 2rem 2rem;
-                overflow-y: scroll;
-                padding-bottom: 100px;
-                -ms-overflow-style: none; // IE,edge用
-                scrollbar-width: none; // FireFox用
+                padding: 3rem 2rem 100px;
+                overflow-y: auto;
+                scrollbar-width: none;
 
                 &::-webkit-scrollbar {
-                    // Chrome,Safari用
                     display: none;
                 }
 
                 @media only screen and (max-width: e.$Bp-11inch) {
-                    padding: 11rem 2rem 50vh 2rem;
+                    padding: 11rem 2rem 50vh;
                 }
             }
 
@@ -694,10 +629,10 @@
                 margin: auto;
                 position: absolute;
                 top: 6rem;
-                left: 0px;
+                left: 0;
                 background: #fff;
                 border: 1px solid #000;
-                border-left: 0px;
+                border-left: 0;
                 transform: translateX(-100%);
                 @include e.Flex-Left;
                 gap: 0.5rem;
@@ -717,43 +652,39 @@
                     pointer-events: auto;
                 }
             }
-
         }
 
-        //.search-contents-wrap
-
         @at-root {
-            .menu_search-container._none._open input[type=radio]:checked+.search-contents-wrap {
+            .menu_search-container._none._open input[type="radio"]:checked+.search-contents-wrap {
                 opacity: 1;
                 pointer-events: auto;
                 transform: translateY(0);
                 transition: 0.5s ease 0.5s;
 
                 @media only screen and (max-width: e.$Bp-11inch) {
-                    transition: 0.5s ease 0s;
+                    transition: 0.5s ease;
                 }
 
                 .mobile-back-btn {
                     transform: translateX(0);
                     transition: 0.35s ease 0.5s;
                 }
-
             }
         }
 
-        //第三階層 -----------------
+        // 第三階層 -----------------
         .lv2-row,
         .lv3-row {
             width: 100%;
             overflow: hidden;
-            max-height: 0px;
+            max-height: 0;
             transition: 0.85s ease;
 
             .form_checkbox-wrap._small {
                 padding-top: 0.5rem;
                 padding-bottom: 3rem;
                 opacity: 0;
-                transition: 0.5s ease 0s;
+                transition: 0.5s ease;
                 position: relative;
 
                 &::after {
@@ -767,17 +698,17 @@
                     left: 0;
                     transform: scaleX(0);
                     transform-origin: left;
-                    transition: 0.5s e.$Transition 0s;
+                    transition: 0.5s e.$Transition;
                 }
             }
         }
 
         .lv2-row .item {
-            width: calc((100% - 0.5rem * 2) / 3);
+            width: calc((100% - 1rem) / 3);
             font-size: 0.9rem;
 
             @media only screen and (max-width: e.$Bp-11inch) {
-                width: calc((100% - 0.5rem * 1) / 2);
+                width: calc((100% - 0.5rem) / 2);
             }
 
             @media only screen and (max-width: e.$Bp-Mobile) {
@@ -791,7 +722,7 @@
         }
 
         .lv3-row .item {
-            width: calc((100% - 0.5rem * 4) / 5) !important;
+            width: calc((100% - 2rem) / 5) !important;
             font-size: 0.9rem;
 
             &._all {
@@ -800,22 +731,17 @@
             }
         }
 
-        .lv2-row {
-            .form_checkbox-wrap._small {
-                padding-left: 2rem;
-            }
-        }
-
+        .lv2-row,
         .lv3-row {
             .form_checkbox-wrap._small {
                 padding-left: 2rem;
             }
         }
 
-        input[type=checkbox]:checked+label+.lv3-row,
-        input[type=radio]:checked+label+.lv3-row,
-        input[type=checkbox]:checked+label+.lv2-row,
-        input[type=radio]:checked+label+.lv2-row {
+        input[type="checkbox"]:checked+label+.lv3-row,
+        input[type="radio"]:checked+label+.lv3-row,
+        input[type="checkbox"]:checked+label+.lv2-row,
+        input[type="radio"]:checked+label+.lv2-row {
             max-height: 3000px;
             display: flex;
             flex-wrap: wrap;
@@ -825,7 +751,7 @@
                 max-height: 6000px;
             }
 
-            &>.form_checkbox-wrap._small {
+            >.form_checkbox-wrap._small {
                 opacity: 1;
                 transition: 0.5s ease 0.25s;
 
@@ -837,7 +763,7 @@
         }
 
         //////////////////////////////////////////////////////////////
-        //価格軸から探す
+        // 価格軸から探す
         //////////////////////////////////////////////////////////////
         .search-contents-wrap._value-select {
             .item-wrap {
@@ -863,19 +789,15 @@
         }
 
         //////////////////////////////////////////////////////////////
-        //カテゴリーから探す
+        // カテゴリーから探す
         //////////////////////////////////////////////////////////////
         .search-contents-wrap._category {
-
             .item-wrap {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 1rem;
             }
-
         }
-
-        //.search-contents-wrap._category
 
         //////////////////////////////////////////////////////////////
         // こだわり条件
@@ -890,7 +812,7 @@
                 }
 
                 //////////////////////////////////////////////////////////////
-                // エリアせ検索
+                // エリア検索
                 //////////////////////////////////////////////////////////////
                 &._area {
                     .item-wrap {
@@ -911,7 +833,6 @@
                         }
                     }
                 }
-
             }
         }
 
@@ -931,7 +852,7 @@
         }
 
         //////////////////////////////////////////////////////////////
-        // 保存した検索条件
+        // ハッシュタグ
         //////////////////////////////////////////////////////////////
         .search-contents-wrap._hashtags {
             .item-wrap {
@@ -939,35 +860,28 @@
                 gap: 2rem;
             }
         }
-
     }
 
-    //.search-contents-container
-
     .search-execution {
-        //検索実行ボタン
         width: 100%;
         max-width: 280px;
         padding: 1.25rem 2rem;
-        background: black;
         position: fixed;
         margin: auto;
         right: 0;
         bottom: 2rem;
         left: 0;
-        // background: e.$Link;
         z-index: 999999;
         background: #fff;
         transform: translateY(calc(100% + 3rem));
         @include e.Flex-Center;
         align-items: center;
         border-radius: 50px;
-        transition: 0.5s ease 0s;
+        transition: 0.5s ease;
 
         @media only screen and (max-width: e.$Bp-11inch) {
-            bottom: 2rem;
             border: 2px solid #000;
-            border-bottom: 0px;
+            border-bottom: 0;
             padding: 1rem 2rem;
 
             &::after {
@@ -991,20 +905,16 @@
             line-height: 1;
             position: relative;
         }
-
     }
 
     @at-root {
         .menu_search-container._none._open .search-execution {
             pointer-events: auto;
-            transform: translateY(calc(0% + 0rem));
+            transform: translateY(0);
             transition: 0.5s ease 0.5s;
         }
     }
-
 }
-
-//.menu_search-container,.menu_my-select-room-container
 
 // ================================================================================================
 //
@@ -1012,11 +922,9 @@
 //
 // ================================================================================================
 .menu_my-select-room-container {
-
     .md_icon-btn._menu-open {
         right: calc(68px + 5rem);
     }
-
 }
 
 // ================================================================================================
@@ -1027,7 +935,7 @@
 .menu_footer {
     width: 100%;
 
-    &>div {
+    >div {
         @include e.Flex-Right;
     }
 
@@ -1053,8 +961,8 @@
                 position: absolute;
                 bottom: -5px;
                 left: 0;
-                transform-origin: 100% 50% 0;
-                transform: scale(0, 1);
+                transform-origin: 100% 50%;
+                transform: scaleX(0);
                 transition: transform 0.35s e.$Transition;
             }
         }
@@ -1062,9 +970,8 @@
         &:hover {
             span {
                 &::after {
-                    transform-origin: 0 50% 0;
-                    transform: scale(1, 1);
-                    transition: transform 0.35s e.$Transition;
+                    transform-origin: 0 50%;
+                    transform: scaleX(1);
                 }
             }
         }
@@ -1081,10 +988,9 @@
         .inner {
             display: block;
             padding-top: 1rem;
-            padding-bottom: 0rem;
+            padding-bottom: 0;
         }
     }
-
 }
 
 // ================================================================================================
@@ -1094,9 +1000,9 @@
 // ================================================================================================
 .btn_floating-action {
     width: 4rem;
-    aspect-ratio: 10/10;
+    aspect-ratio: 1;
     border: 1px solid;
-    border-radius: 100%;
+    border-radius: 50%;
     position: fixed;
     bottom: 4rem;
     right: 4rem;
@@ -1120,7 +1026,6 @@
         }
     }
 
-    // IsHover --------------------------
     &:hover {
         background: #000;
 
@@ -1131,21 +1036,21 @@
         }
     }
 
-    // MenuOpen --------------------
     &._menu-open {
         opacity: 0;
         pointer-events: none;
         transition: 0.5s ease;
     }
-
 }
 
 // ================================================================================================
 //
-//  Floating-action-talk
+//  Floating Action Talk
 //
 // ================================================================================================
 .btn_floating-action-talk {
+    width: 150px;
+    height: auto;
     position: fixed;
     bottom: 4rem;
     right: 4rem;
@@ -1153,12 +1058,7 @@
     opacity: 1;
     pointer-events: auto;
     transition: 0.25s ease;
-
-    width: 150px;
-    aspect-ratio: auto;
-    height: auto;
     border-radius: 12px;
-
     background-color: #000;
     border: none;
 

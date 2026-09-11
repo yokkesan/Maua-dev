@@ -1,13 +1,14 @@
 @charset "utf-8";
+
 @use "variables" as e;
 @use "keyframes" as k;
 @use "../../Admin/component/variable-admin" as a;
 
-//Description.........................................
+// Description.........................................
 //
 // 分類枠の無いモジュールのscss
 //
-//.......................................................
+// ....................................................
 
 // ================================================================================================
 //
@@ -15,7 +16,7 @@
 //
 // ================================================================================================
 .md_fixed-logo {
-    width: 100%;
+    width: auto;
     max-height: e.$GlobalNavHeight;
     padding: 1rem 2rem;
     position: fixed;
@@ -24,14 +25,13 @@
     z-index: 99999;
     @include e.Flex-Left;
     align-items: center;
-    width: auto;
     gap: 2rem;
     mix-blend-mode: difference;
 
     @media only screen and (max-width: e.$Bp-Mobile) {
-        gap: 0rem;
+        gap: 0;
         display: inline-block;
-        padding: 1rem 1rem;
+        padding: 1rem;
         top: 1px;
     }
 
@@ -43,15 +43,15 @@
         }
 
         * {
-            fill: white;
+            fill: #fff;
             transition: 0.5s e.$Transition;
         }
     }
 
     .copy {
         font-size: 10px;
-        transition: 0.5s e.$Transition;
         color: #fff;
+        transition: 0.5s e.$Transition;
 
         @media only screen and (max-width: e.$Bp-Mobile) {
             width: 100%;
@@ -63,15 +63,12 @@
     &._white {
         .copy {
             color: #fff;
-            transition: 0.5s e.$Transition;
         }
 
         svg * {
-            fill: white;
-            transition: 0.5s e.$Transition;
+            fill: #fff;
         }
     }
-
 }
 
 //================================================================================================
@@ -83,10 +80,7 @@
     @include e.SvgIconSize;
     margin: auto;
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
 
     svg {
         width: 100%;
@@ -95,7 +89,7 @@
 
     &._white {
         svg * {
-            stroke: white;
+            stroke: #fff;
         }
     }
 
@@ -113,16 +107,13 @@
 .md_icon-btn {
     @include e.IconBtnSize;
     position: relative;
-    border-radius: 100%;
+    border-radius: 50%;
 
     .inner {
         @include e.SvgIconSize;
         margin: auto;
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        inset: 0;
 
         &._small {
             width: 18px;
@@ -137,6 +128,8 @@
 
     &._small {
         @include e.IconBtnSizeSmall;
+        width: 23px;
+        height: 23px;
     }
 
     &._white {
@@ -152,20 +145,15 @@
         outline-offset: -1px;
     }
 
-    &._small {
-        width: 23px;
-        height: 23px;
-    }
-
     &._stroke-white {
         svg * {
-            stroke: white;
+            stroke: #fff;
         }
     }
 
     &._fill:hover {
         svg * {
-            fill: white;
+            fill: #fff;
             transition: 0.35s e.$Transition;
         }
     }
@@ -176,48 +164,42 @@
         svg * {
             transition: 0.35s e.$Transition;
         }
-    }
 
-    &._hover:hover {
-        background: #000;
-        transition: 0.35s e.$Transition;
+        &:hover {
+            background: #000;
 
-        svg * {
-            stroke: white;
-            transition: 0.35s e.$Transition;
+            svg * {
+                stroke: #fff;
+            }
         }
     }
 
-    //MySelectRoomButton -----------------
+    // MySelectRoomButton -----------------
     &._my-select-room {
         position: fixed;
-        top: 50%;
-        right: 50%;
-        mix-blend-mode: difference;
-        z-index: 9999;
         top: 16px;
         right: calc(68px + 37px + 2rem);
+        mix-blend-mode: difference;
+        z-index: 9999;
 
         @media only screen and (max-width: e.$Bp-Mobile) {
-            right: calc(62px + 37px + 1rem);
             top: 13px;
+            right: calc(62px + 37px + 1rem);
         }
 
         svg {
 
             path,
             rect {
-                stroke: white;
+                stroke: #fff;
             }
         }
     }
-
-
 }
 
 //================================================================================================
 //
-//  SvgIcon
+//  Annotation
 //
 //================================================================================================
 .md_annotation {
@@ -247,7 +229,6 @@
 
     .icon {
         @include e.SvgIconSize;
-        content: "";
         z-index: 1;
         pointer-events: none;
         margin: auto;
@@ -263,7 +244,6 @@
             vertical-align: top;
         }
     }
-
 }
 
 //================================================================================================
@@ -274,13 +254,11 @@
 .md_scroll-content {
     width: 100%;
     height: 100vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-bottom: 60vh;
-    -ms-overflow-style: none; // IE,edge用
-    scrollbar-width: none; // FireFox用
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
-        // Chrome,Safari用
         display: none;
     }
 }
@@ -290,22 +268,19 @@
 //  カーテン
 //
 //================================================================================================
-
-// CurtainClip =============
 @mixin CurtainClipClose {
-    clip-path: polygon(0 0, 100% 0, 100% 0%, 0% 0%);
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     transition: 0.5s e.$TransitionMenu;
 }
 
 @mixin CurtainClipOpen {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     transition: 0.5s e.$TransitionMenu;
 }
 
 .md_curtain-container {
     width: 100%;
     height: 100%;
-    content: "";
     margin: auto;
     position: fixed;
     top: 0;
@@ -313,10 +288,9 @@
     z-index: 9998;
     pointer-events: none;
 
-    &>div {
+    >div {
         width: 100%;
         height: 100%;
-        content: "";
         margin: auto;
         position: absolute;
         top: 0;
@@ -347,7 +321,7 @@
 }
 
 @mixin CurtainClipOpenDelay {
-    &>div {
+    >div {
         @include CurtainClipOpen;
 
         &.no1 {
@@ -364,7 +338,6 @@
     }
 }
 
-//OpenStyle -----------------------------
 .md_curtain-container._open {
     @include CurtainClipOpenDelay;
     pointer-events: auto;
@@ -375,9 +348,6 @@
 //  CursorPointer
 //
 //================================================================================================
-
-// CURSOR
-
 .md_cursor {
     position: fixed;
     top: 0;
@@ -389,13 +359,13 @@
     z-index: 10001;
     mix-blend-mode: difference;
     transform: scale(1);
-    display: none; //TODO: 開発中は一旦非表示
+    display: none;
 
     span {
-        background: #fff;
         width: 30px;
         height: 30px;
-        border-radius: 100%;
+        background: #fff;
+        border-radius: 50%;
         display: block;
         transform: scale(0.4);
         transition: 0.5s e.$Transition;
@@ -408,10 +378,8 @@
     &.active {
         span {
             transform: scale(1);
-            transition: 0.5s e.$Transition;
         }
     }
-
 }
 
 .md_cursor-follower {
@@ -425,39 +393,34 @@
     z-index: 10000;
     will-change: transform;
     mix-blend-mode: difference;
-    display: none; //TODO: 開発中は一旦非表示
+    display: none;
 
     span {
         width: 100%;
         height: 100%;
-        border-radius: 100%;
+        border-radius: 50%;
         display: block;
         background: rgba($color: #fff, $alpha: 0.05);
         transform: scale(0.3);
         transition: 0.5s e.$Transition;
     }
 
-    //overflow: hidden;
     @media only screen and (max-width: e.$Bp-11inch) {
         display: none;
     }
 
     &.active {
         span {
-            background: rgba($color: #fff, $alpha: 0.05);
             transform: scale(1);
-            transition: 0.5s e.$Transition;
         }
     }
-
 }
 
 //================================================================================================
-
+//
 //  テキストリンク
 //
 //================================================================================================
-
 .md_text-link {
     span {
         padding-right: 1.5rem;
@@ -473,7 +436,7 @@
             position: absolute;
             top: 2px;
             right: 0;
-            background: url(/../img/icon/link-black.svg)no-repeat center / contain;
+            background: url(/../img/icon/link-black.svg) no-repeat center / contain;
         }
 
         &::before {
@@ -485,28 +448,23 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            transform-origin: 100% 50% 0;
+            transform-origin: 100% 50%;
             transform: scaleX(0);
-            transition: transform 0.35s e.$Transition 0s;
+            transition: transform 0.35s e.$Transition;
         }
     }
 
     &:hover {
-        span {
-            &::before {
-                transform-origin: 0 50% 0;
-                transform: scaleX(1);
-                transition: transform 0.35s e.$Transition 0s;
-            }
+        span::before {
+            transform-origin: 0 50%;
+            transform: scaleX(1);
         }
     }
 
-    //GrayStyle
     &._op5 {
         opacity: 0.5;
     }
 
-    //Left
     &._left {
         span {
             padding-right: 0;
@@ -514,38 +472,30 @@
         }
     }
 
-    //Pin
     &._pin {
         span::after {
-            margin: auto;
-            position: absolute;
             top: 1px;
             right: auto;
             left: 0;
-            background: url(/../img/icon/pin-black.svg)no-repeat center / contain;
+            background: url(/../img/icon/pin-black.svg) no-repeat center / contain;
         }
     }
 
-    //Tel
     &._tel {
         span::after {
-            margin: auto;
-            position: absolute;
             top: 1px;
             right: auto;
             left: 0;
-            background: url(/../img/icon/tel-black.svg)no-repeat center / contain;
+            background: url(/../img/icon/tel-black.svg) no-repeat center / contain;
         }
     }
 }
-
 
 //================================================================================================
 //
 //  SwiperBg
 //
 //================================================================================================
-
 .md_swiper-bg {
     width: 100%;
     height: 100%;
@@ -595,34 +545,25 @@
             .swiper-wrapper {
                 .swiper-slide {
                     img {
-                        filter: brightness(100%) blur(0px);
+                        filter: brightness(100%) blur(0);
                         transform: scale(1);
                     }
                 }
             }
         }
     }
-
 }
-
 
 //================================================================================================
 //
 //  チェックマークアニメーション
 //
 //================================================================================================
-
 .md_kf-check-mark {
     svg {
         transform: scale(1);
 
-        circle {
-            stroke-dasharray: 300px;
-            stroke-dashoffset: 300px;
-            opacity: 0;
-            transition: 0.5s ease;
-        }
-
+        circle,
         path {
             stroke-dasharray: 300px;
             stroke-dashoffset: 300px;
@@ -647,7 +588,7 @@
             animation-fill-mode: forwards;
             animation-delay: 0.5s;
             opacity: 1;
-            transition: 0.5s ease
+            transition: 0.5s ease;
         }
 
         path {
@@ -657,14 +598,14 @@
             animation-fill-mode: forwards;
             animation-delay: 2s;
             opacity: 1;
-            transition: 0.5s ease
+            transition: 0.5s ease;
         }
     }
 }
 
 //================================================================================================
 //
-//  チェックマークアニメーション
+//  リロードアニメーション
 //
 //================================================================================================
 .md_kf-resend {
@@ -678,20 +619,16 @@
 //  Cropper
 //
 //================================================================================================
-
 .twitter-cropper {
     height: 650px;
 
-    &__background {
-        background-color: #edf2f4;
-    }
-
+    &__background,
     &__foreground {
         background-color: #edf2f4;
     }
 
     &__stencil {
-        border: solid 5px rgb(29, 161, 242);
+        border: 5px solid rgb(29, 161, 242);
     }
 }
 
@@ -710,8 +647,8 @@
     }
 
     &__zoom-icon {
-        height: 18.75px;
         width: 18.75px;
+        height: 18.75px;
         fill: rgb(101, 119, 134);
         flex-shrink: 0;
 
@@ -736,9 +673,9 @@
     }
 
     &__line {
-        background: rgb(142, 208, 249);
-        height: 5px;
         width: 100%;
+        height: 5px;
+        background: rgb(142, 208, 249);
         border-radius: 5px;
         display: flex;
         position: relative;
@@ -783,8 +720,9 @@
         transform: scale(1);
         transition-duration: 0.1s;
         transition-property: transform;
-        box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 7px,
-            rgba(101, 119, 134, 0.15) 0px 1px 3px 1px;
+        box-shadow:
+            rgba(101, 119, 134, 0.2) 0 0 7px,
+            rgba(101, 119, 134, 0.15) 0 1px 3px 1px;
 
         &--focus {
             transform: scale(1.2);
@@ -798,7 +736,7 @@
 //
 //================================================================================================
 .md_page-element {
-    padding: 2rem 2rem;
+    padding: 2rem;
     position: relative;
     animation-duration: 4s;
     animation-delay: 0s;
@@ -818,8 +756,8 @@
         margin-bottom: 2rem;
 
         .img {
-            width: calc((100% - 2rem * 1) / 2);
-            aspect-ratio: 5/5;
+            width: calc((100% - 2rem) / 2);
+            aspect-ratio: 1;
             background: e.$Border-MediumLight;
             position: relative;
             opacity: 0;
@@ -845,7 +783,6 @@
                     stroke: e.$Border-Light;
                 }
             }
-
         }
     }
 
@@ -873,40 +810,35 @@
         .btn {
             width: 40px;
             height: 40px;
-            border-radius: 100%;
+            border-radius: 50%;
             background: e.$Border-MediumLight;
             transform: scale(0);
             transition: 0.5s ease;
 
             &._right {
                 width: 40%;
-                border-radius: 0px;
+                border-radius: 0;
                 background: e.$Border-Light;
             }
         }
     }
 
     .bg {
-        content: "";
         background: #fff;
         margin: auto;
         position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        inset: 0;
         transform: scale(0);
         opacity: 0;
         transition: 0.5s ease 1.5s;
     }
 
-    //AnimationStyle
     .swiper-slide-active &,
     &._on {
         .bg {
             opacity: 1;
             transform: scale(1);
-            transition: 0.5s cubic-bezier(0, .45, .35, 1.5);
+            transition: 0.5s cubic-bezier(0, 0.45, 0.35, 1.5);
         }
 
         .img {
@@ -917,7 +849,7 @@
             .icon svg {
                 opacity: 1;
                 transform: scale(1);
-                transition: 0.5s cubic-bezier(0, .45, .35, 1.5);
+                transition: 0.5s cubic-bezier(0, 0.45, 0.35, 1.5);
             }
 
             &._no01 {
@@ -965,7 +897,7 @@
         .btn-wrap {
             .btn {
                 transform: scale(1);
-                transition: 0.5s cubic-bezier(0, .45, .35, 1.5);
+                transition: 0.5s cubic-bezier(0, 0.45, 0.35, 1.5);
 
                 &._no01 {
                     transition-delay: 1.2s;
@@ -980,10 +912,8 @@
                 }
             }
         }
-
     }
 
-    //Seiper の場合のdelay調整
     .swiper-slide-active & {
         .bg {
             transition-delay: 1s;
@@ -1042,13 +972,10 @@
                 }
             }
         }
-
     }
-
 }
 
 @keyframes PageElementText {
-
     0% {
         transform: scaleX(0);
     }
@@ -1068,16 +995,13 @@
 
 @keyframes PageElementYoYo {
 
-    0% {
+    0%,
+    100% {
         transform: translateY(-6px);
     }
 
     50% {
         transform: translateY(6px);
-    }
-
-    100% {
-        transform: translateY(-6px);
     }
 }
 
@@ -1086,14 +1010,13 @@
 //  トースト
 //
 //================================================================================================
-
 .md_toast {
     position: fixed;
     margin: auto;
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 2rem 2rem;
+    padding: 2rem;
     text-align: center;
     transform: translateY(110%);
     transition: 0.5s e.$Transition;
@@ -1101,17 +1024,15 @@
     z-index: 10100;
 
     &._show {
-        transform: translateY(0%);
-        transition: 0.5s e.$Transition;
+        transform: translateY(0);
     }
 
-    &>.inner {
+    >.inner {
         background: #000;
         color: #fff;
         display: inline-block;
         padding: 0.75rem 3rem;
     }
-
 }
 
 //================================================================================================
@@ -1119,7 +1040,6 @@
 //  ラベル
 //
 //================================================================================================
-
 .md_label {
     width: 100%;
     display: block;
@@ -1128,8 +1048,7 @@
         display: inline-block;
         background: e.$Border-UltraLight;
         color: e.$Border-Light;
-        padding: 0 2rem;
-        padding-top: 2px;
+        padding: 2px 2rem 0;
         font-weight: 700;
         @include e.FontSize-S;
     }
@@ -1137,7 +1056,6 @@
     &._center {
         text-align: center;
     }
-
 }
 
 // ================================================================================================
@@ -1175,13 +1093,12 @@
 
         &._on::after {
             transform: translateY(1px) rotate(225deg);
-            transition: 0.35s ease;
         }
     }
 
     .content {
         width: 100%;
-        clip-path: polygon(0 0, 100% 0, 100% 0%, 0% 0%);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
         background: e.$Border-UltraLight;
         transition: 0.35s ease;
 
@@ -1192,19 +1109,17 @@
     }
 
     .trigger._on+.content {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-        transition: 0.35s ease;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
         .content-inner {
             display: block;
         }
     }
-
 }
 
 // ================================================================================================
 //
-//  HiddenContent
+//  Add / Delete
 //
 // ================================================================================================
 .md_add-del-wrap {
@@ -1222,10 +1137,7 @@
             .md_icon-btn {
                 margin: auto;
                 position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
+                inset: 0;
             }
         }
 
@@ -1241,9 +1153,7 @@
             width: 100%;
         }
     }
-
 }
-
 
 //================================================================================================
 //
@@ -1290,13 +1200,11 @@
             max-width: 480px;
         }
 
-
-        //input
         .input-wrap {
             width: 50%;
             height: 100%;
             background: #fff;
-            padding: 3rem 4rem 4rem 4rem;
+            padding: 3rem 4rem 4rem;
 
             @media only screen and (max-width: e.$Bp-11inch) {
                 width: 100%;
@@ -1338,19 +1246,10 @@
                 .item {
                     width: 100%;
                     text-align: center;
-
-                    input {
-                        // border: 1px solid e.$Border-MediumLight;
-                    }
                 }
-
             }
-
         }
 
-        //input-wrap
-
-        //Img
         .img-wrap {
             width: 50%;
             height: 100%;
@@ -1367,10 +1266,7 @@
                 object-fit: cover;
             }
         }
-
     }
-
-    //wrap
 
     .bg-text {
         width: 100%;
@@ -1387,7 +1283,6 @@
             color: e.$Border-MediumLight;
         }
     }
-
 }
 
 //================================================================================================
@@ -1402,7 +1297,7 @@
     position: relative;
 
     &+& {
-        margin-top: 2rem
+        margin-top: 2rem;
     }
 
     .trigger-item {
@@ -1434,19 +1329,18 @@
         }
 
         &::after {
-            transform: rotate(90deg)
+            transform: rotate(90deg);
         }
 
         .background {
             width: 100%;
             background: #000;
-            content: "";
             margin: auto;
             position: absolute;
             top: 0;
             bottom: 0;
             left: 0;
-            transform-origin: 100% 50% 0;
+            transform-origin: 100% 50%;
             transform: scale(0, 2);
             transition: transform 0.35s e.$Transition;
         }
@@ -1466,7 +1360,6 @@
         }
     }
 
-    //Nestitem --------------------
     .nest-item {
         counter-reset: FlowChartNumber;
         counter-increment: FlowChartNumber 1;
@@ -1486,12 +1379,10 @@
                 margin-right: 1rem;
             }
         }
-
     }
 
-    //OnStyle --------------------
     .trigger-item._on {
-        color: white;
+        color: #fff;
 
         &::before,
         &::after {
@@ -1500,29 +1391,26 @@
         }
 
         &::before {
-            transform: rotate(-360deg)
+            transform: rotate(-360deg);
         }
 
         &::after {
-            transform: rotate(0deg)
+            transform: rotate(0);
         }
 
         .background {
-            transform-origin: 0 50% 0;
+            transform-origin: 0 50%;
             transform: scale(1, 2);
-            transition: transform 0.35s e.$Transition;
         }
 
         &+.hidden-item {
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-            transition: 0.25s ease-in-out;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
             .inner {
                 display: block;
             }
         }
     }
-
 }
 
 //================================================================================================
@@ -1557,21 +1445,18 @@
 
     .body {
         max-width: 680px;
-        margin: auto;
-        margin-bottom: 1rem;
+        margin: 0 auto 1rem;
         background: #fff;
         padding: 4rem 2rem;
         border: 1px solid #000;
         position: relative;
         z-index: 10;
-        // opacity: 0;
-        // transform: translateY(20px);
         transition: 0.8s ease-in-out;
     }
 
     .background-image {
-        height: 100%;
         width: 100%;
+        height: 100%;
         margin: auto;
         position: absolute;
         top: 0;
@@ -1580,23 +1465,13 @@
 
         img {
             width: 100%;
-            filter: blur(100px);
             height: 100%;
+            filter: blur(100px);
             object-fit: cover;
             opacity: 0.25;
             transform: scale(1.2);
         }
     }
-
-    //ShowStyle -----------------
-    // &._on {
-    //     .body {
-    //         opacity: 1;
-    //         transform: translateY(0);
-    //         transition: 0.8s ease-in-out;
-    //     }
-    // }
-
 }
 
 //================================================================================================
@@ -1626,13 +1501,13 @@
 
         svg {
             path {
-                fill: white;
+                fill: #fff;
             }
         }
     }
 
     .menu-wrap {
-        width: calc(100%);
+        width: 100%;
         max-width: 768px;
     }
 
@@ -1644,7 +1519,6 @@
         text-align: center;
         margin-top: 5rem;
     }
-
 }
 
 // ================================================================================================
@@ -1658,9 +1532,7 @@
     counter-reset: FlowChartNumber;
     max-width: 620px;
     margin: auto;
-    padding: 4rem 0 0 0;
-
-    @media only screen and (max-width: e.$Bp-11inch) {}
+    padding: 4rem 0 0;
 
     .item {
         padding-left: 5rem;
@@ -1672,8 +1544,6 @@
         }
 
         &::before {
-            //Label
-            @include e.FontSize-L;
             font-weight: 700;
             margin: auto;
             position: absolute;
@@ -1683,14 +1553,12 @@
             display: inline-block;
             color: e.$Border-Light;
             background: #fff;
-            border: 2px solid;
-            border-color: e.$Border-Light;
+            border: 2px solid e.$Border-Light;
             padding: 0.25rem 1rem;
             @include e.FontSize-S;
-            transform: translate(-50%, 0%);
+            transform: translate(-50%, 0);
         }
 
-        //Title
         .title {
             font-weight: 700;
             position: relative;
@@ -1720,10 +1588,8 @@
         }
     }
 
-    //ShowStyle -------------
     .item._on {
         &::before {
-            //Label
             color: #000;
             background: #fff;
             border-color: #000;
@@ -1732,20 +1598,19 @@
 
         .title,
         .detail {
-            transform: translateX(0px);
+            transform: translateX(0);
             opacity: 1;
             transition: 0.8s ease-in-out;
         }
 
         .detail {
-            transition: 0.8s ease-in-out 0.25s;
+            transition-delay: 0.25s;
         }
     }
 
     .progress-bar {
         width: 0.25rem;
         height: 100%;
-        content: "";
         background: e.$Border-Light;
         margin: auto;
         position: absolute;
@@ -1755,7 +1620,6 @@
         .bar {
             width: 100%;
             height: 100%;
-            content: "";
             background: #000;
             margin: auto;
             position: absolute;
@@ -1764,5 +1628,4 @@
             transform-origin: top;
         }
     }
-
 }
