@@ -4,11 +4,11 @@ WORKDIR /app
 
 RUN apk add --no-cache git
 
-COPY backend/go.mod backend/go.sum* ./
+COPY src/backend/go.mod src/backend/go.sum* ./
 
 RUN go mod download
 
-COPY backend/ ./
+COPY src/backend/ ./
 
 EXPOSE 8080
 
