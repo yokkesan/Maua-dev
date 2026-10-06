@@ -27,8 +27,15 @@ services:
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      TEST_DB_HOST: db_test
+      TEST_DB_PORT: 5432
+      TEST_DB_NAME: auma_test
+      TEST_DB_USER: auma
+      TEST_DB_PASSWORD: auma_test_password
     depends_on:
       - db
+      - db_test
 
   db:
     image: postgres:17
@@ -40,6 +47,15 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  db_test:
+    image: postgres:17
+    container_name: auma_dev_db_test
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: auma
+      POSTGRES_PASSWORD: auma_test_password
+      POSTGRES_DB: auma_test
 
   nginx:
     image: nginx:1.28-alpine

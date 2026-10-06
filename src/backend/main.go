@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"backend/internal/database"
-	_ "backend/routers"
+	"backend/routers"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
@@ -18,6 +18,8 @@ func main() {
 		log.Fatalf("database initialization failed: %v", err)
 	}
 	defer db.Close()
+
+	routers.Register(db)
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
