@@ -51,7 +51,10 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	routers.Register(testDB)
+	routers.Register(
+		testDB,
+		nil,
+	)
 
 	code := m.Run()
 

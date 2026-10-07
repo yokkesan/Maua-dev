@@ -2,17 +2,26 @@ package registration
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+var ErrVerificationTokenNotFound = errors.New("verification token not found")
 
 type Repository interface {
 	CreateVerificationToken(
 		ctx context.Context,
 		params CreateTokenParams,
 	) error
+
+	FindVerificationTokenByHash(
+		ctx context.Context,
+		tokenHash []byte,
+	) (*VerificationToken, error)
 }
 
 type PostgresRepository struct {
@@ -33,7 +42,10 @@ func (r *PostgresRepository) CreateVerificationToken(
 ) error {
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
-		return fmt.Errorf("begin registration transaction: %w", err)
+		return fmt.Errorf(
+			"begin registration transaction: %w",
+			err,
+		)
 	}
 
 	defer func() {
@@ -53,7 +65,10 @@ func (r *PostgresRepository) CreateVerificationToken(
 		params.Email,
 	)
 	if err != nil {
-		return fmt.Errorf("revoke existing signup tokens: %w", err)
+		return fmt.Errorf(
+			"revoke existing signup tokens: %w",
+			err,
+		)
 	}
 
 	_, err = tx.Exec(
@@ -74,8 +89,18 @@ func (r *PostgresRepository) CreateVerificationToken(
 				expires_at
 			)
 			VALUES (
-				$1, $2, $3, $4, $5, $6,
-				$7, $8, $9, $10, $11, $12
+				$1,
+				$2,
+				$3,
+				$4,
+				$5,
+				$6,
+				$7,
+				$8,
+				$9,
+				$10,
+				$11,
+				$12
 			)
 		`,
 		params.Email,
@@ -92,12 +117,78 @@ func (r *PostgresRepository) CreateVerificationToken(
 		params.ExpiresAt,
 	)
 	if err != nil {
-		return fmt.Errorf("insert signup token: %w", err)
+		return fmt.Errorf(
+			"insert signup token: %w",
+			err,
+		)
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return fmt.Errorf("commit registration transaction: %w", err)
+		return fmt.Errorf(
+			"commit registration transaction: %w",
+			err,
+		)
 	}
 
 	return nil
+}
+
+func (r *PostgresRepository) FindVerificationTokenByHash(
+	ctx context.Context,
+	tokenHash []byte,
+) (*VerificationToken, error) {
+	var token VerificationToken
+
+	err := r.db.QueryRow(
+		ctx,
+		`
+			SELECT
+				id,
+				invitation_email,
+				company_name,
+				company_phonetic,
+				company_post_code,
+				company_address,
+				company_tel,
+				company_type,
+				representative_name,
+				representative_phonetic,
+				registration_plan,
+				expires_at,
+				consumed_at,
+				revoked_at
+			FROM signup_tokens
+			WHERE token_hash = $1
+			LIMIT 1
+		`,
+		tokenHash,
+	).Scan(
+		&token.ID,
+		&token.InvitationEmail,
+		&token.CompanyName,
+		&token.CompanyPhonetic,
+		&token.CompanyPostCode,
+		&token.CompanyAddress,
+		&token.CompanyTel,
+		&token.CompanyType,
+		&token.RepresentativeName,
+		&token.RepresentativePhonetic,
+		&token.RegistrationPlan,
+		&token.ExpiresAt,
+		&token.ConsumedAt,
+		&token.RevokedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrVerificationTokenNotFound
+		}
+
+		return nil, fmt.Errorf(
+			"find verification token by hash: %w",
+			err,
+		)
+	}
+
+	return &token, nil
 }

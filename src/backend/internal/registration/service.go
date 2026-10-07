@@ -18,15 +18,20 @@ const (
 )
 
 var (
-	ErrInvalidEmail        = errors.New("invalid email")
-	ErrInvalidCompanyType  = errors.New("invalid company type")
-	ErrInvalidPlan         = errors.New("invalid registration plan")
-	ErrCompanyNameRequired = errors.New("company name is required")
-	ErrInputTooLong        = errors.New("input is too long")
+	ErrInvalidEmail              = errors.New("invalid email")
+	ErrInvalidCompanyType        = errors.New("invalid company type")
+	ErrInvalidPlan               = errors.New("invalid registration plan")
+	ErrCompanyNameRequired       = errors.New("company name is required")
+	ErrInputTooLong              = errors.New("input is too long")
+	ErrVerificationTokenInvalid  = errors.New("verification token is invalid")
+	ErrVerificationTokenExpired  = errors.New("verification token has expired")
+	ErrVerificationTokenRevoked  = errors.New("verification token has been revoked")
+	ErrVerificationTokenConsumed = errors.New("verification token has already been used")
 )
 
 type Service struct {
 	repository Repository
+	mailer     VerificationMailer
 }
 
 type VerificationResult struct {
@@ -34,9 +39,13 @@ type VerificationResult struct {
 	ExpiresAt time.Time
 }
 
-func NewService(repository Repository) *Service {
+func NewService(
+	repository Repository,
+	mailer VerificationMailer,
+) *Service {
 	return &Service{
 		repository: repository,
+		mailer:     mailer,
 	}
 }
 
@@ -70,10 +79,59 @@ func (s *Service) CreateVerification(
 		return nil, fmt.Errorf("create verification token: %w", err)
 	}
 
+	if s.mailer != nil {
+		if err := s.mailer.SendVerificationEmail(
+			ctx,
+			input.Email,
+			rawToken,
+		); err != nil {
+			return nil, fmt.Errorf("send verification email: %w", err)
+		}
+	}
+
 	return &VerificationResult{
 		Token:     rawToken,
 		ExpiresAt: expiresAt,
 	}, nil
+}
+
+func (s *Service) VerifyToken(
+	ctx context.Context,
+	rawToken string,
+) (*VerificationToken, error) {
+	rawToken = strings.TrimSpace(rawToken)
+
+	if rawToken == "" {
+		return nil, ErrVerificationTokenInvalid
+	}
+
+	tokenHash := sha256.Sum256([]byte(rawToken))
+
+	token, err := s.repository.FindVerificationTokenByHash(
+		ctx,
+		tokenHash[:],
+	)
+	if err != nil {
+		if errors.Is(err, ErrVerificationTokenNotFound) {
+			return nil, ErrVerificationTokenInvalid
+		}
+
+		return nil, fmt.Errorf("find verification token: %w", err)
+	}
+
+	if token.RevokedAt != nil {
+		return nil, ErrVerificationTokenRevoked
+	}
+
+	if token.ConsumedAt != nil {
+		return nil, ErrVerificationTokenConsumed
+	}
+
+	if time.Now().UTC().After(token.ExpiresAt) {
+		return nil, ErrVerificationTokenExpired
+	}
+
+	return token, nil
 }
 
 func validateVerificationInput(input VerificationInput) error {

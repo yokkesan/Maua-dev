@@ -8,9 +8,16 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func Register(db *pgxpool.Pool) {
+func Register(
+	db *pgxpool.Pool,
+	mailer registration.VerificationMailer,
+) {
 	registrationRepository := registration.NewPostgresRepository(db)
-	registrationService := registration.NewService(registrationRepository)
+
+	registrationService := registration.NewService(
+		registrationRepository,
+		mailer,
+	)
 
 	ns := beego.NewNamespace("/api",
 		beego.NSRouter(

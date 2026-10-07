@@ -33,9 +33,19 @@ services:
       TEST_DB_NAME: auma_test
       TEST_DB_USER: auma
       TEST_DB_PASSWORD: auma_test_password
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      REGISTRATION_VERIFICATION_URL: ${REGISTRATION_VERIFICATION_URL}
+
     depends_on:
       - db
       - db_test
+      - mailpit
 
   db:
     image: postgres:17
@@ -56,6 +66,14 @@ services:
       POSTGRES_USER: auma
       POSTGRES_PASSWORD: auma_test_password
       POSTGRES_DB: auma_test
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: auma_dev_mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
 
   nginx:
     image: nginx:1.28-alpine
