@@ -9,6 +9,9 @@ const (
 	RegistrationPlanBrandFree    int16 = 0
 	RegistrationPlanShopPersonal int16 = 10
 	RegistrationPlanShopUnit     int16 = 11
+
+	UserTypeShop  int16 = 1
+	UserTypeBrand int16 = 2
 )
 
 type VerificationInput struct {
@@ -32,8 +35,27 @@ type CreateTokenParams struct {
 }
 
 type VerificationToken struct {
-	ID                     int64
-	InvitationEmail        string
+	ID                      int64
+	InvitationEmail         string
+	CompanyName             string
+	CompanyPhonetic         string
+	CompanyPostCode         string
+	CompanyAddress          string
+	CompanyTel              string
+	CompanyType             int16
+	RepresentativeName      string
+	RepresentativePhonetic  string
+	RegistrationPlan        int16
+	ExpiresAt               time.Time
+	ConsumedAt              *time.Time
+	RevokedAt               *time.Time
+}
+
+type CompleteRegistrationParams struct {
+	TokenID int64
+
+	Email                  string
+	PasswordHash           string
 	CompanyName            string
 	CompanyPhonetic        string
 	CompanyPostCode        string
@@ -43,7 +65,11 @@ type VerificationToken struct {
 	RepresentativeName     string
 	RepresentativePhonetic string
 	RegistrationPlan       int16
-	ExpiresAt              time.Time
-	ConsumedAt             *time.Time
-	RevokedAt              *time.Time
+}
+
+type CompleteRegistrationResult struct {
+	CompanyID int64
+	UserID    int64
+	BrandID   *int64
+	ShopID    *int64
 }

@@ -97,3 +97,70 @@ func (c *RegistrationController) Post() {
 
 	_ = c.ServeJSON()
 }
+
+func (c *RegistrationController) Get() {
+	if c.Service == nil {
+		c.Ctx.Output.SetStatus(http.StatusInternalServerError)
+		c.Data["json"] = map[string]string{
+			"error": "internal server error",
+		}
+		_ = c.ServeJSON()
+		return
+	}
+
+	rawToken := c.GetString("token")
+
+	token, err := c.Service.VerifyToken(
+		c.Ctx.Request.Context(),
+		rawToken,
+	)
+	if err != nil {
+		switch {
+		case errors.Is(err, registration.ErrVerificationTokenInvalid):
+			c.Ctx.Output.SetStatus(http.StatusBadRequest)
+			c.Data["json"] = map[string]string{
+				"error": "invalid verification token",
+			}
+
+		case errors.Is(err, registration.ErrVerificationTokenExpired):
+			c.Ctx.Output.SetStatus(http.StatusGone)
+			c.Data["json"] = map[string]string{
+				"error": "verification token has expired",
+			}
+
+		case errors.Is(err, registration.ErrVerificationTokenRevoked):
+			c.Ctx.Output.SetStatus(http.StatusGone)
+			c.Data["json"] = map[string]string{
+				"error": "verification token has been revoked",
+			}
+
+		case errors.Is(err, registration.ErrVerificationTokenConsumed):
+			c.Ctx.Output.SetStatus(http.StatusGone)
+			c.Data["json"] = map[string]string{
+				"error": "verification token has already been used",
+			}
+
+		default:
+			c.Ctx.Output.SetStatus(http.StatusInternalServerError)
+			c.Data["json"] = map[string]string{
+				"error": "internal server error",
+			}
+		}
+
+		_ = c.ServeJSON()
+		return
+	}
+
+	c.Ctx.Output.SetStatus(http.StatusOK)
+	c.Data["json"] = map[string]interface{}{
+		"message":          "verification token is valid",
+		"token_id":         token.ID,
+		"email":            token.InvitationEmail,
+		"company_name":     token.CompanyName,
+		"company_type":     token.CompanyType,
+		"registration_plan": token.RegistrationPlan,
+		"expires_at":       token.ExpiresAt,
+	}
+
+	_ = c.ServeJSON()
+}

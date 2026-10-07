@@ -35,6 +35,12 @@ func Register(
 					Service: registrationService,
 				},
 			),
+			beego.NSRouter(
+				"/registration/complete",
+				&controllers.RegistrationCompleteController{
+					Service: registrationService,
+				},
+			),
 		),
 	)
 

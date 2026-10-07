@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"backend/internal/registration"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type fakeRepository struct {
@@ -18,6 +20,11 @@ type fakeRepository struct {
 	findErr    error
 	findCalled bool
 	findHash   []byte
+
+	completeParams registration.CompleteRegistrationParams
+	completeResult *registration.CompleteRegistrationResult
+	completeErr    error
+	completeCalled bool
 }
 
 func (r *fakeRepository) CreateVerificationToken(
@@ -38,6 +45,16 @@ func (r *fakeRepository) FindVerificationTokenByHash(
 	r.findHash = tokenHash
 
 	return r.findToken, r.findErr
+}
+
+func (r *fakeRepository) CompleteRegistration(
+	ctx context.Context,
+	params registration.CompleteRegistrationParams,
+) (*registration.CompleteRegistrationResult, error) {
+	r.completeCalled = true
+	r.completeParams = params
+
+	return r.completeResult, r.completeErr
 }
 
 type fakeMailer struct {
@@ -247,6 +264,7 @@ func TestVerifyTokenReturnsValidToken(t *testing.T) {
 		context.Background(),
 		"valid-token",
 	)
+
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -401,4 +419,224 @@ func TestVerifyTokenRejectsConsumedToken(t *testing.T) {
 			err,
 		)
 	}
+}
+
+func TestCompleteRegistrationBrand(t *testing.T) {
+	repository := &fakeRepository{
+		findToken: &registration.VerificationToken{
+			ID:                     10,
+			InvitationEmail:        "brand@example.com",
+			CompanyName:            "テストブランド株式会社",
+			CompanyPhonetic:        "テストブランドカブシキガイシャ",
+			CompanyPostCode:        "100-0001",
+			CompanyAddress:         "東京都千代田区",
+			CompanyTel:             "03-1234-5678",
+			CompanyType:            registration.CompanyTypeBrand,
+			RepresentativeName:     "山田太郎",
+			RepresentativePhonetic: "ヤマダタロウ",
+			RegistrationPlan:       registration.RegistrationPlanBrandFree,
+			ExpiresAt:              time.Now().UTC().Add(time.Hour),
+		},
+		completeResult: &registration.CompleteRegistrationResult{
+			CompanyID: 1,
+			UserID:    2,
+			BrandID:   int64Pointer(3),
+		},
+	}
+
+	service := registration.NewService(
+		repository,
+		nil,
+	)
+
+	result, err := service.CompleteRegistration(
+		context.Background(),
+		"valid-registration-token",
+		"password123",
+	)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if !repository.findCalled {
+		t.Fatal("verification token repository was not called")
+	}
+
+	if !repository.completeCalled {
+		t.Fatal("complete registration repository was not called")
+	}
+
+	if repository.completeParams.TokenID != 10 {
+		t.Fatalf(
+			"expected token id 10, got %d",
+			repository.completeParams.TokenID,
+		)
+	}
+
+	if repository.completeParams.Email != "brand@example.com" {
+		t.Fatalf(
+			"unexpected email: %s",
+			repository.completeParams.Email,
+		)
+	}
+
+	if repository.completeParams.CompanyName != "テストブランド株式会社" {
+		t.Fatalf(
+			"unexpected company name: %s",
+			repository.completeParams.CompanyName,
+		)
+	}
+
+	if repository.completeParams.CompanyType != registration.CompanyTypeBrand {
+		t.Fatalf(
+			"unexpected company type: %d",
+			repository.completeParams.CompanyType,
+		)
+	}
+
+	if repository.completeParams.PasswordHash == "" {
+		t.Fatal("password hash should not be empty")
+	}
+
+	if repository.completeParams.PasswordHash == "password123" {
+		t.Fatal("raw password must not be stored")
+	}
+
+	if err := bcrypt.CompareHashAndPassword(
+		[]byte(repository.completeParams.PasswordHash),
+		[]byte("password123"),
+	); err != nil {
+		t.Fatalf(
+			"password hash does not match password: %v",
+			err,
+		)
+	}
+
+	if result.CompanyID != 1 {
+		t.Fatalf(
+			"expected company id 1, got %d",
+			result.CompanyID,
+		)
+	}
+
+	if result.UserID != 2 {
+		t.Fatalf(
+			"expected user id 2, got %d",
+			result.UserID,
+		)
+	}
+
+	if result.BrandID == nil || *result.BrandID != 3 {
+		t.Fatal("unexpected brand id")
+	}
+
+	if result.ShopID != nil {
+		t.Fatal("shop id must be nil for brand registration")
+	}
+}
+
+func TestCompleteRegistrationRejectsEmptyPassword(t *testing.T) {
+	repository := &fakeRepository{
+		findToken: &registration.VerificationToken{
+			ID:               1,
+			InvitationEmail:  "test@example.com",
+			CompanyType:      registration.CompanyTypeBrand,
+			RegistrationPlan: registration.RegistrationPlanBrandFree,
+			ExpiresAt:        time.Now().UTC().Add(time.Hour),
+		},
+	}
+
+	service := registration.NewService(
+		repository,
+		nil,
+	)
+
+	_, err := service.CompleteRegistration(
+		context.Background(),
+		"valid-token",
+		"",
+	)
+
+	if !errors.Is(err, registration.ErrPasswordRequired) {
+		t.Fatalf(
+			"expected ErrPasswordRequired, got %v",
+			err,
+		)
+	}
+
+	if repository.completeCalled {
+		t.Fatal("complete registration repository must not be called")
+	}
+}
+
+func TestCompleteRegistrationRejectsTooLongPassword(t *testing.T) {
+	repository := &fakeRepository{
+		findToken: &registration.VerificationToken{
+			ID:               1,
+			InvitationEmail:  "test@example.com",
+			CompanyType:      registration.CompanyTypeBrand,
+			RegistrationPlan: registration.RegistrationPlanBrandFree,
+			ExpiresAt:        time.Now().UTC().Add(time.Hour),
+		},
+	}
+
+	service := registration.NewService(
+		repository,
+		nil,
+	)
+
+	password := string(bytes.Repeat(
+		[]byte("a"),
+		73,
+	))
+
+	_, err := service.CompleteRegistration(
+		context.Background(),
+		"valid-token",
+		password,
+	)
+
+	if !errors.Is(err, registration.ErrPasswordTooLong) {
+		t.Fatalf(
+			"expected ErrPasswordTooLong, got %v",
+			err,
+		)
+	}
+
+	if repository.completeCalled {
+		t.Fatal("complete registration repository must not be called")
+	}
+}
+
+func TestCompleteRegistrationRejectsInvalidToken(t *testing.T) {
+	repository := &fakeRepository{
+		findErr: registration.ErrVerificationTokenNotFound,
+	}
+
+	service := registration.NewService(
+		repository,
+		nil,
+	)
+
+	_, err := service.CompleteRegistration(
+		context.Background(),
+		"invalid-token",
+		"password123",
+	)
+
+	if !errors.Is(err, registration.ErrVerificationTokenInvalid) {
+		t.Fatalf(
+			"expected ErrVerificationTokenInvalid, got %v",
+			err,
+		)
+	}
+
+	if repository.completeCalled {
+		t.Fatal("complete registration repository must not be called")
+	}
+}
+
+func int64Pointer(value int64) *int64 {
+	return &value
 }

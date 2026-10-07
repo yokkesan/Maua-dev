@@ -22,6 +22,11 @@ type Repository interface {
 		ctx context.Context,
 		tokenHash []byte,
 	) (*VerificationToken, error)
+
+	CompleteRegistration(
+		ctx context.Context,
+		params CompleteRegistrationParams,
+	) (*CompleteRegistrationResult, error)
 }
 
 type PostgresRepository struct {
@@ -191,4 +196,229 @@ func (r *PostgresRepository) FindVerificationTokenByHash(
 	}
 
 	return &token, nil
+}
+
+func (r *PostgresRepository) CompleteRegistration(
+	ctx context.Context,
+	params CompleteRegistrationParams,
+) (*CompleteRegistrationResult, error) {
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"begin complete registration transaction: %w",
+			err,
+		)
+	}
+
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
+
+	var companyID int64
+
+	err = tx.QueryRow(
+		ctx,
+		`
+			INSERT INTO companies (
+				name,
+				phonetic,
+				post_code,
+				address,
+				tel,
+				company_type,
+				representative_name,
+				representative_phonetic
+			)
+			VALUES (
+				$1,
+				$2,
+				$3,
+				$4,
+				$5,
+				$6,
+				$7,
+				$8
+			)
+			RETURNING id
+		`,
+		params.CompanyName,
+		params.CompanyPhonetic,
+		params.CompanyPostCode,
+		params.CompanyAddress,
+		params.CompanyTel,
+		params.CompanyType,
+		params.RepresentativeName,
+		params.RepresentativePhonetic,
+	).Scan(&companyID)
+
+	if err != nil {
+		return nil, fmt.Errorf(
+			"insert company: %w",
+			err,
+		)
+	}
+
+	userType := UserTypeShop
+
+	if params.CompanyType == CompanyTypeBrand {
+		userType = UserTypeBrand
+	}
+
+	var userID int64
+
+	err = tx.QueryRow(
+		ctx,
+		`
+			INSERT INTO users (
+				company_id,
+				email,
+				password_hash,
+				user_type
+			)
+			VALUES (
+				$1,
+				$2,
+				$3,
+				$4
+			)
+			RETURNING id
+		`,
+		companyID,
+		params.Email,
+		params.PasswordHash,
+		userType,
+	).Scan(&userID)
+
+	if err != nil {
+		return nil, fmt.Errorf(
+			"insert user: %w",
+			err,
+		)
+	}
+
+	result := &CompleteRegistrationResult{
+		CompanyID: companyID,
+		UserID:    userID,
+	}
+
+	switch params.CompanyType {
+	case CompanyTypeBrand:
+		var brandID int64
+
+		err = tx.QueryRow(
+			ctx,
+			`
+				INSERT INTO brands (
+					company_id,
+					name,
+					phonetic,
+					tel,
+					email
+				)
+				VALUES (
+					$1,
+					$2,
+					$3,
+					$4,
+					$5
+				)
+				RETURNING id
+			`,
+			companyID,
+			params.CompanyName,
+			params.CompanyPhonetic,
+			params.CompanyTel,
+			params.Email,
+		).Scan(&brandID)
+
+		if err != nil {
+			return nil, fmt.Errorf(
+				"insert brand: %w",
+				err,
+			)
+		}
+
+		result.BrandID = &brandID
+
+	case CompanyTypeShop:
+		var shopID int64
+
+		err = tx.QueryRow(
+			ctx,
+			`
+				INSERT INTO shops (
+					company_id,
+					name,
+					phonetic,
+					tel,
+					email,
+					registration_plan
+				)
+				VALUES (
+					$1,
+					$2,
+					$3,
+					$4,
+					$5,
+					$6
+				)
+				RETURNING id
+			`,
+			companyID,
+			params.CompanyName,
+			params.CompanyPhonetic,
+			params.CompanyTel,
+			params.Email,
+			params.RegistrationPlan,
+		).Scan(&shopID)
+
+		if err != nil {
+			return nil, fmt.Errorf(
+				"insert shop: %w",
+				err,
+			)
+		}
+
+		result.ShopID = &shopID
+
+	default:
+		return nil, fmt.Errorf(
+			"unsupported company type: %d",
+			params.CompanyType,
+		)
+	}
+
+	commandTag, err := tx.Exec(
+		ctx,
+		`
+			UPDATE signup_tokens
+			SET consumed_at = $1
+			WHERE id = $2
+			  AND consumed_at IS NULL
+			  AND revoked_at IS NULL
+		`,
+		time.Now().UTC(),
+		params.TokenID,
+	)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"consume signup token: %w",
+			err,
+		)
+	}
+
+	if commandTag.RowsAffected() != 1 {
+		return nil, fmt.Errorf(
+			"signup token could not be consumed",
+		)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return nil, fmt.Errorf(
+			"commit complete registration transaction: %w",
+			err,
+		)
+	}
+
+	return result, nil
 }
