@@ -7,3 +7,4 @@ docker exec -it "auma_dev_$1" bash 2>/dev/null \
 # dc frontend
 # dc db
 # dc nginx
+
