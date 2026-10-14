@@ -1,4 +1,4 @@
-package controllers
+package registrationcontroller
 
 import (
 	"encoding/json"

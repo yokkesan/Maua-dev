@@ -1,4 +1,4 @@
-package controllers
+package democontroller
 
 import (
 	"backend/models"

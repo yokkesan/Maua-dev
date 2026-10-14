@@ -176,3 +176,28 @@ func (s *Service) Authenticate(
 
 	return user, nil
 }
+
+func (s *Service) Logout(
+	ctx context.Context,
+	rawToken string,
+) error {
+	rawToken = strings.TrimSpace(rawToken)
+
+	if rawToken == "" {
+		return nil
+	}
+
+	tokenHash := sha256.Sum256([]byte(rawToken))
+
+	if err := s.repository.DeleteSessionByTokenHash(
+		ctx,
+		tokenHash[:],
+	); err != nil {
+		return fmt.Errorf(
+			"logout session: %w",
+			err,
+		)
+	}
+
+	return nil
+}

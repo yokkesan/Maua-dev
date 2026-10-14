@@ -1,7 +1,10 @@
 package routers
 
 import (
-	"backend/controllers"
+	authcontroller "backend/controllers/auth"
+healthcontroller "backend/controllers/health"
+registrationcontroller "backend/controllers/registration"
+topcontroller "backend/controllers/top"
 	"backend/internal/auth"
 	"backend/internal/registration"
 
@@ -33,36 +36,36 @@ func Register(
 	v1 := beego.NSNamespace("/v1",
 		beego.NSRouter(
 			"/top/notice",
-			&controllers.TopController{},
+			&topcontroller.TopController{},
 		),
 		beego.NSRouter(
 			"/registration/verification",
-			&controllers.RegistrationController{
+			&registrationcontroller.RegistrationController{
 				Service: registrationService,
 			},
 		),
 		beego.NSRouter(
 			"/registration/complete",
-			&controllers.RegistrationCompleteController{
+			&registrationcontroller.RegistrationCompleteController{
 				Service: registrationService,
 			},
 		),
 		beego.NSRouter(
 			"/login",
-			&controllers.AuthController{
+			&authcontroller.AuthController{
 				Service: authService,
 			},
 		),
 		beego.NSRouter(
 			"/me",
-			&controllers.MeController{},
+			&authcontroller.MeController{},
 		),
 	)
 
 	ns := beego.NewNamespace("/api",
 		beego.NSRouter(
 			"/health",
-			&controllers.HealthController{},
+			&healthcontroller.HealthController{},
 		),
 		v1,
 	)

@@ -29,6 +29,11 @@ type Repository interface {
 		ctx context.Context,
 		tokenHash []byte,
 	) (*User, error)
+
+	DeleteSessionByTokenHash(
+		ctx context.Context,
+		tokenHash []byte,
+	) error
 }
 
 type PostgresRepository struct {
@@ -165,4 +170,27 @@ func (r *PostgresRepository) FindUserBySessionTokenHash(
 	}
 
 	return &user, nil
+}
+
+func (r *PostgresRepository) DeleteSessionByTokenHash(
+	ctx context.Context,
+	tokenHash []byte,
+) error {
+	_, err := r.db.Exec(
+		ctx,
+		`
+			DELETE FROM user_sessions
+			WHERE token_hash = $1
+		`,
+		tokenHash,
+	)
+
+	if err != nil {
+		return fmt.Errorf(
+			"delete session by token hash: %w",
+			err,
+		)
+	}
+
+	return nil
 }
