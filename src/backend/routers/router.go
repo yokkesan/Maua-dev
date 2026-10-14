@@ -2,6 +2,7 @@ package routers
 
 import (
 	"backend/controllers"
+	"backend/internal/auth"
 	"backend/internal/registration"
 
 	beego "github.com/beego/beego/v2/server/web"
@@ -17,6 +18,12 @@ func Register(
 	registrationService := registration.NewService(
 		registrationRepository,
 		mailer,
+	)
+
+	authRepository := auth.NewPostgresRepository(db)
+
+	authService := auth.NewService(
+		authRepository,
 	)
 
 	ns := beego.NewNamespace("/api",
@@ -39,6 +46,12 @@ func Register(
 				"/registration/complete",
 				&controllers.RegistrationCompleteController{
 					Service: registrationService,
+				},
+			),
+			beego.NSRouter(
+				"/login",
+				&controllers.AuthController{
+					Service: authService,
 				},
 			),
 		),

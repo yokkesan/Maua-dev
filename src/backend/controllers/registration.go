@@ -153,13 +153,13 @@ func (c *RegistrationController) Get() {
 
 	c.Ctx.Output.SetStatus(http.StatusOK)
 	c.Data["json"] = map[string]interface{}{
-		"message":          "verification token is valid",
-		"token_id":         token.ID,
-		"email":            token.InvitationEmail,
-		"company_name":     token.CompanyName,
-		"company_type":     token.CompanyType,
+		"message":           "verification token is valid",
+		"token_id":          token.ID,
+		"email":             token.InvitationEmail,
+		"company_name":      token.CompanyName,
+		"company_type":      token.CompanyType,
 		"registration_plan": token.RegistrationPlan,
-		"expires_at":       token.ExpiresAt,
+		"expires_at":        token.ExpiresAt,
 	}
 
 	_ = c.ServeJSON()
