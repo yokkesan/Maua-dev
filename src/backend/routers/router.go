@@ -26,36 +26,52 @@ func Register(
 		authRepository,
 	)
 
+	authFilter := auth.NewAuthenticationFilter(
+		authService,
+	)
+
+	v1 := beego.NSNamespace("/v1",
+		beego.NSRouter(
+			"/top/notice",
+			&controllers.TopController{},
+		),
+		beego.NSRouter(
+			"/registration/verification",
+			&controllers.RegistrationController{
+				Service: registrationService,
+			},
+		),
+		beego.NSRouter(
+			"/registration/complete",
+			&controllers.RegistrationCompleteController{
+				Service: registrationService,
+			},
+		),
+		beego.NSRouter(
+			"/login",
+			&controllers.AuthController{
+				Service: authService,
+			},
+		),
+		beego.NSRouter(
+			"/me",
+			&controllers.MeController{},
+		),
+	)
+
 	ns := beego.NewNamespace("/api",
 		beego.NSRouter(
 			"/health",
 			&controllers.HealthController{},
 		),
-		beego.NSNamespace("/v1",
-			beego.NSRouter(
-				"/top/notice",
-				&controllers.TopController{},
-			),
-			beego.NSRouter(
-				"/registration/verification",
-				&controllers.RegistrationController{
-					Service: registrationService,
-				},
-			),
-			beego.NSRouter(
-				"/registration/complete",
-				&controllers.RegistrationCompleteController{
-					Service: registrationService,
-				},
-			),
-			beego.NSRouter(
-				"/login",
-				&controllers.AuthController{
-					Service: authService,
-				},
-			),
-		),
+		v1,
 	)
 
 	beego.AddNamespace(ns)
+
+	beego.InsertFilter(
+		"/api/v1/me",
+		beego.BeforeExec,
+		authFilter,
+	)
 }

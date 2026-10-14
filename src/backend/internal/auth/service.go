@@ -24,6 +24,7 @@ var (
 	ErrInvalidEmail       = errors.New("invalid email")
 	ErrPasswordRequired   = errors.New("password is required")
 	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrUnauthorized       = errors.New("unauthorized")
 )
 
 type Service struct {
@@ -144,4 +145,34 @@ func generateSessionToken() (
 	}
 
 	return base64.RawURLEncoding.EncodeToString(buf), nil
+}
+
+func (s *Service) Authenticate(
+	ctx context.Context,
+	rawToken string,
+) (*User, error) {
+	rawToken = strings.TrimSpace(rawToken)
+
+	if rawToken == "" {
+		return nil, ErrUnauthorized
+	}
+
+	tokenHash := sha256.Sum256([]byte(rawToken))
+
+	user, err := s.repository.FindUserBySessionTokenHash(
+		ctx,
+		tokenHash[:],
+	)
+	if err != nil {
+		if errors.Is(err, ErrSessionNotFound) {
+			return nil, ErrUnauthorized
+		}
+
+		return nil, fmt.Errorf(
+			"authenticate session: %w",
+			err,
+		)
+	}
+
+	return user, nil
 }

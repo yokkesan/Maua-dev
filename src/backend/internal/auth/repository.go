@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	ErrUserNotFound = errors.New("user not found")
+	ErrUserNotFound    = errors.New("user not found")
+	ErrSessionNotFound = errors.New("session not found")
 )
 
 type Repository interface {
@@ -23,6 +24,11 @@ type Repository interface {
 		ctx context.Context,
 		session Session,
 	) error
+
+	FindUserBySessionTokenHash(
+		ctx context.Context,
+		tokenHash []byte,
+	) (*User, error)
 }
 
 type PostgresRepository struct {
@@ -112,4 +118,51 @@ func (r *PostgresRepository) CreateSession(
 	}
 
 	return nil
+}
+
+func (r *PostgresRepository) FindUserBySessionTokenHash(
+	ctx context.Context,
+	tokenHash []byte,
+) (*User, error) {
+	var user User
+
+	err := r.db.QueryRow(
+		ctx,
+		`
+			SELECT
+				u.id,
+				u.company_id,
+				u.email,
+				u.password_hash,
+				u.user_type,
+				u.role
+			FROM user_sessions AS s
+			INNER JOIN users AS u
+				ON u.id = s.user_id
+			WHERE s.token_hash = $1
+				AND s.expires_at > NOW()
+			LIMIT 1
+		`,
+		tokenHash,
+	).Scan(
+		&user.ID,
+		&user.CompanyID,
+		&user.Email,
+		&user.PasswordHash,
+		&user.UserType,
+		&user.Role,
+	)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrSessionNotFound
+		}
+
+		return nil, fmt.Errorf(
+			"find user by session token hash: %w",
+			err,
+		)
+	}
+
+	return &user, nil
 }
