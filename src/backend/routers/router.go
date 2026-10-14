@@ -2,10 +2,12 @@ package routers
 
 import (
 	authcontroller "backend/controllers/auth"
-healthcontroller "backend/controllers/health"
-registrationcontroller "backend/controllers/registration"
-topcontroller "backend/controllers/top"
+	brandcontroller "backend/controllers/brand"
+	healthcontroller "backend/controllers/health"
+	registrationcontroller "backend/controllers/registration"
+	topcontroller "backend/controllers/top"
 	"backend/internal/auth"
+	"backend/internal/brand"
 	"backend/internal/registration"
 
 	beego "github.com/beego/beego/v2/server/web"
@@ -29,8 +31,18 @@ func Register(
 		authRepository,
 	)
 
+	brandRepository := brand.NewPostgresRepository(db)
+
+	brandService := brand.NewService(
+		brandRepository,
+	)
+
 	authFilter := auth.NewAuthenticationFilter(
 		authService,
+	)
+
+	brandAuthorizationFilter := auth.NewUserTypeAuthorizationFilter(
+		auth.UserTypeBrand,
 	)
 
 	v1 := beego.NSNamespace("/v1",
@@ -57,8 +69,20 @@ func Register(
 			},
 		),
 		beego.NSRouter(
+			"/logout",
+			&authcontroller.LogoutController{
+				Service: authService,
+			},
+		),
+		beego.NSRouter(
 			"/me",
 			&authcontroller.MeController{},
+		),
+		beego.NSRouter(
+			"/brands",
+			&brandcontroller.BrandController{
+				Service: brandService,
+			},
 		),
 	)
 
@@ -76,5 +100,23 @@ func Register(
 		"/api/v1/me",
 		beego.BeforeExec,
 		authFilter,
+	)
+
+	beego.InsertFilter(
+		"/api/v1/logout",
+		beego.BeforeExec,
+		authFilter,
+	)
+
+	beego.InsertFilter(
+		"/api/v1/brands",
+		beego.BeforeExec,
+		authFilter,
+	)
+
+	beego.InsertFilter(
+		"/api/v1/brands",
+		beego.BeforeExec,
+		brandAuthorizationFilter,
 	)
 }
