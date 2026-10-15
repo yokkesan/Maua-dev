@@ -29,6 +29,13 @@ type Repository interface {
 		ctx context.Context,
 		companyID int64,
 	) ([]Brand, error)
+
+	UpdateByID(
+		ctx context.Context,
+		brandID int64,
+		companyID int64,
+		values map[string]any,
+	) (map[string]any, error)
 }
 
 type PostgresRepository struct {

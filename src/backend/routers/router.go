@@ -153,6 +153,15 @@ func Register(
 			"get:Get",
 		),
 
+		// ブランド詳細更新
+		beego.NSRouter(
+			"/brands/:id",
+			&brandcontroller.BrandUpdateController{
+				Service: brandService,
+			},
+			"patch:Patch",
+		),
+
 		// -----------------------------------------------------
 		// Shop
 		// -----------------------------------------------------
@@ -172,6 +181,15 @@ func Register(
 				Service: shopService,
 			},
 			"get:Get",
+		),
+
+		// ショップ詳細更新
+		beego.NSRouter(
+			"/shops/:id",
+			&shopcontroller.ShopUpdateController{
+				Service: shopService,
+			},
+			"patch:Patch",
 		),
 	)
 
