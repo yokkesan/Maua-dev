@@ -15,12 +15,6 @@ var areaRegions = []AreaRegion{
 }
 
 // 都道府県
-// 既存AUMAの地域区分とIDを確認してから定義する。
-var areaPrefectures = []AreaPrefecture{}
-
-// 市区町村
-// 既存データを確認してから定義する。
-var areaCities = []AreaCity{}
 
 // 募集区分
 var salesRecruitments = []MasterItem{}
