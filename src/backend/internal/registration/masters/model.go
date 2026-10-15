@@ -41,7 +41,7 @@ type PriceZone struct {
 
 type PriceZoneGuideline struct {
 	ID         int64  `json:"id"`
-	SecondID   int64  `json:"second_id"`
+	SecondID   *int64 `json:"second_id"`
 	ThirdID    *int64 `json:"third_id"`
 	PriceRank  int16  `json:"price_rank"`
 	PriceRange string `json:"price_range"`
