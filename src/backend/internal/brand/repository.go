@@ -18,6 +18,17 @@ type Repository interface {
 		ctx context.Context,
 		companyID int64,
 	) (*Brand, error)
+
+	FindDetailByID(
+		ctx context.Context,
+		brandID int64,
+		companyID int64,
+	) (map[string]any, error)
+
+	ListByCompanyID(
+		ctx context.Context,
+		companyID int64,
+	) ([]Brand, error)
 }
 
 type PostgresRepository struct {
@@ -74,4 +85,54 @@ func (r *PostgresRepository) FindByCompanyID(
 	}
 
 	return &brand, nil
+}
+
+// ListByCompanyID は、指定された会社に所属するブランドをすべて取得する。
+func (r *PostgresRepository) ListByCompanyID(
+	ctx context.Context,
+	companyID int64,
+) ([]Brand, error) {
+	const query = `
+		SELECT
+			id,
+			company_id,
+			name,
+			phonetic,
+			tel,
+			email
+		FROM brands
+		WHERE company_id = $1
+		ORDER BY id
+	`
+
+	rows, err := r.db.Query(ctx, query, companyID)
+	if err != nil {
+		return nil, fmt.Errorf("list brands by company id: %w", err)
+	}
+	defer rows.Close()
+
+	brands := make([]Brand, 0)
+
+	for rows.Next() {
+		var b Brand
+
+		if err := rows.Scan(
+			&b.ID,
+			&b.CompanyID,
+			&b.Name,
+			&b.Phonetic,
+			&b.Tel,
+			&b.Email,
+		); err != nil {
+			return nil, fmt.Errorf("scan brand: %w", err)
+		}
+
+		brands = append(brands, b)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate brands: %w", err)
+	}
+
+	return brands, nil
 }

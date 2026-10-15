@@ -101,7 +101,7 @@ func Register(
 		),
 
 		// -----------------------------------------------------
-		// Registration Masters（追加）
+		// Registration Masters
 		// -----------------------------------------------------
 		beego.NSRouter(
 			"/registration/masters",
@@ -135,6 +135,8 @@ func Register(
 		// -----------------------------------------------------
 		// Brand
 		// -----------------------------------------------------
+
+		// ブランド一覧
 		beego.NSRouter(
 			"/brands",
 			&brandcontroller.BrandController{
@@ -142,14 +144,34 @@ func Register(
 			},
 		),
 
+		// ブランド詳細取得
+		beego.NSRouter(
+			"/brands/:id",
+			&brandcontroller.BrandDetailController{
+				Service: brandService,
+			},
+			"get:Get",
+		),
+
 		// -----------------------------------------------------
 		// Shop
 		// -----------------------------------------------------
+
+		// ショップ一覧
 		beego.NSRouter(
 			"/shops",
 			&shopcontroller.ShopController{
 				Service: shopService,
 			},
+		),
+
+		// ショップ詳細取得
+		beego.NSRouter(
+			"/shops/:id",
+			&shopcontroller.ShopDetailController{
+				Service: shopService,
+			},
+			"get:Get",
 		),
 	)
 
@@ -191,16 +213,30 @@ func Register(
 	// Brand Authorization
 	// =========================================================
 
-	// ブランド：認証
+	// ブランド一覧：認証
 	beego.InsertFilter(
 		"/api/v1/brands",
 		beego.BeforeExec,
 		authFilter,
 	)
 
-	// ブランド：ユーザー種別による認可
+	// ブランド一覧：ユーザー種別による認可
 	beego.InsertFilter(
 		"/api/v1/brands",
+		beego.BeforeExec,
+		brandAuthorizationFilter,
+	)
+
+	// ブランド詳細：認証
+	beego.InsertFilter(
+		"/api/v1/brands/:id",
+		beego.BeforeExec,
+		authFilter,
+	)
+
+	// ブランド詳細：ユーザー種別による認可
+	beego.InsertFilter(
+		"/api/v1/brands/:id",
 		beego.BeforeExec,
 		brandAuthorizationFilter,
 	)
@@ -209,16 +245,30 @@ func Register(
 	// Shop Authorization
 	// =========================================================
 
-	// ショップ：認証
+	// ショップ一覧：認証
 	beego.InsertFilter(
 		"/api/v1/shops",
 		beego.BeforeExec,
 		authFilter,
 	)
 
-	// ショップ：ユーザー種別による認可
+	// ショップ一覧：ユーザー種別による認可
 	beego.InsertFilter(
 		"/api/v1/shops",
+		beego.BeforeExec,
+		shopAuthorizationFilter,
+	)
+
+	// ショップ詳細：認証
+	beego.InsertFilter(
+		"/api/v1/shops/:id",
+		beego.BeforeExec,
+		authFilter,
+	)
+
+	// ショップ詳細：ユーザー種別による認可
+	beego.InsertFilter(
+		"/api/v1/shops/:id",
 		beego.BeforeExec,
 		shopAuthorizationFilter,
 	)

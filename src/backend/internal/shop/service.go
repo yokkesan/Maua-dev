@@ -34,3 +34,11 @@ func (s *Service) GetByCompanyID(
 
 	return result, nil
 }
+
+// ListByCompanyID は、指定された会社のショップ一覧を取得する。
+func (s *Service) ListByCompanyID(
+	ctx context.Context,
+	companyID int64,
+) ([]Shop, error) {
+	return s.repository.ListByCompanyID(ctx, companyID)
+}

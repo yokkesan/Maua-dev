@@ -16,6 +16,17 @@ type Repository interface {
 		ctx context.Context,
 		companyID int64,
 	) (*Shop, error)
+
+	FindDetailByID(
+		ctx context.Context,
+		shopID int64,
+		companyID int64,
+	) (map[string]any, error)
+
+	ListByCompanyID(
+		ctx context.Context,
+		companyID int64,
+	) ([]Shop, error)
 }
 
 type PostgresRepository struct {
@@ -76,4 +87,54 @@ func (r *PostgresRepository) FindByCompanyID(
 	}
 
 	return &shop, nil
+}
+
+// ListByCompanyID は、指定された会社に所属するショップをすべて取得する。
+func (r *PostgresRepository) ListByCompanyID(
+	ctx context.Context,
+	companyID int64,
+) ([]Shop, error) {
+	const query = `
+		SELECT
+			id,
+			company_id,
+			name,
+			phonetic,
+			tel,
+			email
+		FROM shops
+		WHERE company_id = $1
+		ORDER BY id
+	`
+
+	rows, err := r.db.Query(ctx, query, companyID)
+	if err != nil {
+		return nil, fmt.Errorf("list shops by company id: %w", err)
+	}
+	defer rows.Close()
+
+	shops := make([]Shop, 0)
+
+	for rows.Next() {
+		var s Shop
+
+		if err := rows.Scan(
+			&s.ID,
+			&s.CompanyID,
+			&s.Name,
+			&s.Phonetic,
+			&s.Tel,
+			&s.Email,
+		); err != nil {
+			return nil, fmt.Errorf("scan shop: %w", err)
+		}
+
+		shops = append(shops, s)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate shops: %w", err)
+	}
+
+	return shops, nil
 }
