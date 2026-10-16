@@ -36,6 +36,12 @@ type Repository interface {
 		companyID int64,
 		values map[string]any,
 	) (map[string]any, error)
+
+	Create(
+		ctx context.Context,
+		companyID int64,
+		values map[string]any,
+	) (map[string]any, error)
 }
 
 type PostgresRepository struct {

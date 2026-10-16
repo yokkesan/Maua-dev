@@ -136,12 +136,22 @@ func Register(
 		// Brand
 		// -----------------------------------------------------
 
-		// ブランド一覧
+		// ブランド一覧取得
 		beego.NSRouter(
 			"/brands",
 			&brandcontroller.BrandController{
 				Service: brandService,
 			},
+			"get:Get",
+		),
+
+		// ブランド新規追加
+		beego.NSRouter(
+			"/brands",
+			&brandcontroller.BrandCreateController{
+				Service: brandService,
+			},
+			"post:Post",
 		),
 
 		// ブランド詳細取得
@@ -166,12 +176,22 @@ func Register(
 		// Shop
 		// -----------------------------------------------------
 
-		// ショップ一覧
+		// ショップ一覧取得
 		beego.NSRouter(
 			"/shops",
 			&shopcontroller.ShopController{
 				Service: shopService,
 			},
+			"get:Get",
+		),
+
+		// ショップ新規追加
+		beego.NSRouter(
+			"/shops",
+			&shopcontroller.ShopCreateController{
+				Service: shopService,
+			},
+			"post:Post",
 		),
 
 		// ショップ詳細取得
@@ -213,14 +233,12 @@ func Register(
 	// Authentication Filters
 	// =========================================================
 
-	// ログインユーザー取得
 	beego.InsertFilter(
 		"/api/v1/me",
 		beego.BeforeExec,
 		authFilter,
 	)
 
-	// ログアウト
 	beego.InsertFilter(
 		"/api/v1/logout",
 		beego.BeforeExec,
@@ -231,14 +249,14 @@ func Register(
 	// Brand Authorization
 	// =========================================================
 
-	// ブランド一覧：認証
+	// ブランド一覧・新規追加：認証
 	beego.InsertFilter(
 		"/api/v1/brands",
 		beego.BeforeExec,
 		authFilter,
 	)
 
-	// ブランド一覧：ユーザー種別による認可
+	// ブランド一覧・新規追加：ユーザー種別による認可
 	beego.InsertFilter(
 		"/api/v1/brands",
 		beego.BeforeExec,
@@ -263,14 +281,14 @@ func Register(
 	// Shop Authorization
 	// =========================================================
 
-	// ショップ一覧：認証
+	// ショップ一覧・新規追加：認証
 	beego.InsertFilter(
 		"/api/v1/shops",
 		beego.BeforeExec,
 		authFilter,
 	)
 
-	// ショップ一覧：ユーザー種別による認可
+	// ショップ一覧・新規追加：ユーザー種別による認可
 	beego.InsertFilter(
 		"/api/v1/shops",
 		beego.BeforeExec,

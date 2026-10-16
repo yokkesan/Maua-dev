@@ -8,6 +8,7 @@ import (
 
 	"backend/routers"
 
+	beego "github.com/beego/beego/v2/server/web"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -53,6 +54,9 @@ func TestMain(m *testing.M) {
 		testDB.Close()
 		panic(err)
 	}
+
+	// テスト環境でもJSONリクエスト本文を取得できるようにする
+	beego.BConfig.CopyRequestBody = true
 
 	routers.Register(
 		testDB,
