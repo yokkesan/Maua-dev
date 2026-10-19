@@ -3,18 +3,66 @@ package shop
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"mime/multipart"
 	"sort"
 	"strings"
 	"unicode/utf8"
+
+	"backend/internal/storage"
 
 	"github.com/jackc/pgx/v5"
 )
 
 type CreateShopInput map[string]json.RawMessage
 
+// Create は従来のJSON形式によるショップ登録を行う。
 func (s *Service) Create(
 	ctx context.Context,
+	companyID int64,
+	input CreateShopInput,
+) (map[string]any, error) {
+	values, err := validateCreateShopInput(companyID, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.repository.Create(ctx, companyID, values)
+}
+
+// CreateWithImages は画像2枚を含むショップ登録を行う。
+func (s *Service) CreateWithImages(
+	ctx context.Context,
+	companyID int64,
+	input CreateShopInput,
+	files []*multipart.FileHeader,
+	imageService *storage.MainImageService,
+) (map[string]any, error) {
+	values, err := validateCreateShopInput(companyID, input)
+	if err != nil {
+		return nil, err
+	}
+
+	if imageService == nil {
+		return nil, errors.New("image service is required")
+	}
+
+	if err := storage.ValidateMainImages(files); err != nil {
+		return nil, err
+	}
+
+	return s.repository.CreateWithImages(
+		ctx,
+		companyID,
+		values,
+		files,
+		imageService,
+	)
+}
+
+// validateCreateShopInput はJSON登録と画像付き登録の共通入力検証。
+func validateCreateShopInput(
 	companyID int64,
 	input CreateShopInput,
 ) (map[string]any, error) {
@@ -154,13 +202,58 @@ func (s *Service) Create(
 		values[key] = value
 	}
 
-	return s.repository.Create(ctx, companyID, values)
+	return values, nil
 }
 
+// Create は従来の画像なし登録。
+// 既存のRepository呼び出しとの互換性を維持する。
 func (r *PostgresRepository) Create(
 	ctx context.Context,
 	companyID int64,
 	values map[string]any,
+) (map[string]any, error) {
+	return r.create(
+		ctx,
+		companyID,
+		values,
+		nil,
+		nil,
+	)
+}
+
+// CreateWithImages は画像付き登録。
+// 本体・関連情報・画像情報を同じDBトランザクションで登録する。
+func (r *PostgresRepository) CreateWithImages(
+	ctx context.Context,
+	companyID int64,
+	values map[string]any,
+	files []*multipart.FileHeader,
+	imageService *storage.MainImageService,
+) (map[string]any, error) {
+	if imageService == nil {
+		return nil, errors.New("image service is required")
+	}
+
+	if err := storage.ValidateMainImages(files); err != nil {
+		return nil, err
+	}
+
+	return r.create(
+		ctx,
+		companyID,
+		values,
+		files,
+		imageService,
+	)
+}
+
+// create は画像あり・なしの共通DB登録処理。
+func (r *PostgresRepository) create(
+	ctx context.Context,
+	companyID int64,
+	values map[string]any,
+	files []*multipart.FileHeader,
+	imageService *storage.MainImageService,
 ) (map[string]any, error) {
 	tx, err := r.db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
@@ -234,9 +327,33 @@ func (r *PostgresRepository) Create(
 		}
 	}
 
+	// 画像付き登録の場合のみファイル保存と画像情報INSERTを行う。
+	if imageService != nil {
+		_, err := saveShopMainImages(
+			ctx,
+			tx,
+			shopID,
+			files,
+			imageService,
+		)
+		if err != nil {
+			// saveShopMainImages側で画像Cleanupを試みる。
+			// DBはdeferでRollbackする。
+			return nil, fmt.Errorf(
+				"create shop main images: %w",
+				err,
+			)
+		}
+	}
+
+	// 注意：
+	// CommitのエラーではDBの確定結果が不明な場合がある。
+	// そのため、この時点では画像を無条件に削除しない。
 	if err := tx.Commit(ctx); err != nil {
 		return nil, fmt.Errorf("commit shop create: %w", err)
 	}
 
+	// Commit成功後の詳細取得でエラーになっても、
+	// DBと画像ファイルは削除しない。
 	return r.FindDetailByID(ctx, shopID, companyID)
 }

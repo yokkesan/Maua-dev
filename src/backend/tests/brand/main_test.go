@@ -13,8 +13,13 @@ import (
 )
 
 var testDB *pgxpool.Pool
+var testImageRoot string
 
 func TestMain(m *testing.M) {
+	os.Exit(runBrandTests(m))
+}
+
+func runBrandTests(m *testing.M) (code int) {
 	ctx := context.Background()
 
 	host := os.Getenv("TEST_DB_HOST")
@@ -29,6 +34,9 @@ func TestMain(m *testing.M) {
 		password == "" ||
 		dbName == "" {
 		panic("test database environment variables are not configured")
+	}
+	if dbName != "auma_test" {
+		panic("brand tests require TEST_DB_NAME=auma_test")
 	}
 
 	databaseURL := fmt.Sprintf(
@@ -54,6 +62,30 @@ func TestMain(m *testing.M) {
 		testDB.Close()
 		panic(err)
 	}
+	defer testDB.Close()
+
+	var actualDatabase string
+	if err := testDB.QueryRow(ctx, "SELECT current_database()").Scan(&actualDatabase); err != nil {
+		panic(err)
+	}
+	if actualDatabase != "auma_test" {
+		panic("brand tests must connect only to auma_test")
+	}
+
+	// Router生成前に差し替え、Composeの実画像Volumeには保存しない。
+	testImageRoot, err = os.MkdirTemp("", "auma-brand-http-images-")
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err := os.RemoveAll(testImageRoot); err != nil {
+			fmt.Fprintf(os.Stderr, "cleanup test image root: %v\n", err)
+			code = 1
+		}
+	}()
+	if err := os.Setenv("STORAGE_LOCAL_ROOT", testImageRoot); err != nil {
+		panic(err)
+	}
 
 	// テスト実行時もJSONリクエスト本文を取得できるようにする
 	beego.BConfig.CopyRequestBody = true
@@ -63,9 +95,5 @@ func TestMain(m *testing.M) {
 		nil,
 	)
 
-	code := m.Run()
-
-	testDB.Close()
-
-	os.Exit(code)
+	return m.Run()
 }

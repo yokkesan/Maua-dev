@@ -19,6 +19,7 @@ services:
     working_dir: /app
     volumes:
       - ./src/backend:/app
+      - image_storage:/data/images
     ports:
       - "8080:8080"
     environment:
@@ -41,6 +42,9 @@ services:
       SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME}
       REGISTRATION_VERIFICATION_URL: ${REGISTRATION_VERIFICATION_URL}
+
+      STORAGE_DRIVER: local
+      STORAGE_LOCAL_ROOT: /data/images
 
     depends_on:
       - db
@@ -82,9 +86,11 @@ services:
       - "8081:80"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - image_storage:/data/images:ro
     depends_on:
       - frontend
       - backend
 
 volumes:
   postgres_data:
+  image_storage:

@@ -2,7 +2,10 @@ package registration_test
 
 import (
 	"context"
+	"crypto/rand"
 	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
 	"testing"
 	"time"
 
@@ -12,28 +15,48 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// setupRegistrationTestEmail は一意なメールを生成し、対象データだけを後片付けします。
+// Poolを作成した後に呼び出すことで、Pool終了より先にCleanupを実行します。
+func setupRegistrationTestEmail(t *testing.T, db *pgxpool.Pool) string {
+	t.Helper()
+
+	var randomBytes [12]byte
+	if _, err := rand.Read(randomBytes[:]); err != nil {
+		t.Fatalf("generate test email: %v", err)
+	}
+	email := fmt.Sprintf("registration-%s@example.com", hex.EncodeToString(randomBytes[:]))
+
+	t.Cleanup(func() {
+		ctx := context.Background()
+		_, err := db.Exec(ctx, `DELETE FROM companies
+			WHERE id IN (SELECT company_id FROM users WHERE email = $1)`, email)
+		if err != nil {
+			t.Errorf("cleanup registration company: %v", err)
+		}
+		_, err = db.Exec(ctx, "DELETE FROM signup_tokens WHERE invitation_email = $1", email)
+		if err != nil {
+			t.Errorf("cleanup registration tokens: %v", err)
+		}
+	})
+	return email
+}
+
 func TestPostgresRepositoryCreatesVerificationToken(t *testing.T) {
 	db := testutil.NewTestPostgresPool(t)
-
 	ctx := context.Background()
 
-	_, err := db.Exec(ctx, "DELETE FROM signup_tokens")
-	if err != nil {
-		t.Fatalf("clean signup_tokens: %v", err)
-	}
-
-	repository := registration.NewPostgresRepository(db)
-
-	rawToken := "test-token"
+	email := setupRegistrationTestEmail(t, db)
+	rawToken := "test-token-" + email
 	tokenHash := sha256.Sum256([]byte(rawToken))
 
+	repository := registration.NewPostgresRepository(db)
 	expiresAt := time.Now().UTC().Add(24 * time.Hour)
 
-	err = repository.CreateVerificationToken(
+	err := repository.CreateVerificationToken(
 		ctx,
 		registration.CreateTokenParams{
 			VerificationInput: registration.VerificationInput{
-				Email:                  "test@example.com",
+				Email:                  email,
 				CompanyName:            "テスト株式会社",
 				CompanyPhonetic:        "テストカブシキガイシャ",
 				CompanyPostCode:        "100-0001",
@@ -53,7 +76,7 @@ func TestPostgresRepositoryCreatesVerificationToken(t *testing.T) {
 	}
 
 	var (
-		email           string
+		storedEmail     string
 		company         string
 		tokenHashFromDB []byte
 	)
@@ -68,9 +91,9 @@ func TestPostgresRepositoryCreatesVerificationToken(t *testing.T) {
 			FROM signup_tokens
 			WHERE invitation_email = $1
 		`,
-		"test@example.com",
+		email,
 	).Scan(
-		&email,
+		&storedEmail,
 		&company,
 		&tokenHashFromDB,
 	)
@@ -78,8 +101,8 @@ func TestPostgresRepositoryCreatesVerificationToken(t *testing.T) {
 		t.Fatalf("query signup token: %v", err)
 	}
 
-	if email != "test@example.com" {
-		t.Fatalf("unexpected email: %s", email)
+	if storedEmail != email {
+		t.Fatalf("unexpected email: %s", storedEmail)
 	}
 
 	if company != "テスト株式会社" {
@@ -93,22 +116,18 @@ func TestPostgresRepositoryCreatesVerificationToken(t *testing.T) {
 
 func TestPostgresRepositoryRevokesExistingToken(t *testing.T) {
 	db := testutil.NewTestPostgresPool(t)
-
 	ctx := context.Background()
 
-	_, err := db.Exec(ctx, "DELETE FROM signup_tokens")
-	if err != nil {
-		t.Fatalf("clean signup_tokens: %v", err)
-	}
+	email := setupRegistrationTestEmail(t, db)
 
 	repository := registration.NewPostgresRepository(db)
 
-	firstHash := sha256.Sum256([]byte("first-token"))
-	secondHash := sha256.Sum256([]byte("second-token"))
+	firstHash := sha256.Sum256([]byte("first-token-" + email))
+	secondHash := sha256.Sum256([]byte("second-token-" + email))
 
 	firstParams := registration.CreateTokenParams{
 		VerificationInput: registration.VerificationInput{
-			Email:            "same@example.com",
+			Email:            email,
 			CompanyName:      "テスト株式会社",
 			CompanyType:      registration.CompanyTypeBrand,
 			RegistrationPlan: registration.RegistrationPlanBrandFree,
@@ -117,7 +136,7 @@ func TestPostgresRepositoryRevokesExistingToken(t *testing.T) {
 		ExpiresAt: time.Now().UTC().Add(24 * time.Hour),
 	}
 
-	err = repository.CreateVerificationToken(ctx, firstParams)
+	err := repository.CreateVerificationToken(ctx, firstParams)
 	if err != nil {
 		t.Fatalf("create first token: %v", err)
 	}
@@ -138,7 +157,7 @@ func TestPostgresRepositoryRevokesExistingToken(t *testing.T) {
 			WHERE invitation_email = $1
 			ORDER BY id ASC
 		`,
-		"same@example.com",
+		email,
 	)
 	if err != nil {
 		t.Fatalf("query signup tokens: %v", err)
@@ -184,14 +203,12 @@ func TestPostgresRepositoryRevokesExistingToken(t *testing.T) {
 
 func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 	db := testutil.NewTestPostgresPool(t)
-
 	ctx := context.Background()
-
-	cleanRegistrationTables(t, ctx, db)
 
 	repository := registration.NewPostgresRepository(db)
 
-	tokenHash := sha256.Sum256([]byte("brand-registration-token"))
+	email := setupRegistrationTestEmail(t, db)
+	tokenHash := sha256.Sum256([]byte("brand-registration-token-" + email))
 
 	var tokenID int64
 
@@ -213,22 +230,13 @@ func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 				expires_at
 			)
 			VALUES (
-				$1,
-				$2,
-				$3,
-				$4,
-				$5,
-				$6,
-				$7,
-				$8,
-				$9,
-				$10,
-				$11,
-				$12
+				$1, $2, $3, $4,
+				$5, $6, $7, $8,
+				$9, $10, $11, $12
 			)
 			RETURNING id
 		`,
-		"brand-register@example.com",
+		email,
 		tokenHash[:],
 		"テストブランド株式会社",
 		"テストブランドカブシキガイシャ",
@@ -241,6 +249,7 @@ func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 		registration.RegistrationPlanBrandFree,
 		time.Now().UTC().Add(time.Hour),
 	).Scan(&tokenID)
+
 	if err != nil {
 		t.Fatalf("insert signup token: %v", err)
 	}
@@ -250,7 +259,7 @@ func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 		registration.CompleteRegistrationParams{
 			TokenID: tokenID,
 
-			Email:        "brand-register@example.com",
+			Email:        email,
 			PasswordHash: "$2a$10$test-password-hash",
 
 			CompanyName:            "テストブランド株式会社",
@@ -341,7 +350,7 @@ func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 		t.Fatalf("query user: %v", err)
 	}
 
-	if userEmail != "brand-register@example.com" {
+	if userEmail != email {
 		t.Fatalf("unexpected user email: %s", userEmail)
 	}
 
@@ -391,7 +400,7 @@ func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 		t.Fatalf("unexpected brand name: %s", brandName)
 	}
 
-	if brandEmail != "brand-register@example.com" {
+	if brandEmail != email {
 		t.Fatalf("unexpected brand email: %s", brandEmail)
 	}
 
@@ -417,14 +426,12 @@ func TestPostgresRepositoryCompletesBrandRegistration(t *testing.T) {
 
 func TestPostgresRepositoryCompletesShopRegistration(t *testing.T) {
 	db := testutil.NewTestPostgresPool(t)
-
 	ctx := context.Background()
-
-	cleanRegistrationTables(t, ctx, db)
 
 	repository := registration.NewPostgresRepository(db)
 
-	tokenHash := sha256.Sum256([]byte("shop-registration-token"))
+	email := setupRegistrationTestEmail(t, db)
+	tokenHash := sha256.Sum256([]byte("shop-registration-token-" + email))
 
 	var tokenID int64
 
@@ -439,23 +446,17 @@ func TestPostgresRepositoryCompletesShopRegistration(t *testing.T) {
 				registration_plan,
 				expires_at
 			)
-			VALUES (
-				$1,
-				$2,
-				$3,
-				$4,
-				$5,
-				$6
-			)
+			VALUES ($1, $2, $3, $4, $5, $6)
 			RETURNING id
 		`,
-		"shop-register@example.com",
+		email,
 		tokenHash[:],
 		"テストショップ",
 		registration.CompanyTypeShop,
 		registration.RegistrationPlanShopUnit,
 		time.Now().UTC().Add(time.Hour),
 	).Scan(&tokenID)
+
 	if err != nil {
 		t.Fatalf("insert signup token: %v", err)
 	}
@@ -465,7 +466,7 @@ func TestPostgresRepositoryCompletesShopRegistration(t *testing.T) {
 		registration.CompleteRegistrationParams{
 			TokenID: tokenID,
 
-			Email:        "shop-register@example.com",
+			Email:        email,
 			PasswordHash: "$2a$10$test-password-hash",
 
 			CompanyName:      "テストショップ",
@@ -534,13 +535,14 @@ func TestPostgresRepositoryCompletesShopRegistration(t *testing.T) {
 		t.Fatalf("unexpected shop name: %s", shopName)
 	}
 
-	if shopEmail != "shop-register@example.com" {
+	if shopEmail != email {
 		t.Fatalf("unexpected shop email: %s", shopEmail)
 	}
 
 	if registrationPlan != registration.RegistrationPlanShopUnit {
 		t.Fatalf(
-			"unexpected registration plan: %d",
+			"expected registration plan %d, got %d",
+			registration.RegistrationPlanShopUnit,
 			registrationPlan,
 		)
 	}
@@ -562,33 +564,5 @@ func TestPostgresRepositoryCompletesShopRegistration(t *testing.T) {
 
 	if consumedAt == nil {
 		t.Fatal("signup token should be consumed")
-	}
-}
-
-func cleanRegistrationTables(
-	t *testing.T,
-	ctx context.Context,
-	db *pgxpool.Pool,
-) {
-	t.Helper()
-
-	_, err := db.Exec(
-		ctx,
-		`
-			TRUNCATE TABLE
-				brands,
-				shops,
-				users,
-				companies,
-				signup_tokens
-			RESTART IDENTITY
-			CASCADE
-		`,
-	)
-	if err != nil {
-		t.Fatalf(
-			"clean registration tables: %v",
-			err,
-		)
 	}
 }

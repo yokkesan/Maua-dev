@@ -1,9 +1,11 @@
 package brand
 
 import (
+	"backend/internal/storage"
 	"context"
 	"errors"
 	"fmt"
+	"mime/multipart"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -41,6 +43,14 @@ type Repository interface {
 		ctx context.Context,
 		companyID int64,
 		values map[string]any,
+	) (map[string]any, error)
+
+	CreateWithImages(
+		ctx context.Context,
+		companyID int64,
+		values map[string]any,
+		files []*multipart.FileHeader,
+		imageService *storage.MainImageService,
 	) (map[string]any, error)
 }
 

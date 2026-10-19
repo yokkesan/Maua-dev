@@ -1,6 +1,8 @@
 package routers
 
 import (
+	"os"
+
 	authcontroller "backend/controllers/auth"
 	brandcontroller "backend/controllers/brand"
 	healthcontroller "backend/controllers/health"
@@ -14,6 +16,7 @@ import (
 	"backend/internal/registration"
 	registrationmasters "backend/internal/registration/masters"
 	"backend/internal/shop"
+	"backend/internal/storage"
 
 	beego "github.com/beego/beego/v2/server/web"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -23,6 +26,10 @@ func Register(
 	db *pgxpool.Pool,
 	mailer registration.VerificationMailer,
 ) {
+	// multipart本文全体を12MiBに制限する。画像2枚（各5MB）と登録JSONを含む。
+	// Controller実行前のBeegoによるmultipart解析にも適用する。
+	beego.BConfig.MaxUploadSize = 12 << 20
+
 	// =========================================================
 	// Registration
 	// =========================================================
@@ -49,6 +56,25 @@ func Register(
 	// =========================================================
 	brandRepository := brand.NewPostgresRepository(db)
 	brandService := brand.NewService(brandRepository)
+
+	// =========================================================
+	// Image Storage
+	// =========================================================
+	var imageService *storage.MainImageService
+
+	storageRoot := os.Getenv("STORAGE_LOCAL_ROOT")
+
+	if storageRoot != "" {
+		localStorage, err := storage.NewLocalStorage(storageRoot)
+		if err != nil {
+			panic("initialize local storage: " + err.Error())
+		}
+
+		imageService, err = storage.NewMainImageService(localStorage)
+		if err != nil {
+			panic("initialize main image service: " + err.Error())
+		}
+	}
 
 	// =========================================================
 	// Shop
@@ -149,7 +175,8 @@ func Register(
 		beego.NSRouter(
 			"/brands",
 			&brandcontroller.BrandCreateController{
-				Service: brandService,
+				Service:      brandService,
+				ImageService: imageService,
 			},
 			"post:Post",
 		),
@@ -189,7 +216,8 @@ func Register(
 		beego.NSRouter(
 			"/shops",
 			&shopcontroller.ShopCreateController{
-				Service: shopService,
+				Service:      shopService,
+				ImageService: imageService,
 			},
 			"post:Post",
 		),

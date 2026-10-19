@@ -26,18 +26,20 @@ type registrationCompleteResponse struct {
 }
 
 func TestRegistrationVerificationEndpoint(t *testing.T) {
-	body := []byte(`{
-		"email": "controller-test@example.com",
-		"company_name": "テスト株式会社",
-		"company_phonetic": "テストカブシキガイシャ",
-		"company_post_code": "100-0001",
-		"company_address": "東京都千代田区",
-		"company_tel": "03-1234-5678",
-		"company_type": 1,
-		"representative_name": "山田太郎",
+	email := setupRegistrationTestEmail(t, testDB)
+
+	body := marshalRegistrationRequest(t, map[string]any{
+		"email":                   email,
+		"company_name":            "テスト株式会社",
+		"company_phonetic":        "テストカブシキガイシャ",
+		"company_post_code":       "100-0001",
+		"company_address":         "東京都千代田区",
+		"company_tel":             "03-1234-5678",
+		"company_type":            1,
+		"representative_name":     "山田太郎",
 		"representative_phonetic": "ヤマダタロウ",
-		"registration_plan": 0
-	}`)
+		"registration_plan":       0,
+	})
 
 	req := httptest.NewRequest(
 		http.MethodPost,
@@ -75,12 +77,12 @@ func TestRegistrationVerificationEndpoint(t *testing.T) {
 }
 
 func TestRegistrationVerificationRejectsInvalidEmail(t *testing.T) {
-	body := []byte(`{
-		"email": "invalid-email",
-		"company_name": "テスト株式会社",
-		"company_type": 1,
-		"registration_plan": 0
-	}`)
+	body := marshalRegistrationRequest(t, map[string]any{
+		"email":             "invalid-email",
+		"company_name":      "テスト株式会社",
+		"company_type":      1,
+		"registration_plan": 0,
+	})
 
 	req := httptest.NewRequest(
 		http.MethodPost,
@@ -108,18 +110,20 @@ func TestRegistrationVerificationRejectsInvalidEmail(t *testing.T) {
 }
 
 func TestRegistrationVerificationGetValidToken(t *testing.T) {
-	body := []byte(`{
-		"email": "controller-valid-token@example.com",
-		"company_name": "テスト株式会社",
-		"company_phonetic": "テストカブシキガイシャ",
-		"company_post_code": "100-0001",
-		"company_address": "東京都千代田区",
-		"company_tel": "03-1234-5678",
-		"company_type": 1,
-		"representative_name": "山田太郎",
+	email := setupRegistrationTestEmail(t, testDB)
+
+	body := marshalRegistrationRequest(t, map[string]any{
+		"email":                   email,
+		"company_name":            "テスト株式会社",
+		"company_phonetic":        "テストカブシキガイシャ",
+		"company_post_code":       "100-0001",
+		"company_address":         "東京都千代田区",
+		"company_tel":             "03-1234-5678",
+		"company_type":            1,
+		"representative_name":     "山田太郎",
 		"representative_phonetic": "ヤマダタロウ",
-		"registration_plan": 0
-	}`)
+		"registration_plan":       0,
+	})
 
 	postReq := httptest.NewRequest(
 		http.MethodPost,
@@ -195,7 +199,7 @@ func TestRegistrationVerificationGetValidToken(t *testing.T) {
 
 	if !bytes.Contains(
 		getRecorder.Body.Bytes(),
-		[]byte(`"controller-valid-token@example.com"`),
+		[]byte(`"`+email+`"`),
 	) {
 		t.Fatalf(
 			"response does not contain expected email: %s",
@@ -239,12 +243,14 @@ func TestRegistrationVerificationGetRejectsInvalidToken(t *testing.T) {
 }
 
 func TestRegistrationVerificationGetRejectsRevokedToken(t *testing.T) {
-	firstBody := []byte(`{
-		"email": "controller-revoked-token@example.com",
-		"company_name": "テスト株式会社",
-		"company_type": 1,
-		"registration_plan": 0
-	}`)
+	email := setupRegistrationTestEmail(t, testDB)
+
+	firstBody := marshalRegistrationRequest(t, map[string]any{
+		"email":             email,
+		"company_name":      "テスト株式会社",
+		"company_type":      1,
+		"registration_plan": 0,
+	})
 
 	firstReq := httptest.NewRequest(
 		http.MethodPost,
@@ -286,12 +292,12 @@ func TestRegistrationVerificationGetRejectsRevokedToken(t *testing.T) {
 		t.Fatal("first verification token should not be empty")
 	}
 
-	secondBody := []byte(`{
-		"email": "controller-revoked-token@example.com",
-		"company_name": "テスト株式会社",
-		"company_type": 1,
-		"registration_plan": 0
-	}`)
+	secondBody := marshalRegistrationRequest(t, map[string]any{
+		"email":             email,
+		"company_name":      "テスト株式会社",
+		"company_type":      1,
+		"registration_plan": 0,
+	})
 
 	secondReq := httptest.NewRequest(
 		http.MethodPost,
@@ -351,18 +357,20 @@ func TestRegistrationVerificationGetRejectsRevokedToken(t *testing.T) {
 }
 
 func TestRegistrationCompleteBrand(t *testing.T) {
-	verificationBody := []byte(`{
-		"email": "controller-complete-brand@example.com",
-		"company_name": "本登録テスト株式会社",
-		"company_phonetic": "ホントウロクテストカブシキガイシャ",
-		"company_post_code": "100-0001",
-		"company_address": "東京都千代田区",
-		"company_tel": "03-1234-5678",
-		"company_type": 1,
-		"representative_name": "山田太郎",
+	email := setupRegistrationTestEmail(t, testDB)
+
+	verificationBody := marshalRegistrationRequest(t, map[string]any{
+		"email":                   email,
+		"company_name":            "本登録テスト株式会社",
+		"company_phonetic":        "ホントウロクテストカブシキガイシャ",
+		"company_post_code":       "100-0001",
+		"company_address":         "東京都千代田区",
+		"company_tel":             "03-1234-5678",
+		"company_type":            1,
+		"representative_name":     "山田太郎",
 		"representative_phonetic": "ヤマダタロウ",
-		"registration_plan": 0
-	}`)
+		"registration_plan":       0,
+	})
 
 	verificationReq := httptest.NewRequest(
 		http.MethodPost,
@@ -407,18 +415,10 @@ func TestRegistrationCompleteBrand(t *testing.T) {
 		t.Fatal("verification token should not be empty")
 	}
 
-	completeBody, err := json.Marshal(
-		map[string]string{
-			"token":    verificationResponse.Token,
-			"password": "password123",
-		},
-	)
-	if err != nil {
-		t.Fatalf(
-			"failed to encode complete request: %v",
-			err,
-		)
-	}
+	completeBody := marshalRegistrationRequest(t, map[string]string{
+		"token":    verificationResponse.Token,
+		"password": "password123",
+	})
 
 	completeReq := httptest.NewRequest(
 		http.MethodPost,
@@ -484,10 +484,10 @@ func TestRegistrationCompleteBrand(t *testing.T) {
 }
 
 func TestRegistrationCompleteRejectsInvalidToken(t *testing.T) {
-	body := []byte(`{
-		"token": "invalid-registration-token",
-		"password": "password123"
-	}`)
+	body := marshalRegistrationRequest(t, map[string]any{
+		"token":    "invalid-registration-token",
+		"password": "password123",
+	})
 
 	req := httptest.NewRequest(
 		http.MethodPost,
@@ -528,12 +528,14 @@ func TestRegistrationCompleteRejectsInvalidToken(t *testing.T) {
 }
 
 func TestRegistrationCompleteRejectsConsumedToken(t *testing.T) {
-	verificationBody := []byte(`{
-		"email": "controller-consumed-token@example.com",
-		"company_name": "使用済みテスト株式会社",
-		"company_type": 1,
-		"registration_plan": 0
-	}`)
+	email := setupRegistrationTestEmail(t, testDB)
+
+	verificationBody := marshalRegistrationRequest(t, map[string]any{
+		"email":             email,
+		"company_name":      "使用済みテスト株式会社",
+		"company_type":      1,
+		"registration_plan": 0,
+	})
 
 	verificationReq := httptest.NewRequest(
 		http.MethodPost,
@@ -574,18 +576,10 @@ func TestRegistrationCompleteRejectsConsumedToken(t *testing.T) {
 		)
 	}
 
-	completeBody, err := json.Marshal(
-		map[string]string{
-			"token":    verificationResponse.Token,
-			"password": "password123",
-		},
-	)
-	if err != nil {
-		t.Fatalf(
-			"failed to encode complete request: %v",
-			err,
-		)
-	}
+	completeBody := marshalRegistrationRequest(t, map[string]string{
+		"token":    verificationResponse.Token,
+		"password": "password123",
+	})
 
 	firstReq := httptest.NewRequest(
 		http.MethodPost,
@@ -650,4 +644,15 @@ func TestRegistrationCompleteRejectsConsumedToken(t *testing.T) {
 			secondRecorder.Body.String(),
 		)
 	}
+}
+
+// marshalRegistrationRequest はリクエストのJSONを生成します。
+func marshalRegistrationRequest(t *testing.T, payload any) []byte {
+	t.Helper()
+
+	body, err := json.Marshal(payload)
+	if err != nil {
+		t.Fatalf("marshal registration request: %v", err)
+	}
+	return body
 }
