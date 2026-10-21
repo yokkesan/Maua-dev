@@ -138,5 +138,10 @@ func (t *brandTransaction) Save(ctx context.Context, ids []int64, zone int64) er
 	if _, err := t.tx.Exec(ctx, `UPDATE brands SET price_zone_id=$1, updated_at=NOW() WHERE id=$2`, zone, t.brandID); err != nil {
 		return fmt.Errorf("update price screening zone: %w", err)
 	}
+	// A legacy answer update has no independent product selection. Invalidate
+	// readiness atomically, preserving the previous selection for inspection.
+	if _, err := t.tx.Exec(ctx, `UPDATE brand_price_screenings SET saved_at=NULL,updated_at=NOW() WHERE brand_id=$1`, t.brandID); err != nil {
+		return fmt.Errorf("invalidate price screening selection: %w", err)
+	}
 	return nil
 }

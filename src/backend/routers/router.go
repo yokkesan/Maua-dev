@@ -6,8 +6,10 @@ import (
 	authcontroller "backend/controllers/auth"
 	brandcontroller "backend/controllers/brand"
 	healthcontroller "backend/controllers/health"
+	pricescreeningcontroller "backend/controllers/pricescreening"
 	registrationcontroller "backend/controllers/registration"
 	registrationmasterscontroller "backend/controllers/registration/masters"
+	submissioncontroller "backend/controllers/registrationsubmission"
 	shopcontroller "backend/controllers/shop"
 	topcontroller "backend/controllers/top"
 
@@ -16,6 +18,7 @@ import (
 	"backend/internal/pricescreening"
 	"backend/internal/registration"
 	registrationmasters "backend/internal/registration/masters"
+	"backend/internal/registrationsubmission"
 	"backend/internal/shop"
 	"backend/internal/storage"
 
@@ -58,6 +61,7 @@ func Register(
 	brandRepository := brand.NewPostgresRepository(db)
 	brandService := brand.NewService(brandRepository)
 	priceScreeningService := pricescreening.NewService(pricescreening.NewPostgresRepository(db))
+	selectionService := pricescreening.NewSelectionService(db)
 
 	// =========================================================
 	// Image Storage
@@ -83,6 +87,9 @@ func Register(
 	// =========================================================
 	shopRepository := shop.NewPostgresRepository(db)
 	shopService := shop.NewService(shopRepository)
+	submissionService := registrationsubmission.NewService(
+		registrationsubmission.NewPostgresRepository(db),
+	)
 
 	// =========================================================
 	// Authentication / Authorization Filters
@@ -190,6 +197,20 @@ func Register(
 			"put:Put;get:Get",
 		),
 
+		// ブランドのプライススクリーニング選択保存・取得
+		beego.NSRouter(
+			"/brands/:id/price-screening/selection",
+			&pricescreeningcontroller.SelectionController{Service: selectionService, Table: "brands"},
+			"put:Put;get:Get",
+		),
+
+		// ブランド登録申請・申請状態取得
+		beego.NSRouter(
+			"/brands/:id/submission",
+			&submissioncontroller.Controller{Service: submissionService, Entity: registrationsubmission.Brand},
+			"post:Post;get:Get",
+		),
+
 		// ブランド詳細取得
 		beego.NSRouter(
 			"/brands/:id",
@@ -229,6 +250,20 @@ func Register(
 				ImageService: imageService,
 			},
 			"post:Post",
+		),
+
+		// ショップのプライススクリーニング選択保存・取得
+		beego.NSRouter(
+			"/shops/:id/price-screening/selection",
+			&pricescreeningcontroller.SelectionController{Service: selectionService, Table: "shops"},
+			"put:Put;get:Get",
+		),
+
+		// ショップ登録申請・申請状態取得
+		beego.NSRouter(
+			"/shops/:id/submission",
+			&submissioncontroller.Controller{Service: submissionService, Entity: registrationsubmission.Shop},
+			"post:Post;get:Get",
 		),
 
 		// ショップ詳細取得
@@ -303,6 +338,12 @@ func Register(
 	// プライススクリーニング：認証・ユーザー種別による認可
 	beego.InsertFilter("/api/v1/brands/:id/price-screening", beego.BeforeExec, authFilter)
 	beego.InsertFilter("/api/v1/brands/:id/price-screening", beego.BeforeExec, brandAuthorizationFilter)
+	beego.InsertFilter("/api/v1/brands/:id/price-screening/selection", beego.BeforeExec, authFilter)
+	beego.InsertFilter("/api/v1/brands/:id/price-screening/selection", beego.BeforeExec, brandAuthorizationFilter)
+
+	// ブランド登録申請・申請状態取得：認証・種別認可
+	beego.InsertFilter("/api/v1/brands/:id/submission", beego.BeforeExec, authFilter)
+	beego.InsertFilter("/api/v1/brands/:id/submission", beego.BeforeExec, brandAuthorizationFilter)
 
 	// ブランド詳細：認証
 	beego.InsertFilter(
@@ -335,6 +376,12 @@ func Register(
 		beego.BeforeExec,
 		shopAuthorizationFilter,
 	)
+
+	// ショップ登録申請・申請状態取得：認証・種別認可
+	beego.InsertFilter("/api/v1/shops/:id/submission", beego.BeforeExec, authFilter)
+	beego.InsertFilter("/api/v1/shops/:id/submission", beego.BeforeExec, shopAuthorizationFilter)
+	beego.InsertFilter("/api/v1/shops/:id/price-screening/selection", beego.BeforeExec, authFilter)
+	beego.InsertFilter("/api/v1/shops/:id/price-screening/selection", beego.BeforeExec, shopAuthorizationFilter)
 
 	// ショップ詳細：認証
 	beego.InsertFilter(
