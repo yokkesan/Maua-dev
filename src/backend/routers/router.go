@@ -13,6 +13,7 @@ import (
 
 	"backend/internal/auth"
 	"backend/internal/brand"
+	"backend/internal/pricescreening"
 	"backend/internal/registration"
 	registrationmasters "backend/internal/registration/masters"
 	"backend/internal/shop"
@@ -56,6 +57,7 @@ func Register(
 	// =========================================================
 	brandRepository := brand.NewPostgresRepository(db)
 	brandService := brand.NewService(brandRepository)
+	priceScreeningService := pricescreening.NewService(pricescreening.NewPostgresRepository(db))
 
 	// =========================================================
 	// Image Storage
@@ -181,6 +183,13 @@ func Register(
 			"post:Post",
 		),
 
+		// プライススクリーニングの保存・再取得
+		beego.NSRouter(
+			"/brands/:id/price-screening",
+			&brandcontroller.BrandPriceScreeningController{Service: priceScreeningService},
+			"put:Put;get:Get",
+		),
+
 		// ブランド詳細取得
 		beego.NSRouter(
 			"/brands/:id",
@@ -290,6 +299,10 @@ func Register(
 		beego.BeforeExec,
 		brandAuthorizationFilter,
 	)
+
+	// プライススクリーニング：認証・ユーザー種別による認可
+	beego.InsertFilter("/api/v1/brands/:id/price-screening", beego.BeforeExec, authFilter)
+	beego.InsertFilter("/api/v1/brands/:id/price-screening", beego.BeforeExec, brandAuthorizationFilter)
 
 	// ブランド詳細：認証
 	beego.InsertFilter(

@@ -261,6 +261,45 @@ func (r *PostgresRepository) UpdateByID(
 		return nil, fmt.Errorf("lock brand: %w", err)
 	}
 
+	// 回答登録と同じブランドロックの下で、更新後の整合性を確認する。
+	if _, updating := values["price_zone_id"]; updating {
+		var hasAnswers bool
+		if err := tx.QueryRow(ctx, `SELECT EXISTS (
+			SELECT 1 FROM brand_price_zone_guidelines WHERE brand_id=$1
+		)`, brandID).Scan(&hasAnswers); err != nil {
+			return nil, fmt.Errorf("check brand price screening answers: %w", err)
+		}
+		if hasAnswers {
+			return nil, ErrInvalidBrandInput
+		}
+	}
+
+	if value, updating := values["category_ids"]; updating {
+		ids, ok := value.([]int64)
+		if !ok {
+			return nil, ErrInvalidBrandInput
+		}
+		var losesCategory bool
+		if err := tx.QueryRow(ctx, `SELECT EXISTS (
+			SELECT 1 FROM brand_price_zone_guidelines bg
+			JOIN price_zone_guidelines g ON g.id=bg.price_zone_guideline_id
+			LEFT JOIN third_categories th ON th.id=g.third_id
+			LEFT JOIN second_categories s ON s.id=COALESCE(g.second_id, th.second_category_id)
+			WHERE bg.brand_id=$1 AND NOT EXISTS (
+				SELECT 1 FROM categories c
+				WHERE c.id=ANY($2::bigint[])
+				  AND c.first_id=s.first_category_id AND c.second_id=s.id
+				  AND ((g.third_id IS NOT NULL AND c.third_id=g.third_id)
+				       OR (g.second_id IS NOT NULL AND c.third_id IS NULL))
+			)
+		)`, brandID, ids).Scan(&losesCategory); err != nil {
+			return nil, fmt.Errorf("check brand price screening categories: %w", err)
+		}
+		if losesCategory {
+			return nil, ErrInvalidBrandInput
+		}
+	}
+
 	// -----------------------------------------------------
 	// 基本情報
 	// -----------------------------------------------------
