@@ -1,17 +1,28 @@
 package registrationsubmission
 
 import (
-	"backend/internal/pricescreening"
 	"context"
 	"errors"
 	"fmt"
 	"time"
 
+	"backend/internal/auth"
+	"backend/internal/notification"
+	"backend/internal/pricescreening"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type PostgresRepository struct{ db *pgxpool.Pool }
+type PostgresRepository struct {
+	db            *pgxpool.Pool
+	notifications *notification.Config
+}
+
+func (r *PostgresRepository) WithNotifications(config notification.Config) *PostgresRepository {
+	r.notifications = &config
+	return r
+}
 
 func NewPostgresRepository(db *pgxpool.Pool) *PostgresRepository {
 	return &PostgresRepository{db: db}
@@ -92,6 +103,15 @@ func (r *PostgresRepository) Submit(ctx context.Context, entity Entity, id, comp
 		id, companyID))
 	if err != nil {
 		return nil, err
+	}
+	if r.notifications != nil {
+		actor, ok := auth.UserFromContext(ctx)
+		if !ok || actor == nil {
+			return nil, fmt.Errorf("submission actor required")
+		}
+		if err := notification.Submission(ctx, tx, *r.notifications, table, id, companyID, actor.ID); err != nil {
+			return nil, fmt.Errorf("record submission notifications: %w", err)
+		}
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return nil, fmt.Errorf("commit submission: %w", err)

@@ -30,6 +30,10 @@ func TestMain(m *testing.M) {
 		panic("test database environment variables are not configured")
 	}
 
+	if name != "auma_test" {
+		panic("auth tests require TEST_DB_NAME=auma_test")
+	}
+
 	databaseURL := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		user,
@@ -49,6 +53,12 @@ func TestMain(m *testing.M) {
 	if err := testDB.Ping(ctx); err != nil {
 		testDB.Close()
 		panic(err)
+	}
+
+	var actualDatabase string
+	if err := testDB.QueryRow(ctx, "SELECT current_database()").Scan(&actualDatabase); err != nil || actualDatabase != "auma_test" {
+		testDB.Close()
+		panic("auth tests must connect only to auma_test")
 	}
 
 	routers.Register(

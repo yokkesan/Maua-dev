@@ -89,6 +89,7 @@ func (s *Service) Login(
 			TokenHash: tokenHash[:],
 			ExpiresAt: expiresAt,
 		},
+		user.PasswordHash,
 	)
 	if err != nil {
 		return nil, fmt.Errorf(

@@ -6,19 +6,25 @@ import (
 	authcontroller "backend/controllers/auth"
 	brandcontroller "backend/controllers/brand"
 	healthcontroller "backend/controllers/health"
+	infocontroller "backend/controllers/info"
+	resetcontroller "backend/controllers/passwordreset"
 	pricescreeningcontroller "backend/controllers/pricescreening"
 	registrationcontroller "backend/controllers/registration"
 	registrationmasterscontroller "backend/controllers/registration/masters"
 	submissioncontroller "backend/controllers/registrationsubmission"
 	shopcontroller "backend/controllers/shop"
 	topcontroller "backend/controllers/top"
-
+	"backend/internal/adminauth"
 	"backend/internal/auth"
 	"backend/internal/brand"
+	"backend/internal/clientip"
+	"backend/internal/notification"
+	"backend/internal/passwordreset"
 	"backend/internal/pricescreening"
 	"backend/internal/registration"
 	registrationmasters "backend/internal/registration/masters"
 	"backend/internal/registrationsubmission"
+	"backend/internal/review"
 	"backend/internal/shop"
 	"backend/internal/storage"
 
@@ -30,6 +36,10 @@ func Register(
 	db *pgxpool.Pool,
 	mailer registration.VerificationMailer,
 ) {
+	ipResolver, err := clientip.New(os.Getenv("TRUSTED_PROXY_CIDRS"))
+	if err != nil {
+		panic("invalid TRUSTED_PROXY_CIDRS")
+	}
 	// multipart本文全体を12MiBに制限する。画像2枚（各5MB）と登録JSONを含む。
 	// Controller実行前のBeegoによるmultipart解析にも適用する。
 	beego.BConfig.MaxUploadSize = 12 << 20
@@ -88,8 +98,13 @@ func Register(
 	shopRepository := shop.NewPostgresRepository(db)
 	shopService := shop.NewService(shopRepository)
 	submissionService := registrationsubmission.NewService(
-		registrationsubmission.NewPostgresRepository(db),
+		registrationsubmission.NewPostgresRepository(db).WithNotifications(notification.FromEnv()),
 	)
+
+	adminService := &adminauth.Service{Repository: &adminauth.Repository{DB: db}}
+	reviewService := &review.Service{Repository: &review.Repository{DB: db}}
+	notifications := &notification.Service{Repository: &notification.Repository{DB: db}, Config: notification.FromEnv()}
+	resetService := &passwordreset.Service{Repository: &passwordreset.Repository{DB: db, Config: notification.FromEnv()}}
 
 	// =========================================================
 	// Authentication / Authorization Filters
@@ -109,6 +124,18 @@ func Register(
 	// =========================================================
 	v1 := beego.NSNamespace(
 		"/v1",
+		beego.NSRouter("/info/login", &infocontroller.Controller{Auth: adminService, ClientIP: ipResolver}, "post:Login"),
+		beego.NSRouter("/info/logout", &infocontroller.Controller{Auth: adminService, ClientIP: ipResolver}, "post:Logout"),
+		beego.NSRouter("/info/me", &infocontroller.Controller{}, "get:Me"),
+		beego.NSRouter("/info/brands", &infocontroller.Controller{Review: reviewService, Kind: "brands"}, "get:List"),
+		beego.NSRouter("/info/shops", &infocontroller.Controller{Review: reviewService, Kind: "shops"}, "get:List"),
+		beego.NSRouter("/info/brands/:id", &infocontroller.Controller{Review: reviewService, Kind: "brands"}, "get:Detail"),
+		beego.NSRouter("/info/shops/:id", &infocontroller.Controller{Review: reviewService, Kind: "shops"}, "get:Detail"),
+		beego.NSRouter("/info/brands/:id/review", &infocontroller.Controller{Review: reviewService, Kind: "brands"}, "patch:Decide"),
+		beego.NSRouter("/info/shops/:id/review", &infocontroller.Controller{Review: reviewService, Kind: "shops"}, "patch:Decide"),
+		beego.NSRouter("/info/notification-events", &infocontroller.Controller{Notifications: notifications}, "get:Events"),
+		beego.NSRouter("/password-reset/request", &resetcontroller.Controller{Service: resetService, ClientIP: ipResolver}, "post:Request"),
+		beego.NSRouter("/password-reset/confirm", &resetcontroller.Controller{Service: resetService, ClientIP: ipResolver}, "post:Reset"),
 
 		// -----------------------------------------------------
 		// Top
@@ -300,6 +327,9 @@ func Register(
 	)
 
 	beego.AddNamespace(ns)
+	for _, path := range []string{"/info/me", "/info/logout", "/info/brands", "/info/shops", "/info/brands/:id", "/info/shops/:id", "/info/brands/:id/review", "/info/shops/:id/review", "/info/notification-events"} {
+		beego.InsertFilter("/api/v1"+path, beego.BeforeExec, adminauth.Filter(adminService))
+	}
 
 	// =========================================================
 	// Authentication Filters
