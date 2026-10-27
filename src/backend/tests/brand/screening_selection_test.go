@@ -296,10 +296,10 @@ func TestSelectionLegacyCompatibilityAndInvalidation(t *testing.T) {
 	if after := selectionGet(t, f); !reflect.DeepEqual(before, after) {
 		t.Fatal("legacy no-op invalidated selection")
 	}
-	body := fmt.Sprintf(`{"price_zone_guideline_ids":[%d]}`, f.guidelines[2][2])
+	body := fmt.Sprintf(`{"price_zone_guideline_ids":[%d]}`, f.guidelines[0][2])
 	requireSubmissionHTTP(t, screeningRequest(t, "PUT", fmt.Sprint(f.id), f.cookie, body), 200)
 	result := selectionGet(t, f)
-	if result.Saved || !reflect.DeepEqual(result.Products, before.Products) || result.PriceZoneID == nil || *result.PriceZoneID != 3 {
+	if result.Saved || !reflect.DeepEqual(result.Products, selectionInput(f, 3, 0).Products) || result.PriceZoneID == nil || *result.PriceZoneID != 3 {
 		t.Fatalf("legacy update did not invalidate selection: %+v", result)
 	}
 	state := readSubmissionSnapshot(t, testDB, f.id)
@@ -329,7 +329,7 @@ func TestSelectionLegacyInvalidationRollback(t *testing.T) {
 	selectionExec(t, fmt.Sprintf(`CREATE FUNCTION %s() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.brand_id=%d AND NEW.saved_at IS NULL THEN RAISE EXCEPTION 'selection invalidate internal error'; END IF; RETURN NEW; END $$`, name, f.id))
 	t.Cleanup(func() { selectionExec(t, fmt.Sprintf("DROP FUNCTION %s() CASCADE", name)) })
 	selectionExec(t, fmt.Sprintf("CREATE TRIGGER %s BEFORE UPDATE ON brand_price_screenings FOR EACH ROW EXECUTE FUNCTION %s()", name, name))
-	body := fmt.Sprintf(`{"price_zone_guideline_ids":[%d]}`, f.guidelines[1][2])
+	body := fmt.Sprintf(`{"price_zone_guideline_ids":[%d]}`, f.guidelines[0][2])
 	rec := screeningRequest(t, "PUT", fmt.Sprint(f.id), f.cookie, body)
 	requireSubmissionHTTP(t, rec, 500)
 	if strings.Contains(rec.Body.String(), "internal error") {
@@ -389,13 +389,14 @@ func TestSelectionConcurrentUpdates(t *testing.T) {
 
 func TestSelectionConcurrentLegacyAndNew(t *testing.T) {
 	f := newSelectionFixture(t)
+	requireSubmissionHTTP(t, selectionPut(t, f, selectionInput(f, 1, 1)), 200)
 	input := selectionInput(f, 1, 1)
 	data, err := json.Marshal(input)
 	if err != nil {
 		t.Fatal(err)
 	}
 	newBody := string(data)
-	oldBody := fmt.Sprintf(`{"price_zone_guideline_ids":[%d]}`, f.guidelines[2][2])
+	oldBody := fmt.Sprintf(`{"price_zone_guideline_ids":[%d]}`, f.guidelines[0][2])
 	start := make(chan struct{})
 	results := make(chan int, 2)
 	var wg sync.WaitGroup
@@ -424,20 +425,24 @@ func TestSelectionConcurrentLegacyAndNew(t *testing.T) {
 		}
 	}
 	result := selectionGet(t, f)
-	if !reflect.DeepEqual(result.Products, input.Products) || result.PriceZoneID == nil {
+	if result.PriceZoneID == nil {
 		t.Fatalf("selection partially written: %+v", result)
 	}
 	var saved []int64
 	if err := testDB.QueryRow(context.Background(), "SELECT ARRAY(SELECT price_zone_guideline_id FROM brand_price_zone_guidelines WHERE brand_id=$1 ORDER BY price_zone_guideline_id)", f.id).Scan(&saved); err != nil {
 		t.Fatal(err)
 	}
-	want := []int64{f.guidelines[2][2]}
+	want := []int64{f.guidelines[0][2]}
 	zone := int64(3)
 	if result.Saved {
 		want = []int64{f.guidelines[0][0], f.guidelines[1][0]}
 		zone = 1
 	}
-	if !reflect.DeepEqual(saved, want) || *result.PriceZoneID != zone {
+	expected := selectionInput(f, 3, 0)
+	if result.Saved {
+		expected = input
+	}
+	if !reflect.DeepEqual(result.Products, expected.Products) || !reflect.DeepEqual(saved, want) || *result.PriceZoneID != zone {
 		t.Fatalf("non-atomic old/new result: %+v answers=%v", result, saved)
 	}
 }

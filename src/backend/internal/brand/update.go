@@ -9,6 +9,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"backend/internal/pricescreening"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -422,7 +424,17 @@ func (r *PostgresRepository) UpdateByID(
 		}
 	}
 
-	// すべて成功した場合だけコミット。
+	_, categoryUpdated := values["category_ids"]
+	_, priceUpdated := values["price_zone_id"]
+	if categoryUpdated || priceUpdated {
+		if err := pricescreening.ValidateStoredConsistency(ctx, tx, "brands", brandID); err != nil {
+			if errors.Is(err, pricescreening.ErrInvalidInput) || errors.Is(err, pricescreening.ErrInvalidMaster) {
+				return nil, ErrInvalidBrandInput
+			}
+			return nil, fmt.Errorf("check brand screening consistency: %w", err)
+		}
+	}
+
 	if err := tx.Commit(ctx); err != nil {
 		return nil, fmt.Errorf(
 			"commit brand update: %w",

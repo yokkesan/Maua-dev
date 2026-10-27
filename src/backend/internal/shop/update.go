@@ -9,6 +9,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"backend/internal/pricescreening"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -273,6 +275,17 @@ func (r *PostgresRepository) UpdateByID(
 				}
 				return nil, fmt.Errorf("insert shop category: %w", err)
 			}
+		}
+	}
+
+	_, categoryUpdated := values["category_ids"]
+	_, priceUpdated := values["price_zone_id"]
+	if categoryUpdated || priceUpdated {
+		if err := pricescreening.ValidateStoredConsistency(ctx, tx, "shops", shopID); err != nil {
+			if errors.Is(err, pricescreening.ErrInvalidInput) || errors.Is(err, pricescreening.ErrInvalidMaster) {
+				return nil, ErrInvalidShopInput
+			}
+			return nil, fmt.Errorf("check shop screening consistency: %w", err)
 		}
 	}
 

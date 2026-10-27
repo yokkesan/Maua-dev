@@ -175,5 +175,56 @@ func saveSelection(ctx context.Context, tx pgx.Tx, kind string, id int64, input 
 		}
 	}
 	_, err = tx.Exec(ctx, "UPDATE "+kind+"s SET price_zone_id=COALESCE($1::bigint,price_zone_id),updated_at=NOW() WHERE id=$2", zone, id)
-	return err
+	if err != nil {
+		return err
+	}
+	return ValidateStoredConsistency(ctx, tx, kind+"s", id)
+}
+
+// ValidateStoredConsistency is called with the target row locked, after PATCH
+// changes have been applied in the same transaction. Unanswered/empty selections
+// remain editable; this does not apply submission completeness requirements.
+func ValidateStoredConsistency(ctx context.Context, tx pgx.Tx, table string, id int64) error {
+	kind, err := selectionKind(table)
+	if err != nil {
+		return err
+	}
+	var invalidHierarchy bool
+	if err := tx.QueryRow(ctx, `SELECT EXISTS (
+  SELECT 1 FROM `+kind+`_categories ec JOIN categories c ON c.id=ec.category_id
+  LEFT JOIN second_categories s ON s.id=c.second_id
+  LEFT JOIN third_categories th ON th.id=c.third_id
+  WHERE ec.`+kind+`_id=$1 AND
+   ((c.second_id IS NOT NULL AND (s.id IS NULL OR s.first_category_id<>c.first_id))
+    OR (c.third_id IS NOT NULL AND (th.id IS NULL OR th.second_category_id IS DISTINCT FROM c.second_id)))
+ )`, id).Scan(&invalidHierarchy); err != nil {
+		return err
+	}
+	if invalidHierarchy {
+		return ErrInvalidInput
+	}
+	result, err := readSelection(ctx, tx, kind, id)
+	if err != nil {
+		return err
+	}
+	if len(result.Products) == 0 {
+		return nil
+	}
+	if result.FirstID == nil {
+		return ErrInvalidInput
+	}
+	guidelines, err := validateSelection(ctx, tx, kind, id, SelectionInput{FirstID: *result.FirstID, Products: result.Products}, false)
+	if err != nil {
+		return err
+	}
+	if len(guidelines) > 0 {
+		zone, err := calculate(guidelines)
+		if err != nil {
+			return err
+		}
+		if result.PriceZoneID == nil || *result.PriceZoneID != zone {
+			return ErrInvalidInput
+		}
+	}
+	return nil
 }

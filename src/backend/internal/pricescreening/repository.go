@@ -128,6 +128,48 @@ func (t *brandTransaction) Save(ctx context.Context, ids []int64, zone int64) er
 	if names[zone] != name {
 		return ErrInvalidMaster
 	}
+	// A legacy request may update answers, but cannot replace an existing
+	// independent product selection. Keep unanswered products and slot order.
+	selection, err := readSelection(ctx, t.tx, "brand", t.brandID)
+	if err != nil {
+		return err
+	}
+	if selection.FirstID != nil {
+		var unmatched bool
+		if err := t.tx.QueryRow(ctx, `SELECT EXISTS (
+   SELECT 1 FROM price_zone_guidelines g WHERE g.id=ANY($2::bigint[])
+   AND NOT EXISTS (SELECT 1 FROM brand_price_screening_products p
+    WHERE p.brand_id=$1 AND p.second_category_id IS NOT DISTINCT FROM g.second_id
+     AND p.third_category_id IS NOT DISTINCT FROM g.third_id)
+  )`, t.brandID, ids).Scan(&unmatched); err != nil {
+			return err
+		}
+		if unmatched {
+			return ErrInvalidInput
+		}
+		for i := range selection.Products {
+			product := &selection.Products[i]
+			product.GuidelineID = nil
+			if err := t.tx.QueryRow(ctx, `SELECT (SELECT g.id FROM price_zone_guidelines g
+    WHERE g.id=ANY($1::bigint[]) AND g.second_id IS NOT DISTINCT FROM $2::bigint
+     AND g.third_id IS NOT DISTINCT FROM $3::bigint)`, ids, product.SecondID, product.ThirdID).Scan(&product.GuidelineID); err != nil {
+				return err
+			}
+		}
+		if _, err := validateSelection(ctx, t.tx, "brand", t.brandID, SelectionInput{FirstID: *selection.FirstID, Products: selection.Products}, false); err != nil {
+			return err
+		}
+		// Clear first to avoid transient unique conflicts when replacing answers.
+		if _, err := t.tx.Exec(ctx, `UPDATE brand_price_screening_products SET price_zone_guideline_id=NULL WHERE brand_id=$1`, t.brandID); err != nil {
+			return err
+		}
+		for _, product := range selection.Products {
+			if _, err := t.tx.Exec(ctx, `UPDATE brand_price_screening_products SET price_zone_guideline_id=$1 WHERE brand_id=$2
+ AND second_category_id IS NOT DISTINCT FROM $3::bigint AND third_category_id IS NOT DISTINCT FROM $4::bigint`, product.GuidelineID, t.brandID, product.SecondID, product.ThirdID); err != nil {
+				return err
+			}
+		}
+	}
 	if _, err := t.tx.Exec(ctx, `DELETE FROM brand_price_zone_guidelines WHERE brand_id=$1`, t.brandID); err != nil {
 		return fmt.Errorf("delete price screening answers: %w", err)
 	}
@@ -139,9 +181,9 @@ func (t *brandTransaction) Save(ctx context.Context, ids []int64, zone int64) er
 		return fmt.Errorf("update price screening zone: %w", err)
 	}
 	// A legacy answer update has no independent product selection. Invalidate
-	// readiness atomically, preserving the previous selection for inspection.
+	// readiness atomically, preserving the independently selected products.
 	if _, err := t.tx.Exec(ctx, `UPDATE brand_price_screenings SET saved_at=NULL,updated_at=NOW() WHERE brand_id=$1`, t.brandID); err != nil {
 		return fmt.Errorf("invalidate price screening selection: %w", err)
 	}
-	return nil
+	return ValidateStoredConsistency(ctx, t.tx, "brands", t.brandID)
 }
