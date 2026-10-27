@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"backend/internal/database"
+	"backend/internal/notification"
 	"backend/internal/registration"
 	"backend/routers"
 
@@ -15,6 +16,9 @@ import (
 
 func main() {
 	ctx := context.Background()
+	if err := notification.FromEnv().Validate(); err != nil {
+		log.Fatalf("notification configuration invalid: %v", err)
+	}
 
 	db, err := database.NewPostgresPool(ctx)
 	if err != nil {

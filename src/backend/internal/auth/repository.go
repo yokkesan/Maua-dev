@@ -23,6 +23,7 @@ type Repository interface {
 	CreateSession(
 		ctx context.Context,
 		session Session,
+		expectedPasswordHash string,
 	) error
 
 	FindUserBySessionTokenHash(
@@ -95,8 +96,26 @@ func (r *PostgresRepository) FindUserByEmail(
 func (r *PostgresRepository) CreateSession(
 	ctx context.Context,
 	session Session,
+	expectedPasswordHash string,
 ) error {
-	_, err := r.db.Exec(
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin login session: %w", err)
+	}
+	defer tx.Rollback(ctx)
+	// Match password-reset lock order: user first, then dependent rows.
+	var currentHash string
+	err = tx.QueryRow(ctx, `SELECT password_hash FROM users WHERE id=$1 FOR UPDATE`, session.UserID).Scan(&currentHash)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ErrInvalidCredentials
+	}
+	if err != nil {
+		return fmt.Errorf("lock session user: %w", err)
+	}
+	if expectedPasswordHash == "" || currentHash != expectedPasswordHash {
+		return ErrInvalidCredentials
+	}
+	_, err = tx.Exec(
 		ctx,
 		`
 			INSERT INTO user_sessions (
@@ -122,6 +141,9 @@ func (r *PostgresRepository) CreateSession(
 		)
 	}
 
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit login session: %w", err)
+	}
 	return nil
 }
 
